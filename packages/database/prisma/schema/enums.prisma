@@ -11,3 +11,15 @@ enum Role {
   ADMIN
   SUPER_ADMIN
 }
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum NotificationType {
+  TASK_CREATED
+  TASK_UPDATED
+  TASK_ASSIGNED
+}

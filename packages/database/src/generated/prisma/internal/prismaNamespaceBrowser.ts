@@ -59,17 +59,12 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   MediaFile: 'MediaFile',
-  Product: 'Product',
-  Price: 'Price',
-  Subscription: 'Subscription',
-  Order: 'Order',
-  Customer: 'Customer',
   GlobalSettings: 'GlobalSettings',
   ImageOptimizationSettings: 'ImageOptimizationSettings',
   MediaUploadSettings: 'MediaUploadSettings',
   FileStorageSettings: 'FileStorageSettings',
-  Ticket: 'Ticket',
-  TicketMessage: 'TicketMessage'
+  Task: 'Task',
+  Notification: 'Notification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -214,96 +209,6 @@ export const MediaFileScalarFieldEnum = {
 export type MediaFileScalarFieldEnum = (typeof MediaFileScalarFieldEnum)[keyof typeof MediaFileScalarFieldEnum]
 
 
-export const ProductScalarFieldEnum = {
-  id: 'id',
-  provider: 'provider',
-  externalProductId: 'externalProductId',
-  name: 'name',
-  description: 'description',
-  medias: 'medias',
-  isRecurring: 'isRecurring',
-  isArchived: 'isArchived',
-  featured: 'featured',
-  orderIndex: 'orderIndex',
-  visibility: 'visibility',
-  externalSyncedAt: 'externalSyncedAt',
-  externalSyncAttempts: 'externalSyncAttempts',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
-
-
-export const PriceScalarFieldEnum = {
-  id: 'id',
-  externalPriceId: 'externalPriceId',
-  productId: 'productId',
-  priceAmount: 'priceAmount',
-  priceCurrency: 'priceCurrency',
-  recurringInterval: 'recurringInterval',
-  type: 'type',
-  isArchived: 'isArchived',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PriceScalarFieldEnum = (typeof PriceScalarFieldEnum)[keyof typeof PriceScalarFieldEnum]
-
-
-export const SubscriptionScalarFieldEnum = {
-  id: 'id',
-  externalSubscriptionId: 'externalSubscriptionId',
-  userId: 'userId',
-  productId: 'productId',
-  priceId: 'priceId',
-  status: 'status',
-  currentPeriodStart: 'currentPeriodStart',
-  currentPeriodEnd: 'currentPeriodEnd',
-  cancelAtPeriodEnd: 'cancelAtPeriodEnd',
-  canceledAt: 'canceledAt',
-  externalCustomerId: 'externalCustomerId',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
-
-
-export const OrderScalarFieldEnum = {
-  id: 'id',
-  externalOrderId: 'externalOrderId',
-  userId: 'userId',
-  productId: 'productId',
-  priceId: 'priceId',
-  amount: 'amount',
-  currency: 'currency',
-  status: 'status',
-  externalCustomerId: 'externalCustomerId',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
-
-
-export const CustomerScalarFieldEnum = {
-  id: 'id',
-  externalCustomerId: 'externalCustomerId',
-  provider: 'provider',
-  userId: 'userId',
-  email: 'email',
-  name: 'name',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
-
-
 export const GlobalSettingsScalarFieldEnum = {
   id: 'id',
   primaryColor: 'primaryColor',
@@ -356,33 +261,31 @@ export const FileStorageSettingsScalarFieldEnum = {
 export type FileStorageSettingsScalarFieldEnum = (typeof FileStorageSettingsScalarFieldEnum)[keyof typeof FileStorageSettingsScalarFieldEnum]
 
 
-export const TicketScalarFieldEnum = {
+export const TaskScalarFieldEnum = {
   id: 'id',
-  subject: 'subject',
+  title: 'title',
   description: 'description',
   status: 'status',
-  priority: 'priority',
-  userId: 'userId',
-  assignedTo: 'assignedTo',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  closedAt: 'closedAt'
+  ownerId: 'ownerId',
+  assigneeId: 'assigneeId'
 } as const
 
-export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
+export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
 
 
-export const TicketMessageScalarFieldEnum = {
+export const NotificationScalarFieldEnum = {
   id: 'id',
-  ticketId: 'ticketId',
-  userId: 'userId',
-  content: 'content',
-  isInternal: 'isInternal',
+  type: 'type',
+  message: 'message',
+  read: 'read',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  userId: 'userId',
+  taskId: 'taskId'
 } as const
 
-export type TicketMessageScalarFieldEnum = (typeof TicketMessageScalarFieldEnum)[keyof typeof TicketMessageScalarFieldEnum]
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const SortOrder = {

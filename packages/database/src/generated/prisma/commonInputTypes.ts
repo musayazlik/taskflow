@@ -270,11 +270,11 @@ export type IntWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntFilter<$PrismaModel>
 }
 
-export type EnumProductProviderFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductProvider | Prisma.EnumProductProviderFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductProvider[] | Prisma.ListEnumProductProviderFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductProvider[] | Prisma.ListEnumProductProviderFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductProviderFilter<$PrismaModel> | $Enums.ProductProvider
+export type EnumFileProviderFilter<$PrismaModel = never> = {
+  equals?: $Enums.FileProvider | Prisma.EnumFileProviderFieldRefInput<$PrismaModel>
+  in?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFileProviderFilter<$PrismaModel> | $Enums.FileProvider
 }
 
 export type JsonFilter<$PrismaModel = never> =
@@ -301,21 +301,14 @@ export type JsonFilterBase<$PrismaModel = never> = {
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
 }
 
-export type EnumProductVisibilityFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductVisibility | Prisma.EnumProductVisibilityFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductVisibility[] | Prisma.ListEnumProductVisibilityFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductVisibility[] | Prisma.ListEnumProductVisibilityFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductVisibilityFilter<$PrismaModel> | $Enums.ProductVisibility
-}
-
-export type EnumProductProviderWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductProvider | Prisma.EnumProductProviderFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductProvider[] | Prisma.ListEnumProductProviderFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductProvider[] | Prisma.ListEnumProductProviderFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductProviderWithAggregatesFilter<$PrismaModel> | $Enums.ProductProvider
+export type EnumFileProviderWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FileProvider | Prisma.EnumFileProviderFieldRefInput<$PrismaModel>
+  in?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFileProviderWithAggregatesFilter<$PrismaModel> | $Enums.FileProvider
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumProductProviderFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumProductProviderFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFileProviderFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFileProviderFilter<$PrismaModel>
 }
 
 export type JsonWithAggregatesFilter<$PrismaModel = never> =
@@ -345,31 +338,38 @@ export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
   _max?: Prisma.NestedJsonFilter<$PrismaModel>
 }
 
-export type EnumProductVisibilityWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductVisibility | Prisma.EnumProductVisibilityFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductVisibility[] | Prisma.ListEnumProductVisibilityFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductVisibility[] | Prisma.ListEnumProductVisibilityFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductVisibilityWithAggregatesFilter<$PrismaModel> | $Enums.ProductVisibility
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumProductVisibilityFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumProductVisibilityFilter<$PrismaModel>
+export type EnumTaskStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TaskStatus | Prisma.EnumTaskStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
 }
 
-export type EnumFileProviderFilter<$PrismaModel = never> = {
-  equals?: $Enums.FileProvider | Prisma.EnumFileProviderFieldRefInput<$PrismaModel>
-  in?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
-  notIn?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumFileProviderFilter<$PrismaModel> | $Enums.FileProvider
+export type EnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TaskStatus | Prisma.EnumTaskStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTaskStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTaskStatusFilter<$PrismaModel>
 }
 
-export type EnumFileProviderWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.FileProvider | Prisma.EnumFileProviderFieldRefInput<$PrismaModel>
-  in?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
-  notIn?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumFileProviderWithAggregatesFilter<$PrismaModel> | $Enums.FileProvider
+export type EnumNotificationTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.NotificationType | Prisma.EnumNotificationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.NotificationType[] | Prisma.ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.NotificationType[] | Prisma.ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+}
+
+export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.NotificationType | Prisma.EnumNotificationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.NotificationType[] | Prisma.ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.NotificationType[] | Prisma.ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumFileProviderFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumFileProviderFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -614,28 +614,21 @@ export type NestedFloatFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
 }
 
-export type NestedEnumProductProviderFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductProvider | Prisma.EnumProductProviderFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductProvider[] | Prisma.ListEnumProductProviderFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductProvider[] | Prisma.ListEnumProductProviderFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductProviderFilter<$PrismaModel> | $Enums.ProductProvider
+export type NestedEnumFileProviderFilter<$PrismaModel = never> = {
+  equals?: $Enums.FileProvider | Prisma.EnumFileProviderFieldRefInput<$PrismaModel>
+  in?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFileProviderFilter<$PrismaModel> | $Enums.FileProvider
 }
 
-export type NestedEnumProductVisibilityFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductVisibility | Prisma.EnumProductVisibilityFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductVisibility[] | Prisma.ListEnumProductVisibilityFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductVisibility[] | Prisma.ListEnumProductVisibilityFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductVisibilityFilter<$PrismaModel> | $Enums.ProductVisibility
-}
-
-export type NestedEnumProductProviderWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductProvider | Prisma.EnumProductProviderFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductProvider[] | Prisma.ListEnumProductProviderFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductProvider[] | Prisma.ListEnumProductProviderFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductProviderWithAggregatesFilter<$PrismaModel> | $Enums.ProductProvider
+export type NestedEnumFileProviderWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FileProvider | Prisma.EnumFileProviderFieldRefInput<$PrismaModel>
+  in?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFileProviderWithAggregatesFilter<$PrismaModel> | $Enums.FileProvider
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumProductProviderFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumProductProviderFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFileProviderFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFileProviderFilter<$PrismaModel>
 }
 
 export type NestedJsonFilter<$PrismaModel = never> =
@@ -662,31 +655,38 @@ export type NestedJsonFilterBase<$PrismaModel = never> = {
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
 }
 
-export type NestedEnumProductVisibilityWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductVisibility | Prisma.EnumProductVisibilityFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductVisibility[] | Prisma.ListEnumProductVisibilityFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductVisibility[] | Prisma.ListEnumProductVisibilityFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductVisibilityWithAggregatesFilter<$PrismaModel> | $Enums.ProductVisibility
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumProductVisibilityFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumProductVisibilityFilter<$PrismaModel>
+export type NestedEnumTaskStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TaskStatus | Prisma.EnumTaskStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
 }
 
-export type NestedEnumFileProviderFilter<$PrismaModel = never> = {
-  equals?: $Enums.FileProvider | Prisma.EnumFileProviderFieldRefInput<$PrismaModel>
-  in?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
-  notIn?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumFileProviderFilter<$PrismaModel> | $Enums.FileProvider
+export type NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TaskStatus | Prisma.EnumTaskStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTaskStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTaskStatusFilter<$PrismaModel>
 }
 
-export type NestedEnumFileProviderWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.FileProvider | Prisma.EnumFileProviderFieldRefInput<$PrismaModel>
-  in?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
-  notIn?: $Enums.FileProvider[] | Prisma.ListEnumFileProviderFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumFileProviderWithAggregatesFilter<$PrismaModel> | $Enums.FileProvider
+export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.NotificationType | Prisma.EnumNotificationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.NotificationType[] | Prisma.ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.NotificationType[] | Prisma.ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+}
+
+export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.NotificationType | Prisma.EnumNotificationTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.NotificationType[] | Prisma.ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.NotificationType[] | Prisma.ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumFileProviderFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumFileProviderFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
 }
 
 
