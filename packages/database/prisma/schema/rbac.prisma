@@ -1,0 +1,5 @@
+// ============================================
+// RBAC Models (Role-Based Access Control)
+// ============================================
+// Role enum is defined in enums.prisma
+// User model uses Role enum directly (see auth.prisma)

@@ -1,0 +1,32 @@
+// ============================================
+// Media Files (UploadThing)
+// ============================================
+
+model MediaFile {
+  id         String   @id @default(cuid())
+
+  // UploadThing data
+  key        String   @unique // UploadThing file key
+  name       String   // Original file name
+  url        String   // Public URL
+  size       Int      // File size in bytes
+  type       String?  // MIME type (e.g., "image/jpeg")
+
+  // Metadata
+  uploadedBy String?  // User ID who uploaded
+  folder     String?  // Optional folder/category
+  tags       String[] @default([]) // Tags for organization
+
+  // Timestamps
+  uploadedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  uploader   User?    @relation(fields: [uploadedBy], references: [id], onDelete: SetNull)
+
+  @@index([uploadedBy])
+  @@index([key])
+  @@index([uploadedAt])
+  @@map("media_file")
+}

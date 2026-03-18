@@ -1,0 +1,90 @@
+// ============================================
+// Global Settings (Public)
+// ============================================
+
+model GlobalSettings {
+  id     String @id @default(cuid())
+
+  // Theme colors (OKLCH format) - for landing page
+  primaryColor        String? // e.g., "oklch(0.55 0.25 280)"
+  primaryForeground   String? // e.g., "oklch(0.99 0 0)"
+  secondaryColor      String? // e.g., "oklch(0.97 0 0)"
+  secondaryForeground String? // e.g., "oklch(0.205 0 0)"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("global_settings")
+}
+
+// ============================================
+// Image Optimization Settings (Global)
+// ============================================
+
+model ImageOptimizationSettings {
+  id        String   @id @default(cuid())
+
+  // Whether optimization is enabled
+  enabled   Boolean  @default(false)
+
+  // Target dimensions (pixels) - optional, if unset original size is used
+  maxWidth  Int?
+  maxHeight Int?
+
+  // JPEG/WebP quality (1-100)
+  quality   Int?
+
+  // Preferred output format, e.g. "webp", "avif", "original"
+  format    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("image_optimization_settings")
+}
+
+// ============================================
+// Media Upload Settings (Global)
+// ============================================
+
+model MediaUploadSettings {
+  id        String   @id @default(cuid())
+
+  // Maximum file size in MB
+  maxFileSize   Int      @default(4)
+
+  // Maximum file count per upload
+  maxFileCount  Int      @default(10)
+
+  // Allowed MIME types (stored as JSON array)
+  allowedMimeTypes String[] @default(["image/jpeg", "image/png", "image/gif", "image/webp"])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("media_upload_settings")
+}
+
+// ============================================
+// File Storage Settings (UploadThing)
+// ============================================
+
+model FileStorageSettings {
+  id                  String       @id @default(cuid())
+
+  // Default provider selection
+  defaultProvider     FileProvider @default(UPLOADTHING)
+
+  // UploadThing settings
+  uploadthingToken    String?
+
+  // Provider selection rules (JSON: {"default": "UPLOADTHING"})
+  selectionRules      Json         @default("{\"default\": \"UPLOADTHING\"}")
+
+  // Metadata
+  updatedBy           String?
+  updatedAt           DateTime     @updatedAt
+  createdAt           DateTime     @default(now())
+
+  @@map("file_storage_settings")
+}

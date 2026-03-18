@@ -1,0 +1,52 @@
+{
+	"name": "turbostack",
+	"private": true,
+	"packageManager": "bun@1.1.45",
+	"version": "1.0.0",
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev",
+		"dev:web": "turbo run dev --filter=web",
+		"dev:api": "turbo run dev --filter=api",
+		"dev:docs": "turbo run dev --filter=docs",
+		"lint": "turbo run lint",
+		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
+		"check-types": "turbo run check-types",
+		"db:generate": "turbo run db:generate --filter=@repo/database",
+		"db:push": "turbo run db:push --filter=@repo/database",
+		"db:migrate": "turbo run db:migrate --filter=@repo/database",
+		"db:reset": "turbo run db:reset --filter=@repo/database",
+		"db:seed": "turbo run db:seed --filter=@repo/database",
+		"db:studio": "turbo run db:studio --filter=@repo/database",
+		"db:start": "bun run db:reset && bun run db:push && bun run db:seed",
+		"env:sync": "./scripts/sync-env-by-branch.sh",
+		"env:setup": "./scripts/setup-env-sync.sh",
+		"env:sync-all": "./scripts/sync-to-all-branches.sh",
+		"polar:setup": "./scripts/setup-polar.sh",
+		"deploy:setup": "./scripts/setup-deployment.sh",
+		"docker:up": "docker compose up -d",
+		"docker:down": "docker compose down",
+		"docker:up:web": "docker compose up -d web",
+		"docker:up:api": "docker compose up -d api",
+		"docker:up:docs": "docker compose up -d docs",
+		"docker:build": "docker compose build",
+		"docker:logs": "docker compose logs -f",
+		"docker:restart": "docker compose restart",
+		"clean": "turbo run clean",
+		"ngrok": "ngrok http 4101"
+	},
+	"devDependencies": {
+		"concurrently": "^9.2.1",
+		"prettier": "^3.7.4",
+		"turbo": "^2.7.6",
+		"typescript": "5.9.2"
+	},
+	"engines": {
+		"node": ">=22"
+	},
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"license": "UNLICENSED"
+}

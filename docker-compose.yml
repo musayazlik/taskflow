@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: turbokit-postgres
+    environment:
+      POSTGRES_USER: turbostack
+      POSTGRES_PASSWORD: turbostack_secret
+      POSTGRES_DB: turbostack
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U turbostack"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - turbokit-network
+
+  # API Service (Elysia.js)
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: turbokit-api
+    ports:
+      - "4101:4101"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://turbostack:turbostack_secret@postgres:5432/turbostack
+      PORT: 4101
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - turbokit-network
+    restart: unless-stopped
+
+  # Web Service (Next.js)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: turbokit-web
+    ports:
+      - "4100:4100"
+    environment:
+      NODE_ENV: production
+      # For client-side: use localhost (browser makes requests)
+      # For server-side: Docker Compose uses service name 'api'
+      NEXT_PUBLIC_API_URL: http://localhost:4101
+      PORT: 4100
+      HOSTNAME: "0.0.0.0"
+    depends_on:
+      - api
+    networks:
+      - turbokit-network
+    restart: unless-stopped
+
+  # Docs Service (optional - uncomment if Dockerfile.docs exists)
+  # docs:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.docs
+  #   container_name: turbokit-docs
+  #   ports:
+  #     - "4102:4102"
+  #   environment:
+  #     NODE_ENV: production
+  #     PORT: 4102
+  #   networks:
+  #     - turbokit-network
+  #   restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  turbokit-network:
+    driver: bridge

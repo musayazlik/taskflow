@@ -1,0 +1,149 @@
+// ============================================
+// Payment Models (Mirror Model Architecture)
+// ============================================
+
+enum ProductProvider {
+  POLAR
+  STRIPE
+}
+
+enum ProductVisibility {
+  PUBLIC
+  HIDDEN
+  MEMBERS_ONLY
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  // External provider reference
+  provider        ProductProvider @default(POLAR)
+  externalProductId  String?  @unique
+
+  // Core fields
+  name            String
+  description     String?
+  medias          Json     // Array of {id: string, public_url: string} objects
+  isRecurring     Boolean  @default(false)
+  isArchived      Boolean  @default(false)
+
+  // Internal management fields
+  featured        Boolean  @default(false)
+  orderIndex      Int      @default(0)
+  visibility      ProductVisibility @default(PUBLIC)
+
+  // Sync tracking
+  externalSyncedAt    DateTime?
+  externalSyncAttempts Int       @default(0)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  prices        Price[]
+  subscriptions Subscription[]
+  orders        Order[]
+
+  // Indexes
+  @@index([featured])
+  @@index([orderIndex])
+  @@index([visibility])
+  @@index([isArchived])
+  @@index([provider])
+
+  @@map("product")
+}
+
+model Price {
+  id                String   @id @default(cuid())
+  externalPriceId   String?  @unique
+  productId         String
+  priceAmount       Int // Amount in cents
+  priceCurrency     String   @default("USD")
+  recurringInterval String? // "month", "year", "day", "week"
+  type              String // "one_time" or "recurring"
+  isArchived        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  subscriptions Subscription[]
+  orders        Order[]
+
+  @@index([productId])
+  @@index([isArchived])
+
+  @@map("price")
+}
+
+model Subscription {
+  id                  String    @id @default(cuid())
+  externalSubscriptionId String    @unique
+  userId              String
+  productId           String
+  priceId             String
+  status              String // "active", "canceled", "past_due", "paused", "incomplete"
+  currentPeriodStart  DateTime
+  currentPeriodEnd    DateTime
+  cancelAtPeriodEnd   Boolean   @default(false)
+  canceledAt          DateTime?
+  externalCustomerId  String?
+  metadata            Json?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  // Relations
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+  price   Price   @relation(fields: [priceId], references: [id])
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([status])
+  @@index([productId])
+  @@map("subscription")
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  externalOrderId String   @unique
+  userId          String?
+  productId       String
+  priceId         String
+  amount          Int      // Amount in cents
+  currency        String   @default("USD")
+  status          String   // "pending", "paid", "failed", "canceled", "refunded"
+  externalCustomerId String?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  product Product @relation(fields: [productId], references: [id])
+  price   Price   @relation(fields: [priceId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@index([productId])
+  @@map("order")
+}
+
+model Customer {
+  id                 String   @id @default(cuid())
+  externalCustomerId String   @unique
+  provider           ProductProvider @default(POLAR)
+  userId             String?  @unique // Optional - can exist without user
+  email              String
+  name               String?
+  metadata           Json?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([provider])
+  @@index([userId])
+  @@map("customer")
+}

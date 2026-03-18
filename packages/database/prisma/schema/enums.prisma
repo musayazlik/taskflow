@@ -1,0 +1,13 @@
+// ============================================
+// Enums
+// ============================================
+
+enum FileProvider {
+  UPLOADTHING
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
