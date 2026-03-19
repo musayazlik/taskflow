@@ -3,13 +3,11 @@
 import Link from "next/link";
 import { Iconify } from "@/components/iconify";
 import arrowRightIcon from "@iconify-icons/lucide/arrow-right";
-import githubIcon from "@iconify-icons/lucide/github";
 import starIcon from "@iconify-icons/lucide/star";
 import { motion } from "framer-motion";
 import { Particles } from "@/components/particles";
 import { AuroraText } from "@/components/aurora-text";
 import { AvatarCircles } from "@/components/avatar-circles";
-import { BorderBeam } from "@/components/border-beam";
 
 const avatars = [
   {
