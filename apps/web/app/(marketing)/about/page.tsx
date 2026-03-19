@@ -12,9 +12,9 @@ import rocketIcon from "@iconify-icons/lucide/rocket";
 import checkCircleIcon from "@iconify-icons/lucide/check-circle";
 
 export const metadata: Metadata = {
-  title: "About Us - TurboStack",
+  title: "About Us - Taskflow",
   description:
-    "Learn about TurboStack's mission, vision, and the team behind the modern fullstack monorepo starter.",
+    "Learn about Taskflow's mission, vision, and the team behind real-time task management for modern teams.",
 };
 
 const values = [
@@ -48,7 +48,7 @@ const milestones = [
   {
     year: "2024",
     title: "Project Started",
-    description: "TurboStack was born from the need for a better starter kit.",
+    description: "Taskflow was born from the need for clearer, real-time collaboration.",
   },
   {
     year: "2025",
@@ -58,7 +58,7 @@ const milestones = [
   {
     year: "2025",
     title: "Growing Community",
-    description: "Thousands of developers building with TurboStack.",
+    description: "Teams using Taskflow to keep work moving and visible.",
   },
 ];
 
@@ -73,7 +73,7 @@ export default function AboutPage() {
             Our Story
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-            About <span className="gradient-text">TurboStack</span>
+            About <span className="gradient-text">Taskflow</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             We're building the future of full-stack development, one line of
@@ -220,11 +220,11 @@ export default function AboutPage() {
         <section className="mt-24 text-center">
           <div className="p-12 rounded-2xl bg-linear-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20">
             <h2 className="text-3xl font-bold mb-4">
-              Ready to build with TurboStack?
+              Ready to collaborate with Taskflow?
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of developers who are already building amazing
-              applications with our starter kit.
+              Create your first workspace and start managing tasks with clear
+              ownership and real-time updates.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a

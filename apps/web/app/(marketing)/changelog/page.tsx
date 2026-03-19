@@ -241,7 +241,7 @@ export default function ChangelogPage() {
                 </p>
                 <Button asChild>
                   <a
-                    href="https://github.com/turbostack"
+                    href="https://github.com/musayazlik/taskflow"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
