@@ -79,22 +79,22 @@ export const LANDING_FEATURES = [
       "See task changes, assignments, and status updates instantly across your entire workspace.",
   },
   {
+    icon: usersIcon,
+    title: "Task assignment",
+    description:
+      "Assign owners, set priorities, and make accountability explicit so work never gets stuck in limbo.",
+  },
+  {
+    icon: bellIcon,
+    title: "Notifications",
+    description:
+      "Keep people informed without drowning them in noise, with focused alerts that matter.",
+  },
+  {
     icon: shieldIcon,
     title: "Role-based access",
     description:
       "Keep sensitive work protected with clear roles and permissions for every team member.",
-  },
-  {
-    icon: usersIcon,
-    title: "Team workspaces",
-    description:
-      "Organize tasks by team or project so everyone knows exactly where to focus.",
-  },
-  {
-    icon: bellIcon,
-    title: "Smart notifications",
-    description:
-      "Keep people informed without drowning them in noise, with focused alerts that matter.",
   },
   {
     icon: barChartIcon,
