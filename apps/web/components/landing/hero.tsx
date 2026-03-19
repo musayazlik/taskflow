@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Iconify } from "@/components/iconify";
 import arrowRightIcon from "@iconify-icons/lucide/arrow-right";
-import githubIcon from "@iconify-icons/lucide/github";
 import starIcon from "@iconify-icons/lucide/star";
 import { motion } from "framer-motion";
 import { Particles } from "@/components/particles";
