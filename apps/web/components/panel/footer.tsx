@@ -6,6 +6,7 @@ import {
   getVersionDisplay,
   getVersionBadgeColor,
 } from "@/lib/version";
+import { TASKFLOW_GITHUB_URL } from "@/constant/landing";
 import { Badge } from "@repo/shadcn-ui/badge";
 import { Github, Heart, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -42,7 +43,7 @@ export function PanelFooter() {
           {/* Right: Links */}
           <div className="flex items-center gap-3">
             <a
-              href="https://github.com/turbostack"
+              href={TASKFLOW_GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-all p-2 rounded-lg hover:bg-muted hover:scale-110"
