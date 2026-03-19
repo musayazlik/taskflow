@@ -15,10 +15,8 @@ import {
   Clock,
   ChevronRight,
   BarChart3,
-  Trophy,
   Zap,
   Users,
-  Package,
   FileText,
 } from "lucide-react";
 import {
@@ -29,7 +27,7 @@ import {
 } from "@/components/charts";
 import { SystemStats } from "@/components/system-stats";
 import { cn } from "@/lib/utils";
-import type { PANEL_RECENT_ACTIVITY, PANEL_TOP_PRODUCTS } from "@repo/types";
+import type { PANEL_RECENT_ACTIVITY } from "@repo/types";
 
 const revenueChartData = [
   { month: "Jan", revenue: 4500, target: 4000 },
@@ -86,14 +84,6 @@ const quickActions = [
     color: "bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400",
   },
   {
-    icon: Package,
-    label: "New Product",
-    description: "Add to inventory",
-    href: "/panel/products/new",
-    color:
-      "bg-violet-100 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400",
-  },
-  {
     icon: FileText,
     label: "View Reports",
     description: "Sales & analytics",
@@ -123,12 +113,10 @@ const statusStyles = {
 
 interface AdminDashboardProps {
   recentActivity: typeof PANEL_RECENT_ACTIVITY;
-  topProducts: typeof PANEL_TOP_PRODUCTS;
 }
 
 export function AdminDashboard({
   recentActivity,
-  topProducts,
 }: AdminDashboardProps) {
   return (
     <>
@@ -284,69 +272,8 @@ export function AdminDashboard({
       {/* System Statistics */}
       <SystemStats />
 
-      {/* Top Products & Quick Actions */}
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-        {/* Top Products */}
-        <Card className="bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-amber-500" />
-                Top Products
-              </CardTitle>
-              <CardDescription className="text-gray-500 dark:text-gray-400">
-                Best selling products this month
-              </CardDescription>
-            </div>
-            <Link
-              href="/panel/products"
-              className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-            >
-              All Products
-              <ChevronRight className="h-3 w-3" />
-            </Link>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {topProducts.map((product, index) => (
-                <div
-                  key={product.name}
-                  className="flex items-center justify-between gap-4 p-3 rounded-xl bg-gray-50 dark:bg-zinc-800/50 border border-gray-100 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={cn(
-                        "flex h-10 w-10 items-center justify-center rounded-xl font-bold text-sm transition-all",
-                        index === 0
-                          ? "bg-linear-to-br from-amber-400 to-amber-500 text-white shadow-lg shadow-amber-500/25"
-                          : index === 1
-                            ? "bg-linear-to-br from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600 text-white"
-                            : index === 2
-                              ? "bg-linear-to-br from-amber-600 to-amber-700 text-white"
-                              : "bg-gray-200 dark:bg-zinc-700 text-gray-600 dark:text-gray-300",
-                      )}
-                    >
-                      {index + 1}
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-                        {product.name}
-                      </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {product.sales} sales
-                      </span>
-                    </div>
-                  </div>
-                  <span className="font-bold text-sm text-gray-900 dark:text-white">
-                    {product.revenue}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Actions */}
+      {/* Quick Actions */}
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-1">
         <Card className="bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800">
           <CardHeader>
             <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">

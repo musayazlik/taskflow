@@ -25,18 +25,19 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
-export const ProductProvider = {
-  POLAR: 'POLAR',
-  STRIPE: 'STRIPE'
+export const TaskStatus = {
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  DONE: 'DONE'
 } as const
 
-export type ProductProvider = (typeof ProductProvider)[keyof typeof ProductProvider]
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
 
 
-export const ProductVisibility = {
-  PUBLIC: 'PUBLIC',
-  HIDDEN: 'HIDDEN',
-  MEMBERS_ONLY: 'MEMBERS_ONLY'
+export const NotificationType = {
+  TASK_CREATED: 'TASK_CREATED',
+  TASK_UPDATED: 'TASK_UPDATED',
+  TASK_ASSIGNED: 'TASK_ASSIGNED'
 } as const
 
-export type ProductVisibility = (typeof ProductVisibility)[keyof typeof ProductVisibility]
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

@@ -8,23 +8,20 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [totalUsers, totalProducts, activeSubscriptions, newUsersThisMonth] =
-      await Promise.all([
-        prisma.user.count(),
-        prisma.product.count({ where: { isArchived: false } }),
-        prisma.subscription.count({ where: { status: "active" } }),
-        prisma.user.count({
-          where: { createdAt: { gte: startOfMonth } },
-        }),
-      ]);
+    const [totalUsers, newUsersThisMonth] = await Promise.all([
+      prisma.user.count(),
+      prisma.user.count({
+        where: { createdAt: { gte: startOfMonth } },
+      }),
+    ]);
 
     return {
       totalUsers,
-      totalProducts,
+      totalProducts: 0,
       totalOrders: 0,
       totalRevenue: 0,
       revenueThisMonth: 0,
-      activeSubscriptions,
+      activeSubscriptions: 0,
       newUsersThisMonth,
     };
   } catch (error) {

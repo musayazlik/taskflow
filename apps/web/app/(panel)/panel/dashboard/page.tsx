@@ -7,7 +7,6 @@ import { UserDashboard } from "./components/user-dashboard";
 import {
   PANEL_DASHBOARD_STATS,
   PANEL_RECENT_ACTIVITY,
-  PANEL_TOP_PRODUCTS,
 } from "@repo/types";
 
 // Force dynamic rendering because this page uses cookies
@@ -39,7 +38,6 @@ export default async function DashboardPage() {
       {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
         <AdminDashboard
           recentActivity={PANEL_RECENT_ACTIVITY}
-          topProducts={PANEL_TOP_PRODUCTS}
         />
       ) : (
         <UserDashboard />

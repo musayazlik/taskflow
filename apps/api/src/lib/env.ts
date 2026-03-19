@@ -3,10 +3,13 @@ import { resolve } from "path";
 import { z } from "zod";
 import { logger } from "./logger";
 
-// Load .env from root or current directory
-config(); // Default: looks for .env in current working directory
-config({ path: resolve(process.cwd(), "../../.env") }); // Also check for monorepo root if running from apps/backend
-config({ path: resolve(import.meta.dir, "../../../../.env") }); // Legacy fallback for dev
+// Load .env from stable absolute paths so imports work regardless of CWD.
+const rootEnvPath = resolve(import.meta.dir, "../../../../.env");
+const apiEnvPath = resolve(import.meta.dir, "../../.env");
+
+// Root first, then api-level overrides (if both exist).
+config({ path: rootEnvPath });
+config({ path: apiEnvPath });
 
 /**
  * Environment variable validation schema
@@ -15,7 +18,7 @@ config({ path: resolve(import.meta.dir, "../../../../.env") }); // Legacy fallba
 const envSchema = z.object({
   // Environment
   NODE_ENV: z
-    .enum(["development", "staging", "production"])
+    .enum(["development", "staging", "test", "production"])
     .default("development"),
 
   // Server

@@ -1,27 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@repo/shadcn-ui/card";
-import { Button } from "@repo/shadcn-ui/button";
-import { Badge } from "@repo/shadcn-ui/badge";
-import { Input } from "@repo/shadcn-ui/input";
-import { ScrollArea } from "@repo/shadcn-ui/scroll-area";
-import { Switch } from "@repo/shadcn-ui/switch";
-import { Label } from "@repo/shadcn-ui/label";
-import { Checkbox } from "@repo/shadcn-ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@repo/shadcn-ui/dropdown-menu";
+import { useCallback, useEffect, useState } from "react";
+
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/shadcn-ui/tabs";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/panel/page-header";
@@ -39,15 +20,21 @@ import {
   AlertTriangle,
   AlertCircle,
 } from "lucide-react";
-import { PANEL_NOTIFICATIONS } from "@repo/types";
 import { toast } from "sonner";
+import { apiClient } from "@/lib/api";
 import { StatsGrid, type StatItem } from "@/components/stats";
 
 import { NotificationsTab } from "./organisms/notifications-tab";
 import { PreferencesTab } from "./organisms/preferences-tab";
 
-// Convert readonly array to mutable array for component props
-const notifications = [...PANEL_NOTIFICATIONS];
+type UiNotification = {
+  id: string;
+  title: string;
+  message: string;
+  type: "success" | "warning" | "error" | "info";
+  category: string;
+  time: string;
+};
 
 type NotificationType =
   | "all"
@@ -63,9 +50,70 @@ export function NotificationsPageClient() {
   const [selectedNotifications, setSelectedNotifications] = useState<string[]>(
     [],
   );
-  const [readNotifications, setReadNotifications] = useState<string[]>(
-    notifications.filter((n) => n.read).map((n) => String(n.id)),
-  );
+  const [notifications, setNotifications] = useState<UiNotification[]>([]);
+  const [readNotifications, setReadNotifications] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadNotifications = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await apiClient.get<{
+        success: boolean;
+        data?: { notifications?: Array<unknown> };
+      }>("/api/notifications");
+
+      const backend = Array.isArray(res?.data?.notifications)
+        ? res.data.notifications
+        : [];
+
+      // Backend notification shape:
+      // { id, type, message, read, createdAt, taskId? }
+      const mapped: UiNotification[] = backend.map((n) => {
+        const record = n as {
+          id: string | number;
+          type: string;
+          message: string;
+          read: boolean;
+          createdAt: string | Date;
+        };
+
+        const uiType: UiNotification["type"] =
+          record.type === "TASK_CREATED"
+            ? "success"
+            : record.type === "TASK_UPDATED"
+              ? "info"
+              : "warning";
+
+        const time = new Date(record.createdAt).toLocaleString();
+
+        return {
+          id: String(record.id),
+          title: record.message,
+          message: record.message,
+          type: uiType,
+          category: "Tasks",
+          time,
+        };
+      });
+
+      setNotifications(mapped);
+      setReadNotifications(
+        backend
+          .filter((n) => (n as { read: boolean }).read)
+          .map((n) => String((n as { id: string | number }).id)),
+      );
+    } catch {
+      setNotifications([]);
+      setReadNotifications([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadNotifications();
+  }, [loadNotifications]);
+
   const [preferences, setPreferences] = useState([
     {
       id: "payments",
@@ -116,15 +164,44 @@ export function NotificationsPageClient() {
   ]);
 
   const markAsRead = (id: string) => {
-    if (!readNotifications.includes(id)) {
-      setReadNotifications((prev) => [...prev, id]);
-      toast.success("Marked as read");
-    }
+    if (readNotifications.includes(id)) return;
+
+    // Optimistic update
+    setReadNotifications((prev) => [...prev, id]);
+
+    void apiClient
+      .patch(`/api/notifications/${id}/read`, undefined)
+      .then(() => {
+        toast.success("Marked as read");
+      })
+      .catch(() => {
+        toast.error("Failed to mark as read");
+        // We intentionally keep optimistic UI; next refresh will sync.
+      });
   };
 
   const markAllAsRead = () => {
-    setReadNotifications(notifications.map((n) => String(n.id)));
-    toast.success("All notifications marked as read");
+    const ids = notifications.map((n) => String(n.id));
+    const unreadIds = ids.filter((id) => !readNotifications.includes(id));
+
+    if (unreadIds.length === 0) return;
+
+    // Optimistic update
+    setReadNotifications(ids);
+    toast.success("Marking all as read...");
+
+    void Promise.all(
+      unreadIds.map((id) =>
+        apiClient.patch(`/api/notifications/${id}/read`, undefined),
+      ),
+    )
+      .then(() => {
+        toast.success("All notifications marked as read");
+        void loadNotifications();
+      })
+      .catch(() => {
+        toast.error("Failed to mark all as read");
+      });
   };
 
   const togglePreference = (
@@ -153,7 +230,10 @@ export function NotificationsPageClient() {
           {
             label: "Refresh",
             icon: <RefreshCw className="h-4 w-4" />,
-            onClick: () => toast.success("Refreshed"),
+            onClick: () => {
+              void loadNotifications();
+              toast.success("Refreshed");
+            },
             variant: "outline",
             className: "",
           },

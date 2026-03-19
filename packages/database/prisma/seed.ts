@@ -30,8 +30,45 @@ const prisma = new PrismaClient({
   log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
 });
 
+async function ensureEnumType(
+  prismaClient: PrismaClient,
+  name: string,
+  values: string[],
+) {
+  const valuesSql = values.map((v) => `'${v.replace(/'/g, "''")}'`).join(", ");
+
+  // Create enum type only if it doesn't exist.
+  // Using DO $$ ... $$ because Postgres doesn't support CREATE TYPE IF NOT EXISTS.
+  await prismaClient.$executeRawUnsafe(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1
+        FROM pg_type t
+        JOIN pg_namespace n ON n.oid = t.typnamespace
+        WHERE t.typname = '${name}'
+          AND n.nspname = 'public'
+      ) THEN
+        CREATE TYPE public."${name}" AS ENUM (${valuesSql});
+      END IF;
+    END $$;
+  `);
+}
+
 async function main() {
   console.log("🌱 Starting database seed...\n");
+
+  // TaskFlow + BetterAuth schema relies on a few Postgres enum types.
+  // If migrations weren't applied yet, Prisma will fail with:
+  // "type public.<EnumName> does not exist".
+  // We ensure these enum types exist so the seed can proceed.
+  await ensureEnumType(prisma, "Role", ["USER", "ADMIN", "SUPER_ADMIN"]);
+  await ensureEnumType(prisma, "TaskStatus", ["TODO", "IN_PROGRESS", "DONE"]);
+  await ensureEnumType(prisma, "NotificationType", [
+    "TASK_CREATED",
+    "TASK_UPDATED",
+    "TASK_ASSIGNED",
+  ]);
 
   // ============================================
   // 1. Seed Users
@@ -126,11 +163,11 @@ async function main() {
   console.log("✅ Global settings seeded.\n");
 
   // ============================================
-  // 4. Seed Dummy Tickets
+  // 4. Seed TaskFlow (Tasks + Notifications)
   // ============================================
-  console.log("🎫 Seeding dummy tickets...");
+  console.log("🧩 Seeding TaskFlow tasks and notifications...");
 
-  // Get user IDs
+  // Get user IDs (used as task owners/assignees)
   const superAdminUser = await prisma.user.findUnique({
     where: { email: "superadmin@demo.com" },
   });
@@ -142,158 +179,111 @@ async function main() {
   });
 
   if (!superAdminUser || !adminUser || !regularUser) {
-    console.log("  ⚠️  Users not found, skipping ticket seeding");
+    console.log("  ⚠️  Users not found, skipping tasks/notifications seeding");
   } else {
-    const tickets = [
-      {
-        subject: "Payment issue with subscription",
-        description:
-          "I was charged twice for my monthly subscription. Please help me resolve this issue.",
-        status: "open" as const,
-        priority: "high" as const,
-        userId: regularUser.id,
-        assignedTo: adminUser.id,
-        messages: [
-          {
-            content:
-              "I was charged twice for my monthly subscription. Please help.",
-            isInternal: false,
-          },
-          {
-            content:
-              "We're looking into this issue. Could you please provide your transaction ID?",
-            isInternal: false,
-            userId: adminUser.id,
-          },
-        ],
-      },
-      {
-        subject: "Feature request: Dark mode",
-        description:
-          "Would love to have a dark mode option for the dashboard. It would be great for night-time usage.",
-        status: "closed" as const,
-        priority: "low" as const,
-        userId: regularUser.id,
-        assignedTo: adminUser.id,
-        closedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-        messages: [
-          {
-            content: "Would love to have a dark mode option for the dashboard.",
-            isInternal: false,
-          },
-          {
-            content:
-              "Great news! Dark mode is already available. You can toggle it from your account settings.",
-            isInternal: false,
-            userId: adminUser.id,
-          },
-        ],
-      },
-      {
-        subject: "API integration help",
-        description:
-          "Need assistance with API authentication. Getting 401 errors when trying to authenticate.",
-        status: "in_progress" as const,
-        priority: "medium" as const,
-        userId: regularUser.id,
-        assignedTo: adminUser.id,
-        messages: [
-          {
-            content:
-              "I'm having trouble with API authentication. Getting 401 errors.",
-            isInternal: false,
-          },
-          {
-            content:
-              "Let me check your API key configuration. Can you share your API endpoint?",
-            isInternal: false,
-            userId: adminUser.id,
-          },
-        ],
-      },
-      {
-        subject: "Account verification problem",
-        description:
-          "I'm unable to verify my email address. The verification link seems to be expired.",
-        status: "open" as const,
-        priority: "medium" as const,
-        userId: regularUser.id,
-        messages: [
-          {
-            content:
-              "I'm unable to verify my email address. The verification link seems to be expired.",
-            isInternal: false,
-          },
-        ],
-      },
-      {
-        subject: "Bug report: Dashboard loading slowly",
-        description:
-          "The dashboard takes a very long time to load, especially on mobile devices. This is affecting my productivity.",
-        status: "in_progress" as const,
-        priority: "high" as const,
-        userId: adminUser.id,
-        assignedTo: superAdminUser.id,
-        messages: [
-          {
-            content:
-              "The dashboard takes a very long time to load, especially on mobile devices.",
-            isInternal: false,
-          },
-          {
-            content:
-              "We're investigating performance issues. This might be related to recent updates.",
-            isInternal: true,
-            userId: superAdminUser.id,
-          },
-        ],
-      },
-    ];
-
-    for (const ticketData of tickets) {
-      const {
-        messages,
-        userId: ticketUserId,
-        ...ticketFields
-      } = ticketData as {
-        messages: { content: string; isInternal: boolean; userId?: string }[];
-        userId: string;
-        subject: string;
-        description: string;
-        status: string;
-        priority: string;
-      };
-      const createdTicket = await prisma.ticket.create({
-        data: {
-          ...ticketFields,
-          userId: ticketUserId,
-          createdAt: new Date(
-            Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
-          ), // Random date within last 30 days
+    try {
+      const seedTasks = [
+        {
+          id: "seed-task-1",
+          title: "Welcome Task",
+          description: "This is your first TaskFlow task.",
+          status: "TODO" as const,
+          ownerId: superAdminUser.id,
+          assigneeId: adminUser.id,
         },
-      });
+        {
+          id: "seed-task-2",
+          title: "Ship Realtime Updates",
+          description: "Assign and move this task to IN_PROGRESS.",
+          status: "IN_PROGRESS" as const,
+          ownerId: regularUser.id,
+          assigneeId: adminUser.id,
+        },
+        {
+          id: "seed-task-3",
+          title: "Close the Loop",
+          description: "When done, mark it as DONE.",
+          status: "DONE" as const,
+          ownerId: regularUser.id,
+          assigneeId: null,
+        },
+      ];
 
-      // Create messages for this ticket
-      for (const messageData of messages) {
-        const { userId, ...messageFields } = messageData;
-        await prisma.ticketMessage.create({
-          data: {
-            ticketId: createdTicket.id,
-            userId: userId ?? ticketUserId ?? "",
-            content: messageFields.content,
-            isInternal: messageFields.isInternal ?? false,
-            createdAt: new Date(
-              createdTicket.createdAt.getTime() +
-                Math.random() * 7 * 24 * 60 * 60 * 1000,
-            ), // Random date within 7 days of ticket creation
+      for (const task of seedTasks) {
+        await prisma.task.upsert({
+          where: { id: task.id },
+          update: {
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            ownerId: task.ownerId,
+            assigneeId: task.assigneeId,
+          },
+          create: {
+            id: task.id,
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            ownerId: task.ownerId,
+            assigneeId: task.assigneeId,
           },
         });
       }
 
-      console.log(`  ✓ ${ticketData.subject} (${ticketData.status})`);
-    }
+      const seedNotifications = [
+        {
+          id: "seed-notif-1",
+          type: "TASK_CREATED" as const,
+          message: "Task created: Welcome Task",
+          read: false,
+          userId: superAdminUser.id,
+          taskId: "seed-task-1",
+        },
+        {
+          id: "seed-notif-2",
+          type: "TASK_ASSIGNED" as const,
+          message: "You were assigned a task: Welcome Task",
+          read: false,
+          userId: adminUser.id,
+          taskId: "seed-task-1",
+        },
+        {
+          id: "seed-notif-3",
+          type: "TASK_UPDATED" as const,
+          message: "Task updated: Ship Realtime Updates",
+          read: false,
+          userId: regularUser.id,
+          taskId: "seed-task-2",
+        },
+      ];
 
-    console.log(`✅ ${tickets.length} tickets seeded.\n`);
+      for (const notif of seedNotifications) {
+        await prisma.notification.upsert({
+          where: { id: notif.id },
+          update: {
+            type: notif.type,
+            message: notif.message,
+            read: notif.read,
+            userId: notif.userId,
+            taskId: notif.taskId,
+          },
+          create: {
+            id: notif.id,
+            type: notif.type,
+            message: notif.message,
+            read: notif.read,
+            userId: notif.userId,
+            taskId: notif.taskId,
+          },
+        });
+      }
+
+      console.log(`  ✓ ${seedTasks.length} tasks seeded`);
+      console.log(`  ✓ ${seedNotifications.length} notifications seeded\n`);
+    } catch (e) {
+      const err = e instanceof Error ? e.message : String(e);
+      console.log(`  ⚠️  TaskFlow seeding skipped: ${err}\n`);
+    }
   }
 
   // ============================================
