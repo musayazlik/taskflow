@@ -4,7 +4,6 @@ import { prisma } from "@repo/database";
 import { env } from "@api/lib/env";
 import { logger } from "@api/lib/logger";
 import { sendVerificationEmail, sendPasswordResetEmail } from "../emails";
-import * as customerService from "../services/customer.service";
 
 /**
  * Better Auth Configuration

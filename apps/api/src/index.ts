@@ -12,19 +12,12 @@ import {
   betterAuthPlugin,
   dashboardRoutes,
   usersRoutes,
-  productsRoutes,
   aiModelsRoutes,
-  customersRoutes,
   profileRoutes,
-  subscriptionsRoutes,
-  ordersRoutes,
-  polarWebhookRoutes,
   settingsRoutes,
   mediaRoutes,
   aiRoutes,
   systemRoutes,
-  ticketRoutes,
-  usageRoutes,
   chatHistoryRoutes,
 } from "@api/routes";
 
@@ -471,20 +464,13 @@ Most endpoints require authentication via Bearer token in the Authorization head
         .use(authRoutes)
         .use(dashboardRoutes) // Dashboard stats at /api/dashboard/*
         .use(usersRoutes) // User management at /api/users/*
-        .use(productsRoutes) // Products at /api/products/*
         .use(aiModelsRoutes) // AI Models at /api/ai-models/*
         .use(chatHistoryRoutes) // Chat History at /api/chat-history/*
-        .use(customersRoutes) // Customers at /api/customers/*
         .use(profileRoutes) // Profile at /api/profile/*
-        .use(subscriptionsRoutes) // Subscriptions at /api/subscriptions/*
-        .use(ordersRoutes) // Orders at /api/orders/*
         .use(mediaRoutes) // Media management at /api/media/* (includes file upload)
         .group("/settings", (app) => app.use(settingsRoutes)) // Settings at /api/settings/*
         .use(aiRoutes) // AI routes at /api/ai/* (includes AI management)
         .use(systemRoutes) // System statistics at /api/system/*
-        .use(ticketRoutes) // Support tickets at /api/tickets/*
-        .use(usageRoutes) // Usage statistics at /api/usage/*
-        .use(polarWebhookRoutes), // Webhooks at /webhooks/polar (Polar sends to /api/webhooks/polar)
   )
 
   // Start server

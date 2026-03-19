@@ -1,7 +1,6 @@
 import { Elysia } from "elysia";
 import { auth } from "@api/lib/auth";
 import * as userService from "@api/services/user.service";
-import * as customerService from "@api/services/customer.service";
 import { AppError } from "@api/lib/errors";
 import { logger } from "@api/lib/logger";
 import { env } from "@api/lib/env";
@@ -17,29 +16,9 @@ export const betterAuthPlugin = new Elysia({
   name: "better-auth",
   prefix: "/auth",
 })
-  // Sign up with email - creates Polar customer after successful registration
+  // Sign up with email
   .post("/sign-up/email", async (ctx) => {
     const response = await auth.handler(ctx.request);
-
-    if (response instanceof Response) {
-      const cloned = response.clone();
-      try {
-        const data = await cloned.json();
-        if (data?.user?.id && data?.user?.email) {
-          void customerService
-            .createPolarCustomerForUser(
-              data.user.id,
-              data.user.email,
-              data.user.name || undefined,
-            )
-            .catch((error) => {
-              logger.error({ err: error, userId: data.user.id }, "Failed to create Polar customer after signup");
-            });
-        }
-      } catch {
-        // Ignore parse errors
-      }
-    }
 
     return response;
   })
