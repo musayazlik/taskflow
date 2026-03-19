@@ -1,7 +1,6 @@
 import {
   Header,
   Hero,
-  LogoCloud,
   Features,
   HowItWorks,
   Stats,
@@ -23,9 +22,6 @@ export default function Home() {
       <main>
         {/* Hero Section */}
         <Hero />
-
-        {/* Logo Cloud */}
-        <LogoCloud />
 
         {/* Features Section */}
         <Features />

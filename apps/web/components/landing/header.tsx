@@ -9,6 +9,7 @@ import { UserDropdown } from "@/components/user-dropdown";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
+import { LANDING_HEADER_NAV_LINKS } from "@/constant/landing-content";
 
 interface User {
   id: string;
@@ -36,14 +37,6 @@ export function Header({ user: initialUser }: HeaderProps) {
         image: session.user.image,
       }
     : initialUser;
-
-  const navLinks = [
-    { href: "#features", label: "Features" },
-    { href: "#how-it-works", label: "How It Works" },
-    { href: "#testimonials", label: "Testimonials" },
-    { href: "#pricing", label: "Pricing" },
-    { href: "#faq", label: "FAQ" },
-  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,18 +78,18 @@ export function Header({ user: initialUser }: HeaderProps) {
           <Link href="/" className="flex items-center gap-4 group">
             <Image
               src={"/logo.svg"}
-              alt="TurboStack Logo"
+              alt="Taskflow Logo"
               width={36}
               height={36}
             />
             <span className="text-xl font-bold bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              TurboStack
+              Taskflow
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {LANDING_HEADER_NAV_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -148,7 +141,7 @@ export function Header({ user: initialUser }: HeaderProps) {
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-border pt-4 animate-in slide-in-from-top-4 duration-200">
             <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
+              {LANDING_HEADER_NAV_LINKS.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}

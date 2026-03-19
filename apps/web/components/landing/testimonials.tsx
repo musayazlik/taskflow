@@ -5,59 +5,15 @@ import { motion } from "framer-motion";
 import quoteIcon from "@iconify-icons/lucide/quote";
 import starIcon from "@iconify-icons/lucide/star";
 import { Marquee } from "@/components/marquee";
+import { LANDING_TESTIMONIALS } from "@/constant/landing-content";
 
-const testimonials = [
-  {
-    quote:
-      "TurboStack saved us weeks of setup time. The monorepo structure is exactly what we needed for our SaaS.",
-    author: "Sarah Chen",
-    role: "CTO at TechStart",
-    avatar: "SC",
-  },
-  {
-    quote:
-      "Finally, a starter kit that takes architecture seriously. The type safety across frontend and backend is a game changer.",
-    author: "Marcus Johnson",
-    role: "Senior Developer",
-    avatar: "MJ",
-  },
-  {
-    quote:
-      "We went from idea to MVP in 2 weeks. The Polar integration and auth system worked out of the box.",
-    author: "Emily Rodriguez",
-    role: "Founder at LaunchPad",
-    avatar: "ER",
-  },
-  {
-    quote:
-      "The AI integration with OpenRouter was surprisingly easy to set up. Now we have AI features in our product.",
-    author: "David Kim",
-    role: "Lead Engineer",
-    avatar: "DK",
-  },
-  {
-    quote:
-      "Best investment for our startup. The time saved on boilerplate alone paid for itself in the first week.",
-    author: "Lisa Thompson",
-    role: "Co-founder at SaaSify",
-    avatar: "LT",
-  },
-  {
-    quote:
-      "Clean code, great documentation, and amazing support. TurboStack is now our go-to for new projects.",
-    author: "Alex Martinez",
-    role: "Full Stack Developer",
-    avatar: "AM",
-  },
-];
-
-const firstRow = testimonials.slice(0, testimonials.length / 2);
-const secondRow = testimonials.slice(testimonials.length / 2);
+const firstRow = LANDING_TESTIMONIALS.slice(0, LANDING_TESTIMONIALS.length / 2);
+const secondRow = LANDING_TESTIMONIALS.slice(LANDING_TESTIMONIALS.length / 2);
 
 function TestimonialCard({
   testimonial,
 }: {
-  testimonial: (typeof testimonials)[0];
+  testimonial: (typeof LANDING_TESTIMONIALS)[0];
 }) {
   return (
     <div className="w-[350px] p-6 mx-4 rounded-2xl bg-card border border-border hover:border-primary/30 transition-all">
@@ -113,7 +69,7 @@ export function Testimonials() {
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              See what others are saying about TurboStack.
+              See how teams use Taskflow to keep work moving and everyone aligned.
             </p>
           </motion.div>
         </div>

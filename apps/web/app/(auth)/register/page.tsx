@@ -160,7 +160,7 @@ export default function RegisterPage() {
   return (
     <AuthCard
       title="Create an account"
-      description="Get started with TurboStack today"
+      description="Get started with Taskflow today"
       footer={
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}

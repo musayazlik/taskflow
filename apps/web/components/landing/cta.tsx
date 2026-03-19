@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import arrowRightIcon from "@iconify-icons/lucide/arrow-right";
 import rocketIcon from "@iconify-icons/lucide/rocket";
 import githubIcon from "@iconify-icons/lucide/github";
+import { TASKFLOW_GITHUB_URL } from "@/constant/landing";
 
 export function CTA() {
   return (
@@ -31,13 +32,12 @@ export function CTA() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Ready to{" "}
               <span className="bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                ship faster
+                keep every task on track
               </span>
               ?
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              Join hundreds of developers building the next generation of SaaS
-              applications with TurboStack.
+              Create your first workspace in minutes and start collaborating with your team in Taskflow.
             </p>
 
             {/* CTAs */}
@@ -53,13 +53,13 @@ export function CTA() {
                 />
               </Link>
               <a
-                href="https://github.com/turbostack"
+                href={TASKFLOW_GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-8 py-4 rounded-full bg-card border-2 border-border hover:border-primary/50 font-semibold text-lg transition-all"
               >
                 <Iconify icon={githubIcon} className="w-5 h-5" />
-                View on GitHub
+                GitHub
               </a>
             </div>
 

@@ -21,9 +21,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "TurboStack",
+  title: "Taskflow – Real-time task management",
   description:
-    "Modern fullstack monorepo starter with Next.js, Elysia.js, and more",
+    "Taskflow helps teams manage tasks, collaborate in real time, and keep projects on track in a single workspace.",
 };
 
 export default function RootLayout({

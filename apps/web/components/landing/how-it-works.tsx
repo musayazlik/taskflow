@@ -2,37 +2,9 @@
 
 import { Iconify } from "@/components/iconify";
 import { motion } from "framer-motion";
-import downloadIcon from "@iconify-icons/lucide/download";
-import settingsIcon from "@iconify-icons/lucide/settings";
 import rocketIcon from "@iconify-icons/lucide/rocket";
 import checkIcon from "@iconify-icons/lucide/check";
-
-const steps = [
-  {
-    number: "01",
-    title: "Clone & Install",
-    description:
-      "Clone the repository and install dependencies with a single command. Everything is pre-configured.",
-    icon: downloadIcon,
-    checks: ["Git clone", "bun install", "Environment setup"],
-  },
-  {
-    number: "02",
-    title: "Configure",
-    description:
-      "Set up your environment variables and database. Prisma schema is ready to go.",
-    icon: settingsIcon,
-    checks: ["Database connection", "API keys", "Email config"],
-  },
-  {
-    number: "03",
-    title: "Ship",
-    description:
-      "Start the dev server and begin building your product. Deploy to Vercel, Railway, or Docker.",
-    icon: rocketIcon,
-    checks: ["bun run dev", "Production build", "Deploy anywhere"],
-  },
-];
+import { LANDING_HOW_IT_WORKS_STEPS } from "@/constant/landing-content";
 
 export function HowItWorks() {
   return (
@@ -51,22 +23,21 @@ export function HowItWorks() {
               Quick Start
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-              From zero to{" "}
+              From idea to{" "}
               <span className="bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                production
+                done
               </span>{" "}
               in minutes
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              No complex setup. No configuration hell. Just clone, configure,
-              and start building.
+              No complex setup or onboarding playbooks. Create a workspace, add tasks, and see work move forward in real time.
             </p>
           </motion.div>
         </div>
 
         {/* Steps */}
         <div className="grid md:grid-cols-3 gap-8">
-          {steps.map((step, index) => (
+          {LANDING_HOW_IT_WORKS_STEPS.map((step, index) => (
             <motion.div
               key={step.number}
               initial={{ opacity: 0, y: 20 }}
@@ -76,7 +47,7 @@ export function HowItWorks() {
               className="relative"
             >
               {/* Connection Line */}
-              {index < steps.length - 1 && (
+              {index < LANDING_HOW_IT_WORKS_STEPS.length - 1 && (
                 <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-linear-to-r from-primary/50 to-transparent" />
               )}
 
@@ -130,29 +101,18 @@ export function HowItWorks() {
                 <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
               </div>
               <span className="text-xs text-muted-foreground font-mono ml-2">
-                terminal
+                activity
               </span>
             </div>
-            <div className="p-6 font-mono text-sm">
+            <div className="p-6 font-mono text-sm text-muted-foreground space-y-2">
               <div className="text-green-400">
-                $ git clone https://github.com/turbostack/turbostack.git
+                [10:02] You created workspace <span className="text-white">Product Team</span>
               </div>
-              <div className="text-muted-foreground mt-2">
-                Cloning into 'turbostack'...
-              </div>
+              <div>[10:05] You added 12 tasks to <span className="text-white">Q2 Launch</span></div>
+              <div>[10:08] Alex moved <span className="text-white">Design login flow</span> → In Progress</div>
+              <div>[10:15] Maria completed <span className="text-white">Set up notifications</span></div>
               <div className="text-green-400 mt-4">
-                $ cd turbostack && bun install
-              </div>
-              <div className="text-muted-foreground mt-2">
-                ✓ Installed 127 packages
-              </div>
-              <div className="text-green-400 mt-4">$ bun run dev</div>
-              <div className="text-muted-foreground mt-2">
-                <div>➜ Web: http://localhost:4100</div>
-                <div>➜ API: http://localhost:4101</div>
-              </div>
-              <div className="text-green-400 mt-4">
-                ✓ Ready! Start building your next great app.
+                ✓ Everyone is aligned. Nothing falls through the cracks.
               </div>
             </div>
           </div>

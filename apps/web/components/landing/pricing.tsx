@@ -5,70 +5,7 @@ import { Iconify } from "@/components/iconify";
 import { motion } from "framer-motion";
 import checkIcon from "@iconify-icons/lucide/check";
 import starIcon from "@iconify-icons/lucide/star";
-import sparklesIcon from "@iconify-icons/lucide/sparkles";
-import usersIcon from "@iconify-icons/lucide/users";
-
-const plans = [
-  {
-    name: "Free",
-    description: "Perfect for learning and prototyping",
-    price: "$0",
-    period: "forever",
-    icon: sparklesIcon,
-    features: [
-      "Basic project structure",
-      "TypeScript configuration",
-      "Minimal auth example",
-      "ESLint + Prettier setup",
-      "Community support",
-    ],
-    cta: "Get Started",
-    href: "/register",
-    popular: false,
-  },
-  {
-    name: "Pro",
-    description: "For serious SaaS applications",
-    price: "$149",
-    originalPrice: "$299",
-    period: "one-time",
-    icon: starIcon,
-    features: [
-      "Everything in Free",
-      "Production-ready auth",
-      "Polar payments integration",
-      "AI integration (OpenRouter)",
-      "Admin dashboard",
-      "Email templates (Resend)",
-      "Role-based access control",
-      "API rate limiting",
-      "Priority support",
-      "Lifetime updates",
-    ],
-    cta: "Get Pro",
-    href: "#",
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    description: "For teams and agencies",
-    price: "Custom",
-    period: "",
-    icon: usersIcon,
-    features: [
-      "Everything in Pro",
-      "Custom architecture review",
-      "Team training session",
-      "Dedicated support channel",
-      "SLA guarantee",
-      "White-label license",
-      "Custom integrations",
-    ],
-    cta: "Contact Sales",
-    href: "/contact",
-    popular: false,
-  },
-];
+import { LANDING_PRICING_PLANS } from "@/constant/landing-content";
 
 export function Pricing() {
   return (
@@ -102,7 +39,7 @@ export function Pricing() {
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
-          {plans.map((plan, index) => (
+          {LANDING_PRICING_PLANS.map((plan, index) => (
             <motion.div
               key={plan.name}
               initial={{ opacity: 0, y: 20 }}
