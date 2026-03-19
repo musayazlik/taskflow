@@ -7,12 +7,27 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+    timeout-minutes: 30
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.1.45"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Turbo check-types
+        run: bun run check-types
+
+      - name: Turbo build
+        run: bun run build
+
+      - name: Build Docker images (web + api)
+        run: docker compose build web api
