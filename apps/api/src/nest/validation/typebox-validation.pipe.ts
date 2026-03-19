@@ -29,7 +29,7 @@ export class TypeBoxValidationPipe implements PipeTransform {
     // Try to convert typical TypeBox required-property error messages to the
     // Elysia-style format: "'field' field is required".
     const requiredMatch = error.message.match(
-      /required property\\s+([A-Za-z0-9_\\.-]+)/,
+      /required property\s+([A-Za-z0-9_\\.-]+)/,
     );
 
     if (requiredMatch?.[1]) {
