@@ -46,7 +46,7 @@ export function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              Real-time collaboration for modern teams
+              Real-time task management for teams
             </motion.div>
 
             {/* Main Headline */}
@@ -56,13 +56,13 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-center font-bold tracking-tight mb-6 leading-[1.1]"
             >
-              <span className="text-foreground">Stay on top of every</span>
+              <span className="text-foreground">Real-time task</span>
               <br />
               <AuroraText
                 colors={["#8b5cf6", "#ec4899", "#06b6d4", "#a855f7"]}
                 speed={1.5}
               >
-                task in real time
+                collaboration that scales
               </AuroraText>
             </motion.h1>
 
@@ -73,7 +73,7 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg md:text-xl text-center text-muted-foreground max-w-2xl mb-8 leading-relaxed"
             >
-              Taskflow is a real-time task management platform that helps teams assign work, track progress, and stay aligned without endless status meetings.
+              Assign tasks, track progress, and collaborate with your team in one place. Stay aligned with live updates, clear ownership, and fewer status meetings.
             </motion.p>
 
             {/* Avatar Circles + Social Proof */}
