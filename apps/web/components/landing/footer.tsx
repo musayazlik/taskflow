@@ -27,11 +27,8 @@ const footerLinks = {
   ],
 };
 
-const socialLinks = [
-  { icon: githubIcon, href: "https://github.com/turbostack", label: "GitHub" },
-  { icon: twitterIcon, href: "https://twitter.com/turbostack", label: "Twitter" },
-  { icon: messageCircleIcon, href: "https://discord.gg/turbostack", label: "Discord" },
-];
+const socialLinks: { icon: typeof githubIcon; href: string; label: string }[] =
+  [];
 
 export function Footer() {
   return (
@@ -41,12 +38,11 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Image src={"/logo.svg"} alt="TurboStack Logo" width={36} height={36} />
-              <span className="text-lg font-bold">TurboStack</span>
+              <Image src={"/logo.svg"} alt="Taskflow Logo" width={36} height={36} />
+              <span className="text-lg font-bold">Taskflow</span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
-              Production-ready monorepo starter for building modern SaaS
-              applications.
+              Real-time task management to keep your team aligned and projects on track.
             </p>
             <div className="flex items-center gap-4">
               {socialLinks.map((social) => (
@@ -117,10 +113,10 @@ export function Footer() {
         {/* Bottom */}
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} TurboStack. All rights reserved.
+            © {new Date().getFullYear()} Taskflow. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
-            Built with Next.js, Elysia.js & ❤️
+            Built for fast, focused teamwork & ❤️
           </p>
         </div>
       </div>

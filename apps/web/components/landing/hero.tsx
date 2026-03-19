@@ -35,10 +35,10 @@ const avatars = [
 ];
 
 const features = [
-  "Production-ready auth",
-  "Payments integrated",
-  "AI-powered",
-  "Type-safe",
+  "Real-time task updates",
+  "Collaborative workspaces",
+  "Role-based access",
+  "Notifications that keep everyone aligned",
 ];
 
 export function Hero() {
@@ -76,7 +76,7 @@ export function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              Now with AI integration & Polar payments
+              Real-time collaboration for modern teams
             </motion.div>
 
             {/* Main Headline */}
@@ -86,13 +86,13 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-center font-bold tracking-tight mb-6 leading-[1.1]"
             >
-              <span className="text-foreground">Build SaaS faster with</span>
+              <span className="text-foreground">Stay on top of every</span>
               <br />
               <AuroraText
                 colors={["#8b5cf6", "#ec4899", "#06b6d4", "#a855f7"]}
                 speed={1.5}
               >
-                modern architecture
+                task in real time
               </AuroraText>
             </motion.h1>
 
@@ -103,8 +103,7 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg md:text-xl text-center text-muted-foreground max-w-2xl mb-8 leading-relaxed"
             >
-              Production-ready monorepo starter with Next.js, Elysia.js, and
-              Prisma. Skip the boilerplate and focus on building your product.
+              Taskflow is a real-time task management platform that helps teams assign work, track progress, and stay aligned without endless status meetings.
             </motion.p>
 
             {/* Avatar Circles + Social Proof */}
@@ -161,21 +160,12 @@ export function Hero() {
                 href="/register"
                 className="group relative flex items-center gap-2 px-8 py-4 rounded-full bg-linear-to-r from-primary to-purple-600 text-white font-semibold text-lg hover:opacity-90 transition-all hover:scale-105 overflow-hidden"
               >
-                Start Building Free
+                Start using Taskflow
                 <Iconify
                   icon={arrowRightIcon}
                   className="w-5 h-5 group-hover:translate-x-1 transition-transform"
                 />
               </Link>
-              <a
-                href="https://github.com/turbostack"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-8 py-4 rounded-full bg-card border-2 border-border hover:border-primary/50 font-semibold text-lg transition-all"
-              >
-                <Iconify icon={githubIcon} className="w-5 h-5" />
-                View on GitHub
-              </a>
             </motion.div>
           </div>
         </div>

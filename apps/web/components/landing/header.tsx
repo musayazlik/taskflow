@@ -85,12 +85,12 @@ export function Header({ user: initialUser }: HeaderProps) {
           <Link href="/" className="flex items-center gap-4 group">
             <Image
               src={"/logo.svg"}
-              alt="TurboStack Logo"
+              alt="Taskflow Logo"
               width={36}
               height={36}
             />
             <span className="text-xl font-bold bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              TurboStack
+              Taskflow
             </span>
           </Link>
 

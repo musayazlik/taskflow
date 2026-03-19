@@ -12,18 +12,13 @@ const logos = [
   { name: "Docker", icon: "logos:docker-icon" },
   { name: "Redis", icon: "logos:redis" },
   { name: "GitHub", icon: "logos:github-icon" },
-  { name: "Elysia", icon: "simple-icons:elysia" },
   { name: "Bun", icon: "simple-icons:bun" },
 ];
 
 export function LogoCloud() {
   return (
     <section className="py-16 border-y border-border/50 bg-muted/20 relative overflow-hidden">
-      <div className="mx-auto max-w-7xl px-6 mb-8">
-        <p className="text-center text-sm text-muted-foreground uppercase tracking-wider font-medium">
-          Powered by industry-leading technologies
-        </p>
-      </div>
+      <div className="mx-auto max-w-7xl px-6 mb-8" />
 
       {/* First Marquee Row */}
       <Marquee pauseOnHover className="[--duration:30s]">

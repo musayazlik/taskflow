@@ -4,63 +4,62 @@ import { Iconify } from "@/components/iconify";
 import { motion } from "framer-motion";
 import zapIcon from "@iconify-icons/lucide/zap";
 import shieldIcon from "@iconify-icons/lucide/shield";
-import layersIcon from "@iconify-icons/lucide/layers";
-import refreshCwIcon from "@iconify-icons/lucide/refresh-cw";
+import usersIcon from "@iconify-icons/lucide/users";
+import bellIcon from "@iconify-icons/lucide/bell";
 import code2Icon from "@iconify-icons/lucide/code-2";
-import rocketIcon from "@iconify-icons/lucide/rocket";
-import botIcon from "@iconify-icons/lucide/bot";
-import creditCardIcon from "@iconify-icons/lucide/credit-card";
-import mailIcon from "@iconify-icons/lucide/mail";
+import barChartIcon from "@iconify-icons/lucide/bar-chart-3";
+import checkSquareIcon from "@iconify-icons/lucide/check-square";
+import lockIcon from "@iconify-icons/lucide/lock";
 import { CardSpotlight } from "@/components/card-spotlight";
 
 const features = [
   {
     icon: zapIcon,
-    title: "Lightning Fast DX",
+    title: "Real-time updates",
     description:
-      "Hot reload, instant feedback, and optimized builds with Turborepo caching for rapid development.",
+      "See task changes, assignments, and status updates instantly across your entire workspace.",
   },
   {
     icon: shieldIcon,
-    title: "Type-Safe End-to-End",
+    title: "Role-based access",
     description:
-      "Full TypeScript support from frontend to backend with shared types across the entire stack.",
+      "Keep sensitive work protected with clear roles and permissions for every team member.",
   },
   {
-    icon: layersIcon,
-    title: "Monorepo Architecture",
+    icon: usersIcon,
+    title: "Team workspaces",
     description:
-      "Shared packages for database, validations, types, and UI components. One codebase to rule them all.",
+      "Organize tasks by team or project so everyone knows exactly where to focus.",
   },
   {
-    icon: botIcon,
-    title: "AI Integration Ready",
+    icon: bellIcon,
+    title: "Smart notifications",
     description:
-      "Built-in OpenRouter integration for AI features. Add chat, content generation, or image processing.",
+      "Keep people informed without drowning them in noise, with focused alerts that matter.",
   },
   {
-    icon: creditCardIcon,
-    title: "Payments Built-in",
+    icon: barChartIcon,
+    title: "Progress visibility",
     description:
-      "Polar.sh integration with webhooks, subscriptions, and checkout flows ready to monetize.",
+      "Track what is on track, blocked, or at risk with clear overviews of work in motion.",
   },
   {
-    icon: mailIcon,
-    title: "Email Infrastructure",
+    icon: checkSquareIcon,
+    title: "Actionable task views",
     description:
-      "Resend integration with React Email templates for transactional and marketing emails.",
+      "Filter by assignee, status, or priority so everyone sees the tasks that matter to them.",
   },
   {
-    icon: refreshCwIcon,
-    title: "Auto API Documentation",
+    icon: lockIcon,
+    title: "Secure by design",
     description:
-      "Elysia.js backend with auto-generated OpenAPI/Swagger docs. Your API documents itself.",
+      "Built with modern security best practices to keep your workspace and data safe.",
   },
   {
-    icon: rocketIcon,
-    title: "Production Ready",
+    icon: zapIcon,
+    title: "Fast to adopt",
     description:
-      "Best practices, rate limiting, error handling, and security headers included from day one.",
+      "Onboard your team quickly with an interface that feels familiar but is optimized for focus.",
   },
 ];
 
@@ -83,12 +82,11 @@ export function Features() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Everything you need to{" "}
               <span className="bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                ship faster
+                manage work together
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A complete toolkit for building modern SaaS applications. No more
-              piecing together different tools and services.
+              Taskflow keeps tasks, owners, and context in one place so teams can move quickly without losing clarity.
             </p>
           </motion.div>
         </div>

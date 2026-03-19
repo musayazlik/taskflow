@@ -9,44 +9,44 @@ import messageCircleIcon from "@iconify-icons/lucide/message-circle";
 
 const faqs = [
   {
-    question: "What is TurboStack?",
+    question: "What is Taskflow?",
     answer:
-      "TurboStack is a production-ready monorepo starter kit for building modern SaaS applications. It includes Next.js frontend, Elysia.js backend, Prisma ORM, authentication, payments, and AI integration - all pre-configured and ready to use.",
+      "Taskflow is a real-time task management platform that helps teams organize work, assign owners, and track progress in a single place.",
   },
   {
     question: "Do I need to know TypeScript?",
     answer:
-      "While TurboStack is built with TypeScript for type safety, you can use it with basic JavaScript knowledge. However, we recommend learning TypeScript as it helps catch errors early and improves developer experience.",
+      "No. Taskflow is a web application you access in your browser. If you integrate it with your own systems, TypeScript is helpful but not required.",
   },
   {
-    question: "Can I use TurboStack for commercial projects?",
+    question: "Can I use Taskflow with my team?",
     answer:
-      "Yes! Both Free and Pro plans allow commercial use. The Free plan is perfect for learning and small projects, while Pro includes features needed for production SaaS applications.",
+      "Yes. You can invite your teammates to a shared workspace, assign tasks to each other, and control access with roles and permissions.",
   },
   {
-    question: "What is included in the Pro version?",
+    question: "What is included in the Pro plan?",
     answer:
-      "Pro includes everything in Free plus production-ready authentication, Polar payments integration, AI integration with OpenRouter, admin dashboard, email templates with Resend, role-based access control, API rate limiting, and priority support.",
+      "Pro includes everything in Free plus unlimited projects and workspaces, advanced filters and views, role-based access control, activity history, and priority support.",
   },
   {
     question: "How do I get support?",
     answer:
-      "Free users get community support through Discord. Pro users receive priority email support with faster response times. Enterprise customers get a dedicated support channel and SLA guarantee.",
+      "Free users get community support. Paid plans include email support with faster response times, and Enterprise customers get a dedicated success manager.",
   },
   {
     question: "Can I get a refund?",
     answer:
-      "Yes, we offer a 14-day refund guarantee. If you're not satisfied with TurboStack Pro, contact us within 14 days of purchase for a full refund.",
+      "Yes, we offer a 14-day refund window for paid plans. If Taskflow is not a fit, you can contact us within 14 days of purchase.",
   },
   {
     question: "Do I get updates?",
     answer:
-      "Absolutely! All purchases include lifetime access to updates. When we add new features, fix bugs, or improve the codebase, you'll get access to everything at no additional cost.",
+      "Absolutely. We continuously improve Taskflow and roll out new features. You automatically get access to updates as they are released.",
   },
   {
-    question: "What technologies are used?",
+    question: "Is my data secure?",
     answer:
-      "TurboStack uses Next.js 16, React 19, TypeScript, Tailwind CSS v4, shadcn/ui, Elysia.js, Prisma, PostgreSQL, and Bun. It also integrates with Polar for payments, Resend for emails, and OpenRouter for AI features.",
+      "Taskflow is built with modern security best practices. We use encryption in transit, role-based access control, and follow strict security guidelines to keep your data safe.",
   },
 ];
 

@@ -9,42 +9,42 @@ import { Marquee } from "@/components/marquee";
 const testimonials = [
   {
     quote:
-      "TurboStack saved us weeks of setup time. The monorepo structure is exactly what we needed for our SaaS.",
+      "Taskflow finally gave us one place to see who is working on what. Standups are shorter and far more focused.",
     author: "Sarah Chen",
     role: "CTO at TechStart",
     avatar: "SC",
   },
   {
     quote:
-      "Finally, a starter kit that takes architecture seriously. The type safety across frontend and backend is a game changer.",
+      "Our team used to live in spreadsheets and chat threads. With Taskflow, every task has a clear owner and status.",
     author: "Marcus Johnson",
     role: "Senior Developer",
     avatar: "MJ",
   },
   {
     quote:
-      "We went from idea to MVP in 2 weeks. The Polar integration and auth system worked out of the box.",
+      "We onboarded the whole team in one afternoon. Everyone knew exactly what to do next and what was blocked.",
     author: "Emily Rodriguez",
     role: "Founder at LaunchPad",
     avatar: "ER",
   },
   {
     quote:
-      "The AI integration with OpenRouter was surprisingly easy to set up. Now we have AI features in our product.",
+      "Real-time updates in Taskflow mean I do not have to chase people for status. I just open the board and see reality.",
     author: "David Kim",
     role: "Lead Engineer",
     avatar: "DK",
   },
   {
     quote:
-      "Best investment for our startup. The time saved on boilerplate alone paid for itself in the first week.",
+      "Best investment for our startup. The clarity around priorities and responsibilities paid off in the first week.",
     author: "Lisa Thompson",
     role: "Co-founder at SaaSify",
     avatar: "LT",
   },
   {
     quote:
-      "Clean code, great documentation, and amazing support. TurboStack is now our go-to for new projects.",
+      "Simple, fast, and opinionated in the right ways. Taskflow is now where all of our projects start.",
     author: "Alex Martinez",
     role: "Full Stack Developer",
     avatar: "AM",
@@ -113,7 +113,7 @@ export function Testimonials() {
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              See what others are saying about TurboStack.
+              See how teams use Taskflow to keep work moving and everyone aligned.
             </p>
           </motion.div>
         </div>
