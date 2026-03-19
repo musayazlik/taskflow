@@ -5,66 +5,7 @@ import { Iconify } from "@/components/iconify";
 import { motion } from "framer-motion";
 import checkIcon from "@iconify-icons/lucide/check";
 import starIcon from "@iconify-icons/lucide/star";
-import sparklesIcon from "@iconify-icons/lucide/sparkles";
-import usersIcon from "@iconify-icons/lucide/users";
-
-const plans = [
-  {
-    name: "Free",
-    description: "Perfect for trying Taskflow with a small team",
-    price: "$0",
-    period: "forever",
-    icon: sparklesIcon,
-    features: [
-      "Up to 1 workspace",
-      "Basic task lists and statuses",
-      "Assignees and due dates",
-      "Email notifications",
-      "Community support",
-    ],
-    cta: "Get Started",
-    href: "/register",
-    popular: false,
-  },
-  {
-    name: "Pro",
-    description: "For growing teams that need clarity at scale",
-    price: "$149",
-    originalPrice: "$299",
-    period: "one-time",
-    icon: starIcon,
-    features: [
-      "Everything in Free",
-      "Unlimited projects and workspaces",
-      "Advanced filters and saved views",
-      "Role-based access control",
-      "Team activity history",
-      "Priority support",
-      "Custom fields and tags",
-    ],
-    cta: "Get Pro",
-    href: "#",
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    description: "For organizations with multiple teams and strict requirements",
-    price: "Custom",
-    period: "",
-    icon: usersIcon,
-    features: [
-      "Everything in Pro",
-      "Multiple workspaces and teams",
-      "Single sign-on (SSO) ready",
-      "Security and compliance reviews",
-      "Dedicated success manager",
-      "Custom onboarding and training",
-    ],
-    cta: "Contact Sales",
-    href: "/contact",
-    popular: false,
-  },
-];
+import { LANDING_PRICING_PLANS } from "@/constant/landing-content";
 
 export function Pricing() {
   return (
@@ -98,7 +39,7 @@ export function Pricing() {
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
-          {plans.map((plan, index) => (
+          {LANDING_PRICING_PLANS.map((plan, index) => (
             <motion.div
               key={plan.name}
               initial={{ opacity: 0, y: 20 }}

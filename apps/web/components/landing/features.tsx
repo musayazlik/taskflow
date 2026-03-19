@@ -2,66 +2,9 @@
 
 import { Iconify } from "@/components/iconify";
 import { motion } from "framer-motion";
-import zapIcon from "@iconify-icons/lucide/zap";
-import shieldIcon from "@iconify-icons/lucide/shield";
-import usersIcon from "@iconify-icons/lucide/users";
-import bellIcon from "@iconify-icons/lucide/bell";
 import code2Icon from "@iconify-icons/lucide/code-2";
-import barChartIcon from "@iconify-icons/lucide/bar-chart-3";
-import checkSquareIcon from "@iconify-icons/lucide/check-square";
-import lockIcon from "@iconify-icons/lucide/lock";
 import { CardSpotlight } from "@/components/card-spotlight";
-
-const features = [
-  {
-    icon: zapIcon,
-    title: "Real-time updates",
-    description:
-      "See task changes, assignments, and status updates instantly across your entire workspace.",
-  },
-  {
-    icon: shieldIcon,
-    title: "Role-based access",
-    description:
-      "Keep sensitive work protected with clear roles and permissions for every team member.",
-  },
-  {
-    icon: usersIcon,
-    title: "Team workspaces",
-    description:
-      "Organize tasks by team or project so everyone knows exactly where to focus.",
-  },
-  {
-    icon: bellIcon,
-    title: "Smart notifications",
-    description:
-      "Keep people informed without drowning them in noise, with focused alerts that matter.",
-  },
-  {
-    icon: barChartIcon,
-    title: "Progress visibility",
-    description:
-      "Track what is on track, blocked, or at risk with clear overviews of work in motion.",
-  },
-  {
-    icon: checkSquareIcon,
-    title: "Actionable task views",
-    description:
-      "Filter by assignee, status, or priority so everyone sees the tasks that matter to them.",
-  },
-  {
-    icon: lockIcon,
-    title: "Secure by design",
-    description:
-      "Built with modern security best practices to keep your workspace and data safe.",
-  },
-  {
-    icon: zapIcon,
-    title: "Fast to adopt",
-    description:
-      "Onboard your team quickly with an interface that feels familiar but is optimized for focus.",
-  },
-];
+import { LANDING_FEATURES } from "@/constant/landing-content";
 
 export function Features() {
   return (
@@ -93,7 +36,7 @@ export function Features() {
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
+          {LANDING_FEATURES.map((feature, index) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}

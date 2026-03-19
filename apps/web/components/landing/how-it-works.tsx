@@ -2,37 +2,9 @@
 
 import { Iconify } from "@/components/iconify";
 import { motion } from "framer-motion";
-import downloadIcon from "@iconify-icons/lucide/download";
-import settingsIcon from "@iconify-icons/lucide/settings";
 import rocketIcon from "@iconify-icons/lucide/rocket";
 import checkIcon from "@iconify-icons/lucide/check";
-
-const steps = [
-  {
-    number: "01",
-    title: "Create your workspace",
-    description:
-      "Set up a Taskflow workspace for your team and organize projects by product, squad, or client.",
-    icon: downloadIcon,
-    checks: ["Create workspace", "Define projects", "Invite first members"],
-  },
-  {
-    number: "02",
-    title: "Add tasks & owners",
-    description:
-      "Break work into clear tasks, assign owners, and set priorities so everyone knows what to do next.",
-    icon: settingsIcon,
-    checks: ["Create task lists", "Assign owners", "Set priorities"],
-  },
-  {
-    number: "03",
-    title: "Track progress in real time",
-    description:
-      "Watch work move from backlog to done with live updates, filters, and views that fit your process.",
-    icon: rocketIcon,
-    checks: ["Follow status changes", "Review workloads", "Share updates"],
-  },
-];
+import { LANDING_HOW_IT_WORKS_STEPS } from "@/constant/landing-content";
 
 export function HowItWorks() {
   return (
@@ -65,7 +37,7 @@ export function HowItWorks() {
 
         {/* Steps */}
         <div className="grid md:grid-cols-3 gap-8">
-          {steps.map((step, index) => (
+          {LANDING_HOW_IT_WORKS_STEPS.map((step, index) => (
             <motion.div
               key={step.number}
               initial={{ opacity: 0, y: 20 }}
@@ -75,7 +47,7 @@ export function HowItWorks() {
               className="relative"
             >
               {/* Connection Line */}
-              {index < steps.length - 1 && (
+              {index < LANDING_HOW_IT_WORKS_STEPS.length - 1 && (
                 <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-linear-to-r from-primary/50 to-transparent" />
               )}
 

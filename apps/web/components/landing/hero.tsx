@@ -10,36 +10,7 @@ import { Particles } from "@/components/particles";
 import { AuroraText } from "@/components/aurora-text";
 import { AvatarCircles } from "@/components/avatar-circles";
 import { BorderBeam } from "@/components/border-beam";
-
-const avatars = [
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/16860528",
-    profileUrl: "https://github.com/dillionverma",
-  },
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/20110627",
-    profileUrl: "https://github.com/tomonari",
-  },
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/124599",
-    profileUrl: "https://github.com/zenorocha",
-  },
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/1011721",
-    profileUrl: "https://github.com/peduarte",
-  },
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/1500684",
-    profileUrl: "https://github.com/kentcdodds",
-  },
-];
-
-const features = [
-  "Real-time task updates",
-  "Collaborative workspaces",
-  "Role-based access",
-  "Notifications that keep everyone aligned",
-];
+import { LANDING_HERO_AVATARS, LANDING_HERO_PILLS } from "@/constant/landing-content";
 
 export function Hero() {
   return (
@@ -113,7 +84,7 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.25 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8"
             >
-              <AvatarCircles avatarUrls={avatars} numPeople={99} />
+              <AvatarCircles avatarUrls={[...LANDING_HERO_AVATARS]} numPeople={99} />
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
@@ -138,7 +109,7 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap justify-center gap-3 mb-10"
             >
-              {features.map((feature) => (
+              {LANDING_HERO_PILLS.map((feature) => (
                 <div
                   key={feature}
                   className="flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border"

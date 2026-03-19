@@ -6,49 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import helpCircleIcon from "@iconify-icons/lucide/help-circle";
 import chevronDownIcon from "@iconify-icons/lucide/chevron-down";
 import messageCircleIcon from "@iconify-icons/lucide/message-circle";
-
-const faqs = [
-  {
-    question: "What is Taskflow?",
-    answer:
-      "Taskflow is a real-time task management platform that helps teams organize work, assign owners, and track progress in a single place.",
-  },
-  {
-    question: "Do I need to know TypeScript?",
-    answer:
-      "No. Taskflow is a web application you access in your browser. If you integrate it with your own systems, TypeScript is helpful but not required.",
-  },
-  {
-    question: "Can I use Taskflow with my team?",
-    answer:
-      "Yes. You can invite your teammates to a shared workspace, assign tasks to each other, and control access with roles and permissions.",
-  },
-  {
-    question: "What is included in the Pro plan?",
-    answer:
-      "Pro includes everything in Free plus unlimited projects and workspaces, advanced filters and views, role-based access control, activity history, and priority support.",
-  },
-  {
-    question: "How do I get support?",
-    answer:
-      "Free users get community support. Paid plans include email support with faster response times, and Enterprise customers get a dedicated success manager.",
-  },
-  {
-    question: "Can I get a refund?",
-    answer:
-      "Yes, we offer a 14-day refund window for paid plans. If Taskflow is not a fit, you can contact us within 14 days of purchase.",
-  },
-  {
-    question: "Do I get updates?",
-    answer:
-      "Absolutely. We continuously improve Taskflow and roll out new features. You automatically get access to updates as they are released.",
-  },
-  {
-    question: "Is my data secure?",
-    answer:
-      "Taskflow is built with modern security best practices. We use encryption in transit, role-based access control, and follow strict security guidelines to keep your data safe.",
-  },
-];
+import { LANDING_FAQS } from "@/constant/landing-content";
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -82,7 +40,7 @@ export function FAQ() {
 
         {/* FAQ Items */}
         <div className="space-y-4">
-          {faqs.map((faq, index) => (
+          {LANDING_FAQS.map((faq, index) => (
             <motion.div
               key={faq.question}
               initial={{ opacity: 0, y: 20 }}

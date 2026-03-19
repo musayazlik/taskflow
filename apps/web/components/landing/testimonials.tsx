@@ -5,59 +5,15 @@ import { motion } from "framer-motion";
 import quoteIcon from "@iconify-icons/lucide/quote";
 import starIcon from "@iconify-icons/lucide/star";
 import { Marquee } from "@/components/marquee";
+import { LANDING_TESTIMONIALS } from "@/constant/landing-content";
 
-const testimonials = [
-  {
-    quote:
-      "Taskflow finally gave us one place to see who is working on what. Standups are shorter and far more focused.",
-    author: "Sarah Chen",
-    role: "CTO at TechStart",
-    avatar: "SC",
-  },
-  {
-    quote:
-      "Our team used to live in spreadsheets and chat threads. With Taskflow, every task has a clear owner and status.",
-    author: "Marcus Johnson",
-    role: "Senior Developer",
-    avatar: "MJ",
-  },
-  {
-    quote:
-      "We onboarded the whole team in one afternoon. Everyone knew exactly what to do next and what was blocked.",
-    author: "Emily Rodriguez",
-    role: "Founder at LaunchPad",
-    avatar: "ER",
-  },
-  {
-    quote:
-      "Real-time updates in Taskflow mean I do not have to chase people for status. I just open the board and see reality.",
-    author: "David Kim",
-    role: "Lead Engineer",
-    avatar: "DK",
-  },
-  {
-    quote:
-      "Best investment for our startup. The clarity around priorities and responsibilities paid off in the first week.",
-    author: "Lisa Thompson",
-    role: "Co-founder at SaaSify",
-    avatar: "LT",
-  },
-  {
-    quote:
-      "Simple, fast, and opinionated in the right ways. Taskflow is now where all of our projects start.",
-    author: "Alex Martinez",
-    role: "Full Stack Developer",
-    avatar: "AM",
-  },
-];
-
-const firstRow = testimonials.slice(0, testimonials.length / 2);
-const secondRow = testimonials.slice(testimonials.length / 2);
+const firstRow = LANDING_TESTIMONIALS.slice(0, LANDING_TESTIMONIALS.length / 2);
+const secondRow = LANDING_TESTIMONIALS.slice(LANDING_TESTIMONIALS.length / 2);
 
 function TestimonialCard({
   testimonial,
 }: {
-  testimonial: (typeof testimonials)[0];
+  testimonial: (typeof LANDING_TESTIMONIALS)[0];
 }) {
   return (
     <div className="w-[350px] p-6 mx-4 rounded-2xl bg-card border border-border hover:border-primary/30 transition-all">

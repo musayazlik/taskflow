@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import arrowRightIcon from "@iconify-icons/lucide/arrow-right";
 import rocketIcon from "@iconify-icons/lucide/rocket";
 import githubIcon from "@iconify-icons/lucide/github";
+import { TASKFLOW_GITHUB_URL } from "@/constant/landing";
 
 export function CTA() {
   return (
@@ -51,6 +52,15 @@ export function CTA() {
                   className="w-5 h-5 group-hover:translate-x-1 transition-transform"
                 />
               </Link>
+              <a
+                href={TASKFLOW_GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-8 py-4 rounded-full bg-card border-2 border-border hover:border-primary/50 font-semibold text-lg transition-all"
+              >
+                <Iconify icon={githubIcon} className="w-5 h-5" />
+                GitHub
+              </a>
             </div>
 
             {/* Trust Text */}

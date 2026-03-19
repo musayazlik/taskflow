@@ -2,44 +2,14 @@
 
 import { Iconify } from "@/components/iconify";
 import { motion } from "framer-motion";
-import clockIcon from "@iconify-icons/lucide/clock";
-import codeIcon from "@iconify-icons/lucide/code";
-import usersIcon from "@iconify-icons/lucide/users";
-import zapIcon from "@iconify-icons/lucide/zap";
-
-const stats = [
-  {
-    icon: clockIcon,
-    value: "100+",
-    label: "Hours Saved",
-    description: "On initial setup and configuration",
-  },
-  {
-    icon: codeIcon,
-    value: "100%",
-    label: "TypeScript",
-    description: "End-to-end type safety",
-  },
-  {
-    icon: usersIcon,
-    value: "500+",
-    label: "Developers",
-    description: "Already shipping faster",
-  },
-  {
-    icon: zapIcon,
-    value: "5min",
-    label: "Setup Time",
-    description: "From clone to running",
-  },
-];
+import { LANDING_STATS } from "@/constant/landing-content";
 
 export function Stats() {
   return (
     <section className="py-20 px-6 bg-linear-to-b from-background to-muted/30">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
+          {LANDING_STATS.map((stat, index) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}

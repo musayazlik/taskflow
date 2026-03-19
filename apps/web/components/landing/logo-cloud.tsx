@@ -2,18 +2,7 @@
 
 import { Iconify } from "@/components/iconify";
 import { Marquee } from "@/components/marquee";
-
-const logos = [
-  { name: "Next.js", icon: "logos:nextjs-icon" },
-  { name: "TypeScript", icon: "logos:typescript-icon" },
-  { name: "Prisma", icon: "material-icon-theme:prisma" },
-  { name: "Tailwind", icon: "logos:tailwindcss-icon" },
-  { name: "PostgreSQL", icon: "logos:postgresql" },
-  { name: "Docker", icon: "logos:docker-icon" },
-  { name: "Redis", icon: "logos:redis" },
-  { name: "GitHub", icon: "logos:github-icon" },
-  { name: "Bun", icon: "simple-icons:bun" },
-];
+import { LANDING_LOGOS } from "@/constant/landing-content";
 
 export function LogoCloud() {
   return (
@@ -22,7 +11,7 @@ export function LogoCloud() {
 
       {/* First Marquee Row */}
       <Marquee pauseOnHover className="[--duration:30s]">
-        {logos.map((logo) => (
+        {LANDING_LOGOS.map((logo) => (
           <div
             key={logo.name}
             className="flex items-center gap-3 px-6 py-3 mx-4 rounded-xl bg-card/50 border border-border/50 hover:border-primary/30 transition-all group"
@@ -40,7 +29,7 @@ export function LogoCloud() {
 
       {/* Second Marquee Row - Reverse */}
       <Marquee reverse pauseOnHover className="[--duration:35s] mt-4">
-        {[...logos].reverse().map((logo) => (
+        {[...LANDING_LOGOS].reverse().map((logo) => (
           <div
             key={`reverse-${logo.name}`}
             className="flex items-center gap-3 px-6 py-3 mx-4 rounded-xl bg-card/50 border border-border/50 hover:border-primary/30 transition-all group"
