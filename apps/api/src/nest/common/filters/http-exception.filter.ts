@@ -3,6 +3,7 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
 
@@ -10,6 +11,30 @@ import { env } from "@api/lib/env";
 import { logger } from "@api/lib/logger";
 import { AppError } from "@api/lib/errors";
 import type { RequestWithRequestId } from "../../middleware/request-id.middleware";
+
+function httpExceptionStatusToErrorCode(status: number): string {
+  switch (status) {
+    case HttpStatus.BAD_REQUEST:
+      return "VALIDATION_ERROR";
+    case HttpStatus.UNAUTHORIZED:
+      return "UNAUTHORIZED";
+    case HttpStatus.FORBIDDEN:
+      return "FORBIDDEN";
+    case HttpStatus.NOT_FOUND:
+      return "NOT_FOUND";
+    case HttpStatus.CONFLICT:
+      return "CONFLICT";
+    case HttpStatus.TOO_MANY_REQUESTS:
+      return "RATE_LIMIT_EXCEEDED";
+    case HttpStatus.UNPROCESSABLE_ENTITY:
+      return "UNPROCESSABLE_ENTITY";
+    default:
+      if (status >= 400 && status < 500) {
+        return "CLIENT_ERROR";
+      }
+      return "INTERNAL_ERROR";
+  }
+}
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -59,7 +84,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         return undefined;
       })();
 
-      if (status === 400) {
+      if (status === HttpStatus.BAD_REQUEST) {
         res.status(status).json({
           success: false,
           error: "VALIDATION_ERROR",
@@ -74,21 +99,24 @@ export class HttpExceptionFilter implements ExceptionFilter {
         return;
       }
 
-      const internalMessage =
-        env.NODE_ENV === "production"
-          ? "An unexpected error occurred"
-          : message || "An unexpected error occurred";
+      const hideDetails =
+        env.NODE_ENV === "production" && status >= HttpStatus.INTERNAL_SERVER_ERROR;
+      const responseMessage = hideDetails
+        ? "An unexpected error occurred"
+        : message || "Request failed";
+
+      const errorCode = httpExceptionStatusToErrorCode(status);
 
       res.status(status).json({
         success: false,
-        error: "INTERNAL_ERROR",
-        message: internalMessage,
+        error: errorCode,
+        message: responseMessage,
         ...(requestId && { requestId }),
       });
 
       logger.error(
-        { requestId, status, message },
-        `[ERROR] HTTP ${status}: ${String(message)}`,
+        { requestId, status, message, errorCode },
+        `[ERROR] HTTP ${status} (${errorCode}): ${String(message)}`,
       );
       return;
     }
