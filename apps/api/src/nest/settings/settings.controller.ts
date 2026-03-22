@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Patch } from "@nestjs/common";
+import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
 
 import { prisma } from "@repo/database";
 import { AppError } from "@api/lib/errors";
 import { successResponse } from "@api/lib/route-helpers";
 import * as mediaService from "@api/services/media.service";
+import { BetterAuthGuard } from "../auth/better-auth.guard";
+import { AdminGuard } from "../auth/role.guards";
 
 import type {
   UpdateGlobalSettingsBody,
@@ -23,6 +25,7 @@ export class SettingsController {
   }
 
   @Patch("/")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async updateSettings(@Body() body: UpdateGlobalSettingsBody) {
     let settings = await prisma.globalSettings.findFirst();
 
@@ -62,12 +65,14 @@ export class SettingsController {
   }
 
   @Get("/image-optimization")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async getImageOptimization() {
     const settings = await mediaService.getImageOptimizationSettings();
     return successResponse(settings);
   }
 
   @Patch("/image-optimization")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async updateImageOptimization(
     @Body() body: UpdateImageOptimizationBody,
   ) {
@@ -88,12 +93,14 @@ export class SettingsController {
   }
 
   @Get("/media-upload")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async getMediaUploadSettings() {
     const settings = await mediaService.getMediaUploadSettings();
     return successResponse(settings);
   }
 
   @Patch("/media-upload")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async updateMediaUploadSettings(@Body() body: UpdateMediaUploadBody) {
     const validMimeTypes = [
       "image/jpeg",
