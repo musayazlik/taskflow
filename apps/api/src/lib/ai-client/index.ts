@@ -1,9 +1,6 @@
 /**
- * AI Client Module
- * 
- * HTTP clients and utilities for AI service integrations.
- * 
- * @module ai-client
+ * @fileoverview AI integrations: `HttpClient` (retries/timeouts) and `OpenRouterClient` (chat completions).
+ * @module @api/lib/ai-client
  */
 
 export * from "./http-client";

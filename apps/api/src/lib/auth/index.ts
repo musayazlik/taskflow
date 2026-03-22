@@ -1,13 +1,26 @@
+/**
+ * @fileoverview Better Auth server instance: Prisma adapter, sessions, email/password, OAuth, cookies.
+ * HTTP routes are mounted under `/api/auth` in `nest/main.ts`.
+ * @module @api/lib/auth
+ */
+
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@repo/database";
 import { env } from "@api/lib/env";
 import { logger } from "@api/lib/logger";
-import { sendVerificationEmail, sendPasswordResetEmail } from "../emails";
+import { sendVerificationEmail, sendPasswordResetEmail } from "../../emails";
 
 /**
- * Better Auth Configuration
- * Main authentication instance with Prisma adapter, email/password, and OAuth providers
+ * Singleton Better Auth instance.
+ *
+ * @remarks
+ * - **Database**: PostgreSQL via Prisma adapter; user `role` is an additional field for guards.
+ * - **Emails**: verification and password reset use `src/emails` (Resend).
+ * - **URLs**: `baseURL` is `env.BETTER_AUTH_URL || env.FRONTEND_URL` for OAuth and magic links.
+ * - **Session**: cookie name `turbostack_session`, 7-day expiry (see config block below).
+ *
+ * Use `auth.api.getSession({ headers })` or Nest `BetterAuthGuard` for request authentication.
  */
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -114,6 +127,6 @@ export const auth = betterAuth({
 });
 
 /**
- * Auth instance type (Better Auth)
+ * Type of the {@link auth} instance (infer Better Auth API surface).
  */
 export type Auth = typeof auth;

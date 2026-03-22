@@ -1,6 +1,6 @@
 /**
- * File Service Module
- * UploadThing-based file management
+ * @fileoverview Storage abstraction (`FileProvider`, `FileService`, `FileServiceFactory`) with UploadThing backend.
+ * @module @api/lib/file-service
  */
 
 export {
@@ -16,5 +16,5 @@ export type { FileService as FileServiceType } from "./interface";
 export { FileServiceFactory } from "./factory";
 export { UploadThingProvider } from "./providers/uploadthing.provider";
 
-// Re-export for convenience
+/** @deprecated Prefer {@link FileServiceFactory} — legacy alias used in some imports. */
 export { FileServiceFactory as FileUploadService } from "./factory";

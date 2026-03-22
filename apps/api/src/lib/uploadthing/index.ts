@@ -1,13 +1,22 @@
+/**
+ * @fileoverview UploadThing server integration: `UTApi` for server-side file ops and a typed `uploadRouter`.
+ * @module @api/lib/uploadthing
+ */
+
 import { createUploadthing, type FileRouter, UTApi } from "uploadthing/server";
-import { env } from "./env";
-import { auth } from "./auth";
-import { logger } from "./logger";
+import { env } from "@api/lib/env";
+import { auth } from "@api/lib/auth";
+import { logger } from "@api/lib/logger";
 
 const f = createUploadthing();
 
 /**
- * UploadThing API client instance
- * Used for server-side file operations (upload, delete, list, etc.)
+ * UploadThing **UTApi** client for listing, deleting, and URL operations from server code.
+ *
+ * @remarks
+ * - If `UPLOADTHING_TOKEN` is unset, logs a warning and constructs an instance with an empty token
+ *   (operations may fail until configured).
+ * - Used heavily by `media.service`.
  */
 export const utapi = env.UPLOADTHING_TOKEN
   ? new UTApi({
@@ -24,8 +33,9 @@ export const utapi = env.UPLOADTHING_TOKEN
     })();
 
 /**
- * UploadThing File Router
- * Defines available upload endpoints and their configurations
+ * UploadThing **FileRouter** for client-driven uploads. Each route can define middleware and completion hooks.
+ *
+ * `imageUploader`: single image up to 4MB; middleware requires a valid Better Auth session.
  */
 export const uploadRouter: FileRouter = {
   imageUploader: f({
@@ -56,4 +66,7 @@ export const uploadRouter: FileRouter = {
     }),
 };
 
+/**
+ * Type of {@link uploadRouter} for UploadThing client type inference.
+ */
 export type OurFileRouter = typeof uploadRouter;

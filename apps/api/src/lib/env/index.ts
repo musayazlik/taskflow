@@ -1,11 +1,18 @@
+/**
+ * @fileoverview Validated environment variables for the API process (Zod).
+ * Loads root and app-level `.env` files, parses `process.env`, and throws if invalid.
+ * Production/staging require `BETTER_AUTH_SECRET`.
+ * @module @api/lib/env
+ */
+
 import { config } from "dotenv";
 import { resolve } from "path";
 import { z } from "zod";
-import { logger } from "./logger";
+import { logger } from "@api/lib/logger";
 
 // Load .env from stable absolute paths so imports work regardless of CWD.
-const rootEnvPath = resolve(import.meta.dir, "../../../../.env");
-const apiEnvPath = resolve(import.meta.dir, "../../.env");
+const rootEnvPath = resolve(import.meta.dir, "../../../../../.env");
+const apiEnvPath = resolve(import.meta.dir, "../../../.env");
 
 // Root first, then api-level overrides (if both exist).
 config({ path: rootEnvPath });
@@ -99,7 +106,14 @@ if (
   );
 }
 
+/**
+ * Parsed, typed environment object. Read-only at runtime after module load.
+ *
+ * @remarks Do not read `process.env` directly in feature code — use this export for consistency.
+ */
 export const env = _env;
 
-// Type export
+/**
+ * Inferred TypeScript type of the Zod schema (all keys from `envSchema`).
+ */
 export type Env = z.infer<typeof envSchema>;

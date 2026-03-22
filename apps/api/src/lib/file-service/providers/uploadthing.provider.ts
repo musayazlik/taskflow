@@ -1,5 +1,6 @@
 /**
- * UploadThing Provider Implementation
+ * @fileoverview `FileService` implementation backed by UploadThing `UTApi`.
+ * @module @api/lib/file-service/providers/uploadthing.provider
  */
 
 import { UTApi } from "uploadthing/server";
@@ -13,6 +14,9 @@ import {
   type UploadResult,
 } from "../interface";
 
+/**
+ * UploadThing-backed storage: upload/delete/metadata/URL resolution via `env.UPLOADTHING_TOKEN`.
+ */
 export class UploadThingProvider extends FileService {
   readonly name = "UploadThing";
   readonly provider = FileProvider.UPLOADTHING;

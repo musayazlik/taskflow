@@ -1,21 +1,21 @@
 /**
- * Route helper functions
- * Common utilities for route handlers
+ * @fileoverview Session helpers, pagination, and standard JSON response shapes for handlers and services.
+ * Uses {@link auth} for `getSession`. Prefer Nest guards for HTTP controllers when possible.
+ * @module @api/lib/route-helpers
  */
 
 import { auth } from "@api/lib/auth";
 import { AppError } from "@api/lib/errors";
 import { PAGINATION } from "@api/constants";
 
-// Request headers as a plain record or Web Fetch `Headers`
+/**
+ * Headers accepted by session helpers: Web `Headers` or a plain record (e.g. Express/Nest normalized headers).
+ */
 export type HeadersLike = Record<string, string | undefined> | Headers;
 
-// ============================================
-// Authentication & Authorization Helpers
-// ============================================
-
 /**
- * Convert headers to HeadersInit format for auth.api.getSession
+ * @internal
+ * Flattens {@link HeadersLike} to a string record for Better Auth.
  */
 const normalizeHeaders = (headers: HeadersLike): Record<string, string> => {
   if (headers instanceof Headers) {
@@ -25,7 +25,6 @@ const normalizeHeaders = (headers: HeadersLike): Record<string, string> => {
     });
     return result;
   }
-  // Record<string, string | undefined>
   const result: Record<string, string> = {};
   for (const [key, value] of Object.entries(headers)) {
     if (value !== undefined) {
@@ -36,7 +35,11 @@ const normalizeHeaders = (headers: HeadersLike): Record<string, string> => {
 };
 
 /**
- * Get authenticated session from headers
+ * Returns the current session or throws {@link AppError} with **401** if unauthenticated.
+ *
+ * @param headers - Incoming request headers carrying cookies / auth.
+ * @returns Better Auth session (user + session objects).
+ * @throws {AppError} `UNAUTHORIZED` when no session.
  */
 export const getSession = async (headers: HeadersLike) => {
   const headersInit = normalizeHeaders(headers);
@@ -48,19 +51,24 @@ export const getSession = async (headers: HeadersLike) => {
 };
 
 /**
- * Alias for getSession - require authentication
+ * Alias of {@link getSession}.
  */
 export const requireAuth = getSession;
 
 /**
- * Check if user is admin (ADMIN or SUPER_ADMIN)
+ * @param role - `session.user.role`
+ * @returns `true` if role is `ADMIN` or `SUPER_ADMIN`.
+ *
+ * @remarks Prefer `isAdminRole` from `@api/lib/auth-roles` for new code to avoid drift.
  */
 export const isAdmin = (role: string): boolean => {
   return role === "ADMIN" || role === "SUPER_ADMIN";
 };
 
 /**
- * Require admin access
+ * Like {@link getSession}, but requires an admin role; otherwise **403**.
+ *
+ * @throws {AppError} `FORBIDDEN` if not admin.
  */
 export const requireAdmin = async (headers: HeadersLike) => {
   const session = await getSession(headers);
@@ -71,7 +79,7 @@ export const requireAdmin = async (headers: HeadersLike) => {
 };
 
 /**
- * Require super admin access
+ * Requires `SUPER_ADMIN` role; otherwise **403**.
  */
 export const requireSuperAdmin = async (headers: HeadersLike) => {
   const session = await getSession(headers);
@@ -81,15 +89,13 @@ export const requireSuperAdmin = async (headers: HeadersLike) => {
   return session;
 };
 
-// ============================================
-// Pagination Helpers
-// ============================================
-
+/** Raw pagination query fields (stringly typed from URL). */
 export interface PaginationParams {
   page?: string;
   limit?: string;
 }
 
+/** Numeric pagination with SQL-style `skip`. */
 export interface PaginationResult {
   page: number;
   limit: number;
@@ -97,7 +103,9 @@ export interface PaginationResult {
 }
 
 /**
- * Parse pagination parameters from query
+ * Parses `page` / `limit` with defaults from {@link PAGINATION}.
+ *
+ * @remarks Uses `parseInt` without radix bounds — for untrusted input consider `parseQueryInt` from `@api/lib/parse-query-int`.
  */
 export const parsePagination = (query: PaginationParams): PaginationResult => {
   const page = query.page ? parseInt(query.page) : PAGINATION.DEFAULT_PAGE;
@@ -108,14 +116,15 @@ export const parsePagination = (query: PaginationParams): PaginationResult => {
 };
 
 /**
- * Calculate total pages
+ * @param total - Total row count.
+ * @param limit - Page size (must be &gt; 0 for meaningful results).
  */
 export const calculateTotalPages = (total: number, limit: number): number => {
   return Math.ceil(total / limit);
 };
 
 /**
- * Create pagination metadata
+ * Builds `{ total, page, limit, totalPages }` for list responses.
  */
 export const createPaginationMeta = (
   total: number,
@@ -130,12 +139,10 @@ export const createPaginationMeta = (
   };
 };
 
-// ============================================
-// Response Helpers
-// ============================================
-
 /**
- * Create success response
+ * Standard success payload: `{ success: true, data }` or adds optional `message`.
+ *
+ * @typeParam T - Payload type of `data`.
  */
 export const successResponse = <T>(data: T, message?: string) => {
   if (message) {
@@ -152,7 +159,9 @@ export const successResponse = <T>(data: T, message?: string) => {
 };
 
 /**
- * Create paginated response
+ * List response with `meta` from {@link createPaginationMeta}.
+ *
+ * @typeParam T - Element type of the `data` array.
  */
 export const paginatedResponse = <T>(
   data: T[],

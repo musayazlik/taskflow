@@ -1,5 +1,7 @@
 /**
- * Utility functions for backend services
+ * @fileoverview Miscellaneous backend helpers: secure password generation, legacy media normalization,
+ * and Sharp-based image optimization (global settings + manual admin transforms).
+ * @module @api/lib/utils
  */
 
 import { prisma } from "@repo/database";
@@ -11,8 +13,9 @@ import sharp from "sharp";
 // ============================================
 
 /**
- * Generate a random temporary password
- * Uses a character set that excludes easily confused characters (0, O, I, l)
+ * Generates a 16-character random password using an ambiguous-character-safe alphabet.
+ *
+ * @returns Cryptographically suitable for temporary passwords (admin-created users, resets).
  */
 export const generateTempPassword = (): string => {
 	const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%";
@@ -24,7 +27,7 @@ export const generateTempPassword = (): string => {
 };
 
 /**
- * Generate a random password (alias for generateTempPassword)
+ * @see {@link generateTempPassword}
  */
 export const generateRandomPassword = (): string => {
 	return generateTempPassword();
@@ -34,14 +37,17 @@ export const generateRandomPassword = (): string => {
 // Media/File Utilities
 // ============================================
 
-/**
- * Media item type for product medias
- */
+/** Single media reference (legacy product-style shape). */
 export type MediaItem = { id: string; public_url: string };
+
+/** Acceptable raw shapes before normalization. */
 export type MediaInput = string | MediaItem | Array<string | MediaItem>;
 
 /**
- * Normalize media data from various formats to consistent structure
+ * Coerces arbitrary client/storage shapes into `MediaItem[]` (arrays, JSON strings, mixed entries).
+ *
+ * @param medias - Unknown payload; safe to pass JSON-parsed blobs.
+ * @returns Empty array on failure or empty input.
  */
 export const normalizeMedias = (medias: unknown): MediaItem[] => {
 	if (!medias) return [];
@@ -78,7 +84,9 @@ export const normalizeMedias = (medias: unknown): MediaItem[] => {
 };
 
 /**
- * Prepare media data for database storage
+ * Maps structured {@link MediaInput} list into storable `MediaItem` rows.
+ *
+ * @param medias - Optional list; empty/undefined returns `[]`.
  */
 export const prepareMediasForStorage = (medias?: MediaInput[]): MediaItem[] => {
 	if (!medias || medias.length === 0) return [];
@@ -102,7 +110,10 @@ export const prepareMediasForStorage = (medias?: MediaInput[]): MediaItem[] => {
 // ============================================
 
 /**
- * Get MIME type and file extension for image format
+ * Maps a format keyword (e.g. `"webp"`, `"jpeg"`) to MIME + file extension.
+ *
+ * @param format - Case-insensitive format name.
+ * @returns `null` if unsupported.
  */
 export const getMimeAndExtensionForFormat = (
 	format: string,
@@ -123,7 +134,9 @@ export const getMimeAndExtensionForFormat = (
 };
 
 /**
- * Replace file extension in filename
+ * Replaces or appends extension in a filename (e.g. `photo.jpg` + `webp` → `photo.webp`).
+ *
+ * @param newExt - Extension without leading dot.
  */
 export const replaceFileExtension = (fileName: string, newExt: string): string => {
 	const idx = fileName.lastIndexOf(".");
@@ -132,8 +145,13 @@ export const replaceFileExtension = (fileName: string, newExt: string): string =
 };
 
 /**
- * Optimize image based on global settings (non-blocking)
- * Returns original file if optimization fails or is disabled
+ * Applies **global** `imageOptimizationSettings` from Prisma before upload when enabled.
+ *
+ * @param inputFile - Original `File` (type checked for `image/*`).
+ * @param inputBuffer - Same bytes as `inputFile` for Sharp.
+ * @returns Possibly new `File`/`buffer` and `optimized: true`; on skip/failure returns originals and `optimized: false`.
+ *
+ * @remarks Uses {@link prisma} — ensure settings row exists in DB for production behavior.
  */
 export const maybeOptimizeImage = async (
 	inputFile: File,
@@ -236,8 +254,13 @@ export const maybeOptimizeImage = async (
 };
 
 /**
- * Optimize image with custom settings
- * Used for manual optimization from media page
+ * **Manual** image optimization (admin/media UI): resize and/or re-encode with explicit options.
+ *
+ * @param options.quality - Roughly 1–100 depending on codec (see Sharp behavior in implementation).
+ * @param options.format - Target format; omit or `"original"` to keep format where possible.
+ * @param options.maxWidth / maxHeight - `fit: inside`, no enlargement.
+ * @returns New `File` with transformed bytes.
+ * @throws If input is not an image or Sharp fails.
  */
 export const optimizeImage = async (
 	inputFile: File,

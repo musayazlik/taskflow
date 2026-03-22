@@ -1,10 +1,7 @@
 /**
- * HTTP Client for AI API Integration
- * 
- * Provides retry mechanism, timeout handling, and error management
- * for AI service API calls.
- * 
- * @module ai-client/http-client
+ * @fileoverview Generic `fetch` wrapper with timeout, retries on 5xx/429/408/network errors, and `AppError` mapping.
+ * Intended for AI and other JSON HTTP APIs — not a full-featured HTTP client.
+ * @module @api/lib/ai-client/http-client
  */
 
 import { logger } from "@api/lib/logger";
@@ -77,7 +74,9 @@ function isRetryableError(error: unknown, status?: number): boolean {
 }
 
 /**
- * HTTP Client with retry and timeout support
+ * Configurable HTTP client; default timeout **30s**, **3** retries, **1s** base delay.
+ *
+ * @remarks Use `get` / `post` / `put` / `delete` for JSON APIs; body is JSON-stringified for mutating methods.
  */
 export class HttpClient {
   private config: Required<Omit<HttpClientConfig, "headers">> & {

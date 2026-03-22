@@ -1,23 +1,22 @@
 /**
- * File Service Interface
- * UploadThing-based file management
+ * @fileoverview Abstract file storage contract and UploadThing-oriented types.
+ * @module @api/lib/file-service/interface
  */
 
 /**
- * File storage provider types
+ * Supported storage backends (extend when adding new providers).
  */
 export enum FileProvider {
   UPLOADTHING = "UPLOADTHING",
 }
 
-/**
- * Options for generating signed URLs
- */
+/** Options for signed / CDN URL generation (provider-specific). */
 export interface SignedUrlOptions {
   expiresIn?: string | number;
   contentDisposition?: "inline" | "attachment";
 }
 
+/** Parameters for a single upload operation. */
 export interface UploadFileParams {
   file: File | Buffer;
   fileName?: string;
@@ -26,6 +25,7 @@ export interface UploadFileParams {
   metadata?: Record<string, string>;
 }
 
+/** Normalized result after a successful upload. */
 export interface UploadResult {
   id: string;
   url: string;
@@ -36,6 +36,7 @@ export interface UploadResult {
   metadata?: Record<string, string>;
 }
 
+/** Rich file record (DB or provider metadata). */
 export interface FileMetadata {
   id: string;
   key: string;
@@ -47,32 +48,25 @@ export interface FileMetadata {
   metadata?: Record<string, string>;
 }
 
+/**
+ * Pluggable storage backend. Implementations live under `providers/`.
+ */
 export abstract class FileService {
   abstract readonly name: string;
   abstract readonly provider: FileProvider;
 
-  /**
-   * Upload a file
-   */
+  /** Upload bytes and return provider identifiers. */
   abstract upload(params: UploadFileParams): Promise<UploadResult>;
 
-  /**
-   * Delete a file
-   */
+  /** Delete by storage key; returns whether deletion succeeded. */
   abstract delete(key: string): Promise<boolean>;
 
-  /**
-   * Get file metadata
-   */
+  /** Fetch metadata if the file exists. */
   abstract getFile(key: string): Promise<FileMetadata | null>;
 
-  /**
-   * Get public URL for a file
-   */
+  /** Public or CDN URL for the given key. */
   abstract getUrl(key: string): string;
 
-  /**
-   * Check if service is configured
-   */
+  /** Whether API credentials / token are present for this provider. */
   abstract isConfigured(): boolean;
 }
