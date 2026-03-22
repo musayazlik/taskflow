@@ -1,14 +1,13 @@
 # ai-client
 
-Clients and low-level HTTP utilities for **AI integrations**, primarily **OpenRouter** (multi-model API). Keeps SDK usage, env keys, and error mapping in one place.
+**OpenRouter** client for AI integrations: wraps the official SDK, maps env keys and errors, and keeps usage in one place.
 
 ## Layout
 
 | File | Role |
 |------|------|
-| `http-client.ts` | Generic fetch with **timeout**, **retries**, and **`AppError`** on failure — suitable for any JSON AI HTTP API. |
 | `openrouter-client.ts` | **`OpenRouter`** from `@openrouter/sdk` — chat completions, typed request/response helpers, uses **`env.OPENROUTER_API_KEY`**. |
-| `index.ts` | Re-exports public symbols from both files. |
+| `index.ts` | Re-exports `openrouter-client` public API. |
 
 ## What `OpenRouterClient` does (high level)
 
@@ -17,12 +16,6 @@ Clients and low-level HTTP utilities for **AI integrations**, primarily **OpenRo
 - Maps provider errors to **`AppError`** and logs via [`../logger`](../logger/README.md) for observability.
 
 Exact method names follow the implementation in `openrouter-client.ts` (e.g. chat completion helpers).
-
-## What `http-client` does
-
-- Configurable **`timeout`**, **`maxRetries`**, **`retryDelay`**, default headers.
-- Returns **`HttpResponse<T>`** with parsed JSON `data`.
-- Use when you need resilient HTTP to an AI endpoint **without** going through OpenRouter’s SDK.
 
 ## Usage
 

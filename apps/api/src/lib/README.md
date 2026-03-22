@@ -25,7 +25,7 @@ TypeScript resolves `@api/lib/<name>` to `<name>/index.ts`. Deeper paths are all
 ```text
 env ─────────────► logger, resend, auth, ai-client, …
 auth ◄──────────── resend, emails (verification / reset)
-uploadthing ◄───── env, auth (session in middleware)
+uploadthing ◄───── env, logger
 file-service ◄──── env (UploadThing token), logger
 media.service ───► file-service, utils (Sharp), uploadthing (utapi)
 ```
@@ -36,7 +36,7 @@ media.service ───► file-service, utils (Sharp), uploadthing (utapi)
 |--------|------------------|
 | [`auth`](./auth/README.md) | Better Auth instance (sessions, OAuth, email flows) |
 | [`auth-roles`](./auth-roles/README.md) | `isAdminRole`, `RequesterContext` without Nest imports |
-| [`ai-client`](./ai-client/README.md) | OpenRouter SDK wrapper + HTTP helpers for AI APIs |
+| [`ai-client`](./ai-client/README.md) | OpenRouter SDK wrapper for chat completions |
 | [`env`](./env/README.md) | Zod-validated `process.env`, fail-fast at startup |
 | [`errors`](./errors/README.md) | `AppError` and subclasses; works with global exception filter |
 | [`file-service`](./file-service/README.md) | Storage provider abstraction (UploadThing implementation) |
@@ -45,7 +45,7 @@ media.service ───► file-service, utils (Sharp), uploadthing (utapi)
 | [`resend`](./resend/README.md) | Resend email client; dev fallback when API key missing |
 | [`route-helpers`](./route-helpers/README.md) | Session helpers, pagination, standard JSON response shapes |
 | [`system-prompts`](./system-prompts/README.md) | AI system prompts by category (`getSystemPrompt`) |
-| [`uploadthing`](./uploadthing/README.md) | `UTApi` + file router for UploadThing |
+| [`uploadthing`](./uploadthing/README.md) | Shared `UTApi` singleton for server-side UploadThing |
 | [`utils`](./utils/README.md) | Passwords, media normalization, Sharp image optimization |
 
 Nested files (e.g. `file-service/providers/`) are **internal** to that module unless exported from its `index.ts`.

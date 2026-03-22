@@ -1,6 +1,6 @@
 # uploadthing
 
-**UploadThing** integration: server-side **`UTApi`** (`utapi`) for listing/deleting files and a **`uploadRouter`** used if you expose UploadThing’s client upload routes. Token and auth are tied to [`../env`](../env/README.md) and [`../auth`](../auth/README.md).
+**UploadThing** server-side integration: shared **`UTApi`** singleton (`utapi`) for uploads, deletes, listing, and URL helpers. Token validation lives in [`../env`](../env/README.md).
 
 ## What it exports
 
@@ -12,19 +12,14 @@ Instance of UploadThing’s **`UTApi`** when `UPLOADTHING_TOKEN` is valid in env
 
 - Used by **`media.service`**, **`UploadThingProvider`** ([`../file-service`](../file-service/README.md)), and anywhere else that needs server-side UploadThing API calls — **one shared `UTApi` instance** for the process.
 
-### `uploadRouter` / `OurFileRouter`
+### Client-side uploads
 
-Defines **`imageUploader`** route:
-
-- Max **4MB**, **1** file, image types.
-- **Middleware**: reads the Web **`Request`**, pulls headers, calls **`auth.api.getSession`** — unauthenticated uploads throw.
-- **`onUploadComplete`**: returns metadata (`url`, `name`, `size`); extend here to persist to Prisma if you use client-side UploadThing components against this router.
+This package does **not** export a **FileRouter**. If you use `@uploadthing/react` in the web app, define the router next to your Next.js (or other) route handler that calls `createRouteHandler` / UploadThing’s app integration, and keep types there.
 
 ## Usage
 
 ```ts
-import { utapi, uploadRouter } from "@api/lib/uploadthing";
-import type { OurFileRouter } from "@api/lib/uploadthing";
+import { utapi } from "@api/lib/uploadthing";
 
 const urls = await utapi.getFileUrls(fileKey);
 ```
