@@ -42,11 +42,6 @@ const envSchema = z.object({
   GITHUB_CLIENT_ID: z.string().optional(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
 
-  // Payments (optional)
-  POLAR_ACCESS_TOKEN: z.string().optional(),
-  POLAR_WEBHOOK_SECRET: z.string().optional(),
-  POLAR_ENVIRONMENT: z.enum(["production", "sandbox"]).optional(),
-
   // AI (optional)
   OPENROUTER_API_KEY: z.string().optional(),
 
@@ -93,7 +88,18 @@ const envSchema = z.object({
 });
 
 // Validate on import - fails fast if invalid
-export const env = envSchema.parse(process.env);
+const _env = envSchema.parse(process.env);
+
+if (
+  (_env.NODE_ENV === "production" || _env.NODE_ENV === "staging") &&
+  !_env.BETTER_AUTH_SECRET
+) {
+  throw new Error(
+    "BETTER_AUTH_SECRET is required when NODE_ENV is production or staging",
+  );
+}
+
+export const env = _env;
 
 // Type export
 export type Env = z.infer<typeof envSchema>;
