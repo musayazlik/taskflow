@@ -5,6 +5,7 @@ import { AppError } from "@api/lib/errors";
 import { successResponse } from "@api/lib/route-helpers";
 import * as mediaService from "@api/services/media.service";
 import { BetterAuthGuard } from "../auth/better-auth.guard";
+import { AdminGuard } from "../auth/role.guards";
 import { FileProvider } from "@api/lib/file-service";
 
 import type { StorageSettingsUpdateBody } from "./dto/storage-settings.dto";
@@ -12,6 +13,7 @@ import type { StorageSettingsUpdateBody } from "./dto/storage-settings.dto";
 @Controller("/api/storage-settings")
 export class StorageSettingsController {
   @Get("/")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async get() {
     const settings = await prisma.fileStorageSettings.findFirst();
 
@@ -30,7 +32,7 @@ export class StorageSettingsController {
   }
 
   @Put("/")
-  @UseGuards(BetterAuthGuard)
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async update(
     @Body() body: StorageSettingsUpdateBody,
   ) {
