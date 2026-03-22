@@ -1,10 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 
 import { AppError } from "@api/lib/errors";
+import { isAdminRole } from "@api/lib/auth-roles";
 
 import type { RequestWithSession } from "./better-auth.guard";
-
-const isAdmin = (role: string): boolean => role === "ADMIN" || role === "SUPER_ADMIN";
 
 @Injectable()
 export class AdminGuard implements CanActivate {
@@ -16,7 +15,7 @@ export class AdminGuard implements CanActivate {
       throw new AppError("UNAUTHORIZED", "Authentication required", 401);
     }
 
-    if (!isAdmin(session.user.role)) {
+    if (!isAdminRole(session.user.role)) {
       throw new AppError("FORBIDDEN", "Admin access required", 403);
     }
 
