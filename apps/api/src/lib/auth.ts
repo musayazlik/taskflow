@@ -114,6 +114,6 @@ export const auth = betterAuth({
 });
 
 /**
- * Auth handler type for Elysia routes
+ * Auth instance type (Better Auth)
  */
 export type Auth = typeof auth;

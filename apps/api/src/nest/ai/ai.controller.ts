@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
-import { t } from "elysia";
+import { Type as t } from "@sinclair/typebox";
 
 import { AppError } from "@api/lib/errors";
 import { successResponse } from "@api/lib/route-helpers";

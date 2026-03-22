@@ -27,7 +27,7 @@ export class TypeBoxValidationPipe implements PipeTransform {
     if (!error) return "Invalid request data";
 
     // Try to convert typical TypeBox required-property error messages to the
-    // Elysia-style format: "'field' field is required".
+    // format: "'field' field is required".
     const requiredMatch = error.message.match(
       /required property\s+([A-Za-z0-9_\\.-]+)/,
     );

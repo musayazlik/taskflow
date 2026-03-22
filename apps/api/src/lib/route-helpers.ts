@@ -7,8 +7,8 @@ import { auth } from "@api/lib/auth";
 import { AppError } from "@api/lib/errors";
 import { PAGINATION } from "@api/constants";
 
-// Elysia headers type - can be Record<string, string | undefined> or Headers object
-export type ElysiaHeaders = Record<string, string | undefined> | Headers;
+// Request headers as a plain record or Web Fetch `Headers`
+export type HeadersLike = Record<string, string | undefined> | Headers;
 
 // ============================================
 // Authentication & Authorization Helpers
@@ -17,7 +17,7 @@ export type ElysiaHeaders = Record<string, string | undefined> | Headers;
 /**
  * Convert headers to HeadersInit format for auth.api.getSession
  */
-const normalizeHeaders = (headers: ElysiaHeaders): Record<string, string> => {
+const normalizeHeaders = (headers: HeadersLike): Record<string, string> => {
   if (headers instanceof Headers) {
     const result: Record<string, string> = {};
     headers.forEach((value, key) => {
@@ -38,7 +38,7 @@ const normalizeHeaders = (headers: ElysiaHeaders): Record<string, string> => {
 /**
  * Get authenticated session from headers
  */
-export const getSession = async (headers: ElysiaHeaders) => {
+export const getSession = async (headers: HeadersLike) => {
   const headersInit = normalizeHeaders(headers);
   const session = await auth.api.getSession({ headers: headersInit });
   if (!session) {
@@ -62,7 +62,7 @@ export const isAdmin = (role: string): boolean => {
 /**
  * Require admin access
  */
-export const requireAdmin = async (headers: ElysiaHeaders) => {
+export const requireAdmin = async (headers: HeadersLike) => {
   const session = await getSession(headers);
   if (!isAdmin(session.user.role)) {
     throw new AppError("FORBIDDEN", "Admin access required", 403);
@@ -73,7 +73,7 @@ export const requireAdmin = async (headers: ElysiaHeaders) => {
 /**
  * Require super admin access
  */
-export const requireSuperAdmin = async (headers: ElysiaHeaders) => {
+export const requireSuperAdmin = async (headers: HeadersLike) => {
   const session = await getSession(headers);
   if (session.user.role !== "SUPER_ADMIN") {
     throw new AppError("FORBIDDEN", "Super admin access required", 403);

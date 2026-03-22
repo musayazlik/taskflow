@@ -107,7 +107,7 @@ async function bootstrap(): Promise<void> {
 
     // Password reset + email verification endpoints.
     // These are mounted via `toNodeHandler(auth)` (Express), so we add them
-    // manually to Swagger for parity with Elysia routes.
+    // manually to Swagger because they are mounted outside Nest's route graph.
 
     doc.paths["/api/auth/get-session"] = {
       get: {
