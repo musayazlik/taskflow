@@ -5,7 +5,6 @@ import { RateLimitMiddleware } from "./middleware/rate-limit.middleware";
 import { AiModule } from "./ai/ai.module";
 import { AiModelsModule } from "./ai-models/ai-models.module";
 import { AuthModule } from "./auth/auth.module";
-import { ChatHistoryModule } from "./chat-history/chat-history.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { FileStorageModule } from "./file-storage/file-storage.module";
 import { HealthModule } from "./health/health.module";
@@ -22,7 +21,6 @@ import { UsersModule } from "./users/users.module";
     AiModule,
     AiModelsModule,
     AuthModule,
-    ChatHistoryModule,
     DashboardModule,
     FileStorageModule,
     HealthModule,

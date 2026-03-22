@@ -26,29 +26,12 @@ import { auth } from "@api/lib/auth";
 
 import type { UpdateUserData, UserListParams } from "@repo/types";
 
-type UserQuery = {
-  page?: string;
-  limit?: string;
-  search?: string;
-  role?: string;
-};
-
-type UpdateUserBody = Partial<{
-  name: string;
-  email: string;
-  image: string;
-}>;
-
-type BulkIdsBody = {
-  ids: string[];
-};
-
-type CreateUserBody = {
-  email: string;
-  name: string;
-  role: "USER" | "ADMIN" | "SUPER_ADMIN";
-  password: string;
-};
+import type {
+  BulkIdsBody,
+  CreateUserBody,
+  UpdateUserBody,
+  UserQuery,
+} from "./dto/admin-users.dto";
 
 @Controller("/api/users")
 @UseGuards(BetterAuthGuard, AdminGuard)

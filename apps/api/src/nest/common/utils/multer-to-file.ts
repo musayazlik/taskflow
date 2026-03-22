@@ -11,4 +11,3 @@ export const multerFileToDomFile = (file: Express.Multer.File): File => {
 export const multerFilesToDomFiles = (
   files: Express.Multer.File[],
 ): File[] => files.map(multerFileToDomFile);
-

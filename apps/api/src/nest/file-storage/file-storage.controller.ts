@@ -5,32 +5,34 @@ import {
   Get,
   Param,
   Post,
-  Put,
   Query,
   Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
-  BadRequestException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import multer from "multer";
 
-import { prisma } from "@repo/database";
 import { AppError } from "@api/lib/errors";
 import { successResponse } from "@api/lib/route-helpers";
 import * as mediaService from "@api/services/media.service";
 import { BetterAuthGuard } from "../auth/better-auth.guard";
 import type { RequestWithSession } from "../auth/better-auth.guard";
-import { FileProvider } from "@api/lib/file-service";
-import { FILE_UPLOAD_LIMITS, PAGINATION } from "@api/constants";
-import { multerFileToDomFile } from "../utils/multer-to-file";
+import { FILE_UPLOAD_LIMITS } from "@api/constants";
+import { multerFileToDomFile } from "../common/utils/multer-to-file";
+
+import type {
+  FileStorageListQuery,
+  FileStorageUploadBody,
+  MigrateFileBody,
+} from "./dto/file-storage.dto";
 
 @Controller("/api/file-storage")
 export class FileStorageController {
   @Get("/files")
   async listFiles(
-    @Query() query: { limit?: string; offset?: string; folder?: string },
+    @Query() query: FileStorageListQuery,
   ) {
     const limit = query.limit ? parseInt(query.limit) : 50;
     const offset = query.offset ? parseInt(query.offset) : 0;
@@ -57,11 +59,7 @@ export class FileStorageController {
     @Req() req: RequestWithSession,
     @UploadedFile() file?: Express.Multer.File,
     @Body()
-    body?: {
-      folder?: string;
-      provider?: FileProvider;
-      metadata?: Record<string, string>;
-    },
+    body?: FileStorageUploadBody,
   ) {
     const session = req.betterAuthSession;
     if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);
@@ -106,7 +104,7 @@ export class FileStorageController {
   @UseGuards(BetterAuthGuard)
   async migrateFile(
     @Param("key") key: string,
-    @Body() body: { targetProvider: FileProvider },
+    @Body() body: MigrateFileBody,
   ) {
     const result = await mediaService.migrateFile(key, body.targetProvider);
     return successResponse(result, "File migrated successfully");

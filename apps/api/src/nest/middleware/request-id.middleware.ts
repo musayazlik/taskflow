@@ -3,7 +3,11 @@ import type { NextFunction, Request, Response } from "express";
 import crypto from "crypto";
 
 import { logger } from "@api/lib/logger";
-import type { RequestWithRequestId } from "../types/request-with-request-id";
+
+/** Express request augmented by {@link RequestIdAndLoggingMiddleware} */
+export type RequestWithRequestId = Request & {
+  requestId?: string;
+};
 
 @Injectable()
 export class RequestIdAndLoggingMiddleware implements NestMiddleware {

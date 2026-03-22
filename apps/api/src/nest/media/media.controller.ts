@@ -23,14 +23,19 @@ import { AdminGuard } from "../auth/role.guards";
 import { MEDIA_UPLOAD_DEFAULTS, PAGINATION } from "@api/constants";
 import * as mediaService from "@api/services/media.service";
 import { successResponse } from "@api/lib/route-helpers";
-import { multerFileToDomFile, multerFilesToDomFiles } from "../utils/multer-to-file";
+import {
+  multerFileToDomFile,
+  multerFilesToDomFiles,
+} from "../common/utils/multer-to-file";
+
+import type { MediaListQuery, OptimizeImageBody } from "./dto/media.dto";
 
 @Controller("/api/media")
 @UseGuards(BetterAuthGuard, AdminGuard)
 export class MediaController {
   @Get("/")
   async list(
-    @Query() query: { limit?: string; offset?: string },
+    @Query() query: MediaListQuery,
   ) {
     const limit = query.limit ? parseInt(query.limit) : PAGINATION.DEFAULT_LIMIT;
     const offset = query.offset ? parseInt(query.offset) : PAGINATION.DEFAULT_OFFSET;
@@ -84,12 +89,7 @@ export class MediaController {
   @Post("/:key/optimize")
   async optimize(
     @Param("key") key: string,
-    @Body() body: {
-      quality?: number;
-      format?: "webp" | "jpeg" | "png" | "original";
-      maxWidth?: number;
-      maxHeight?: number;
-    },
+    @Body() body: OptimizeImageBody,
   ) {
     const result = await mediaService.optimizeImage(key, {
       quality: body.quality,

@@ -5,28 +5,11 @@ import { AppError } from "@api/lib/errors";
 import { successResponse } from "@api/lib/route-helpers";
 import * as mediaService from "@api/services/media.service";
 
-type NullableString = string | null;
-
-type UpdateGlobalSettingsBody = Partial<{
-  primaryColor: NullableString;
-  primaryForeground: NullableString;
-  secondaryColor: NullableString;
-  secondaryForeground: NullableString;
-}>;
-
-type UpdateImageOptimizationBody = Partial<{
-  enabled: boolean;
-  maxWidth: number | null;
-  maxHeight: number | null;
-  quality: number | null;
-  format: string | null;
-}>;
-
-type UpdateMediaUploadBody = Partial<{
-  maxFileSize: number;
-  maxFileCount: number;
-  allowedMimeTypes: string[];
-}>;
+import type {
+  UpdateGlobalSettingsBody,
+  UpdateImageOptimizationBody,
+  UpdateMediaUploadBody,
+} from "./dto/settings.dto";
 
 @Controller("/api/settings")
 export class SettingsController {

@@ -10,7 +10,7 @@ import { env } from "@api/lib/env";
 import { logger } from "@api/lib/logger";
 
 import { AppModule } from "./app.module";
-import { HttpExceptionFilter } from "./filters/http-exception.filter";
+import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
 import { auth } from "@api/lib/auth";
 
 async function bootstrap(): Promise<void> {

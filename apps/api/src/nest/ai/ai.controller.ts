@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
-import { Type as t } from "@sinclair/typebox";
 
 import { AppError } from "@api/lib/errors";
 import { successResponse } from "@api/lib/route-helpers";
@@ -13,133 +12,20 @@ import type {
   MultimodalContent,
   SystemPromptCategory,
 } from "@repo/types";
-import { TypeBoxValidationPipe } from "../validation/typebox-validation.pipe";
+import { TypeBoxValidationPipe } from "../common/pipes/typebox-validation.pipe";
 
-const chatSchema = t.Object({
-  model: t.String(),
-  messages: t.Array(
-    t.Object({
-      role: t.Union([
-        t.Literal("user"),
-        t.Literal("assistant"),
-        t.Literal("system"),
-      ]),
-      // content can be string or array, validated/normalized below
-      content: t.Any(),
-    }),
-  ),
-  temperature: t.Optional(t.Number({ minimum: 0, maximum: 2 })),
-  maxTokens: t.Optional(t.Number({ minimum: 1, maximum: 128000 })),
-});
-
-type ChatRequest = {
-  model: string;
-  messages: ChatMessage[];
-  temperature?: number;
-  maxTokens?: number;
-};
-
-const seoSchema = t.Object({
-  model: t.String(),
-  topic: t.String({ minLength: 1 }),
-  targetKeyword: t.Optional(t.String()),
-  tone: t.String({ default: "professional" }),
-  language: t.String({ default: "en" }),
-  creativity: t.Number({ minimum: 0, maximum: 1, default: 0.7 }),
-});
-
-type SeoRequest = {
-  model: string;
-  topic: string;
-  targetKeyword?: string;
-  tone: string;
-  language: string;
-  creativity: number;
-};
-
-const contentSchema = t.Object({
-  model: t.String(),
-  topic: t.String({ minLength: 1 }),
-  keywords: t.Optional(t.String()),
-  contentType: t.String({ default: "blog" }),
-  tone: t.String({ default: "professional" }),
-  language: t.String({ default: "en" }),
-  targetLength: t.Number({ minimum: 100, maximum: 5000, default: 500 }),
-  creativity: t.Number({ minimum: 0, maximum: 1, default: 0.7 }),
-});
-
-type ContentRequest = {
-  model: string;
-  topic: string;
-  keywords?: string;
-  contentType: string;
-  tone: string;
-  language: string;
-  targetLength: number;
-  creativity: number;
-};
-
-const imageSchema = t.Object({
-  model: t.String(),
-  prompt: t.String({ minLength: 1 }),
-  negativePrompt: t.Optional(t.String()),
-  aspectRatio: t.String({ default: "1:1" }),
-  style: t.String({ default: "realistic" }),
-  quality: t.Number({ minimum: 50, maximum: 100, default: 80 }),
-  count: t.Number({ minimum: 1, maximum: 4, default: 1 }),
-  baseImageUrl: t.Optional(t.String()),
-});
-
-type ImageRequest = {
-  model: string;
-  prompt: string;
-  negativePrompt?: string;
-  aspectRatio: string;
-  style: string;
-  quality: number;
-  count: number;
-  baseImageUrl?: string;
-};
-
-const processSchema = t.Object({
-  userPrompt: t.String({ minLength: 1 }),
-  aiModelName: t.String({ minLength: 1 }),
-  aiProvider: t.Union([
-    t.Literal("openrouter"),
-    t.Literal("openai"),
-    t.Literal("anthropic"),
-    t.Literal("google"),
-  ]),
-  systemPromptCategory: t.Optional(
-    t.Union([
-      t.Literal("TEXT_GENERATION"),
-      t.Literal("IMAGE_GENERATION"),
-      t.Literal("SEO_OPTIMIZATION"),
-      t.Literal("CODE_GENERATION"),
-    ]),
-  ),
-  systemPromptType: t.Optional(t.String()),
-  customSystemPrompt: t.Optional(t.String()),
-  temperature: t.Optional(t.Number({ minimum: 0, maximum: 2 })),
-  maxTokens: t.Optional(t.Number({ minimum: 1, maximum: 128000 })),
-  additionalParams: t.Optional(t.Record(t.String(), t.Any())),
-});
-
-type ProcessRequest = {
-  userPrompt: string;
-  aiModelName: string;
-  aiProvider: "openrouter" | "openai" | "anthropic" | "google";
-  systemPromptCategory?:
-    | "TEXT_GENERATION"
-    | "IMAGE_GENERATION"
-    | "SEO_OPTIMIZATION"
-    | "CODE_GENERATION";
-  systemPromptType?: string;
-  customSystemPrompt?: string;
-  temperature?: number;
-  maxTokens?: number;
-  additionalParams?: Record<string, unknown>;
-};
+import {
+  chatSchema,
+  contentSchema,
+  imageSchema,
+  processSchema,
+  seoSchema,
+  type ChatRequest,
+  type ContentRequest,
+  type ImageRequest,
+  type ProcessRequest,
+  type SeoRequest,
+} from "./dto/ai.schemas";
 
 @Controller("/api/ai")
 @UseGuards(BetterAuthGuard)
@@ -155,7 +41,7 @@ export class AiController {
     const { model, messages, temperature, maxTokens } = body;
 
     // Normalize messages to match provider expected format
-    const normalizedMessages = messages.map((msg) => {
+    const normalizedMessages = (messages as ChatMessage[]).map((msg) => {
       if (typeof msg.content === "string") return msg;
       if (Array.isArray(msg.content)) {
         const validatedContent: MultimodalContent[] = msg.content.map((item) => {
@@ -287,4 +173,3 @@ export class AiController {
     return successResponse(response);
   }
 }
-

@@ -16,12 +16,14 @@ import {
   UpdateAiModelSchema,
   type UpdateAiModelData,
 } from "@repo/types";
-import { TypeBoxValidationPipe } from "../validation/typebox-validation.pipe";
+import { TypeBoxValidationPipe } from "../common/pipes/typebox-validation.pipe";
+
+import type { AiModelsListQuery } from "./dto/ai-models.dto";
 
 @Controller("/api/ai-models")
 export class AiModelsController {
   @Get("/")
-  async list(@Query() query: { page?: string; limit?: string; activeOnly?: string; provider?: string }) {
+  async list(@Query() query: AiModelsListQuery) {
     const { page, limit } = parsePagination(query);
     const params = {
       page,

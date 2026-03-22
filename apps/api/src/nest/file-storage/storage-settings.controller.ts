@@ -7,6 +7,8 @@ import * as mediaService from "@api/services/media.service";
 import { BetterAuthGuard } from "../auth/better-auth.guard";
 import { FileProvider } from "@api/lib/file-service";
 
+import type { StorageSettingsUpdateBody } from "./dto/storage-settings.dto";
+
 @Controller("/api/storage-settings")
 export class StorageSettingsController {
   @Get("/")
@@ -30,11 +32,7 @@ export class StorageSettingsController {
   @Put("/")
   @UseGuards(BetterAuthGuard)
   async update(
-    @Body() body: {
-      defaultProvider: FileProvider;
-      uploadthingToken?: string;
-      selectionRules?: Record<string, string>;
-    },
+    @Body() body: StorageSettingsUpdateBody,
   ) {
     try {
       const settings = await prisma.fileStorageSettings.upsert({

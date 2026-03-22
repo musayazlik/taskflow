@@ -39,4 +39,3 @@ export class TypeBoxValidationPipe implements PipeTransform {
     return error.message || "Invalid request data";
   }
 }
-

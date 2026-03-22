@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Patch, Req, UseGuards } from "@nestjs/common";
 
 import { AppError } from "@api/lib/errors";
 import { successResponse } from "@api/lib/route-helpers";

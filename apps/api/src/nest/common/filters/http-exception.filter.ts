@@ -9,7 +9,7 @@ import type { Request, Response } from "express";
 import { env } from "@api/lib/env";
 import { logger } from "@api/lib/logger";
 import { AppError } from "@api/lib/errors";
-import type { RequestWithRequestId } from "../types/request-with-request-id";
+import type { RequestWithRequestId } from "../../middleware/request-id.middleware";
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -113,4 +113,3 @@ export class HttpExceptionFilter implements ExceptionFilter {
     );
   }
 }
-

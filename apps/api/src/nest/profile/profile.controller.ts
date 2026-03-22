@@ -22,15 +22,18 @@ import { BetterAuthGuard } from "../auth/better-auth.guard";
 import {
   ChangePasswordSchema,
   UpdateProfileSchema,
+  type ChangePassword,
   type UpdateProfile,
 } from "@repo/types";
 import type { RequestWithSession } from "../auth/better-auth.guard";
 
-import { TypeBoxValidationPipe } from "../validation/typebox-validation.pipe";
+import { TypeBoxValidationPipe } from "../common/pipes/typebox-validation.pipe";
 import { hashPassword, verifyPassword } from "better-auth/crypto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import multer from "multer";
-import { multerFileToDomFile } from "../utils/multer-to-file";
+import { multerFileToDomFile } from "../common/utils/multer-to-file";
+
+import type { SetPasswordBody } from "./dto/profile.dto";
 
 @Controller("/api/profile")
 export class ProfileController {
@@ -146,7 +149,7 @@ export class ProfileController {
   @UseGuards(BetterAuthGuard)
   async setPassword(
     @Req() req: RequestWithSession,
-    @Body() body: { newPassword?: string },
+    @Body() body: SetPasswordBody,
   ) {
     const session = req.betterAuthSession;
     if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);
@@ -193,10 +196,7 @@ export class ProfileController {
   @UseGuards(BetterAuthGuard)
   async changePassword(
     @Req() req: RequestWithSession,
-    @Body(new TypeBoxValidationPipe(ChangePasswordSchema)) body: {
-      currentPassword: string;
-      newPassword: string;
-    },
+    @Body(new TypeBoxValidationPipe(ChangePasswordSchema)) body: ChangePassword,
   ) {
     const session = req.betterAuthSession;
     if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);
