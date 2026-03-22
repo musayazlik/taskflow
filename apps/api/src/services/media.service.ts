@@ -4,7 +4,9 @@
  */
 
 import { prisma } from "@repo/database";
+import type { MediaFile } from "@repo/database";
 import { AppError } from "@api/lib/errors";
+import { isAdminRole, type RequesterContext } from "@api/lib/auth-roles";
 import { logger } from "@api/lib/logger";
 import { utapi } from "@api/lib/uploadthing";
 import { optimizeImage as optimizeImageUtil, maybeOptimizeImage } from "@api/lib/utils";
@@ -44,6 +46,106 @@ export interface OptimizeImageOptions {
 	format?: "webp" | "jpeg" | "png" | "original";
 	maxWidth?: number;
 	maxHeight?: number;
+}
+
+// ============================================
+// Media file authorization
+// ============================================
+
+function assertCanManageMediaFile(
+	fileRecord: Pick<MediaFile, "uploadedBy">,
+	requester: RequesterContext,
+): void {
+	if (isAdminRole(requester.role)) {
+		return;
+	}
+	if (fileRecord.uploadedBy === null) {
+		throw new AppError(
+			"FORBIDDEN",
+			"Only administrators can manage this file",
+			403,
+		);
+	}
+	if (fileRecord.uploadedBy !== requester.userId) {
+		throw new AppError(
+			"FORBIDDEN",
+			"You can only manage your own files",
+			403,
+		);
+	}
+}
+
+/**
+ * Resolve DB record and canonical key (same heuristics as delete).
+ */
+async function resolveMediaFileKeyAndRecord(
+	inputKey: string,
+): Promise<{ key: string; record: MediaFile | null }> {
+	let fileKey = inputKey;
+	let fileRecord = await prisma.mediaFile.findUnique({
+		where: { key: fileKey },
+	});
+
+	if (!fileRecord && fileKey.includes("utfs.io")) {
+		const urlMatch = fileKey.match(/utfs\.io\/f\/([^/?#]+)/);
+		if (urlMatch?.[1]) {
+			const extractedKey = urlMatch[1];
+			fileRecord = await prisma.mediaFile.findUnique({
+				where: { key: extractedKey },
+			});
+			if (fileRecord) {
+				fileKey = extractedKey;
+			}
+		}
+	}
+
+	if (!fileRecord) {
+		fileRecord = await prisma.mediaFile.findFirst({
+			where: {
+				OR: [{ key: fileKey }, { url: { contains: fileKey } }],
+			},
+		});
+		if (fileRecord) {
+			fileKey = fileRecord.key;
+		}
+	}
+
+	return { key: fileKey, record: fileRecord };
+}
+
+async function deleteProviderOnly(fileKey: string): Promise<void> {
+	const provider = FileServiceFactory.getProvider(FileProvider.UPLOADTHING);
+	logger.warn(
+		{ fileKey },
+		"File not found in database, attempting to delete from provider",
+	);
+	const deleted = await provider.delete(fileKey);
+	if (deleted) {
+		logger.info(
+			{ fileKey },
+			"File deleted from provider (was not in database)",
+		);
+		return;
+	}
+	throw new AppError("FILE_NOT_FOUND", `File not found: ${fileKey}`, 404);
+}
+
+async function deleteProviderAndDbRecord(fileRecord: MediaFile): Promise<void> {
+	const provider = FileServiceFactory.getProvider(FileProvider.UPLOADTHING);
+	const deleted = await provider.delete(fileRecord.key);
+	if (!deleted) {
+		logger.warn(
+			{ fileKey: fileRecord.key },
+			"Failed to delete from storage provider",
+		);
+	}
+	await prisma.mediaFile.delete({
+		where: { key: fileRecord.key },
+	});
+	logger.info(
+		{ fileKey: fileRecord.key, fileName: fileRecord.name },
+		"File deleted successfully",
+	);
 }
 
 // ============================================
@@ -210,72 +312,27 @@ export const uploadProfileImage = async (
 };
 
 /**
- * Delete a file from both provider and database
+ * Delete a file from both provider and database (enforces owner-or-admin rules).
  */
-export const deleteFile = async (fileKey: string): Promise<void> => {
+export const deleteFile = async (
+	fileKey: string,
+	requester: RequesterContext,
+): Promise<void> => {
 	try {
-		// Try to find file by key first
-		let fileRecord = await prisma.mediaFile.findUnique({
-			where: { key: fileKey },
-		});
-
-		// If not found, try to extract key from URL if it's a URL
-		if (!fileRecord && fileKey.includes("utfs.io")) {
-			const urlMatch = fileKey.match(/utfs\.io\/f\/([^/?#]+)/);
-			if (urlMatch && urlMatch[1]) {
-				const extractedKey = urlMatch[1];
-				fileRecord = await prisma.mediaFile.findUnique({
-					where: { key: extractedKey },
-				});
-				if (fileRecord) {
-					fileKey = extractedKey; // Use extracted key for deletion
-				}
+		const { key, record } = await resolveMediaFileKeyAndRecord(fileKey);
+		if (!record) {
+			if (!isAdminRole(requester.role)) {
+				throw new AppError(
+					"FORBIDDEN",
+					"You do not have permission to delete this file",
+					403,
+				);
 			}
+			await deleteProviderOnly(key);
+			return;
 		}
-
-		// If still not found, try searching by URL
-		if (!fileRecord) {
-			fileRecord = await prisma.mediaFile.findFirst({
-				where: {
-					OR: [
-						{ key: fileKey },
-						{ url: { contains: fileKey } },
-					],
-				},
-			});
-			if (fileRecord) {
-				fileKey = fileRecord.key; // Use the found key
-			}
-		}
-
-		// Get provider (always UPLOADTHING for now)
-		const provider = FileServiceFactory.getProvider(FileProvider.UPLOADTHING);
-
-		// If file not found in database, try to delete from provider anyway
-		if (!fileRecord) {
-			logger.warn({ fileKey }, "File not found in database, attempting to delete from provider");
-			const deleted = await provider.delete(fileKey);
-			if (deleted) {
-				logger.info({ fileKey }, "File deleted from provider (was not in database)");
-				return; // Successfully deleted from provider, even though not in DB
-			}
-			throw new AppError("FILE_NOT_FOUND", `File not found: ${fileKey}`, 404);
-		}
-
-		// Delete from provider (use the actual key from database)
-		const deleted = await provider.delete(fileRecord.key);
-
-		if (!deleted) {
-			logger.warn({ fileKey: fileRecord.key }, "Failed to delete from storage provider");
-			// Continue with database deletion even if provider deletion fails
-		}
-
-		// Delete from database
-		await prisma.mediaFile.delete({
-			where: { key: fileRecord.key },
-		});
-
-		logger.info({ fileKey: fileRecord.key, fileName: fileRecord.name }, "File deleted successfully");
+		assertCanManageMediaFile(record, requester);
+		await deleteProviderAndDbRecord(record);
 	} catch (error) {
 		if (error instanceof AppError) throw error;
 		logger.error({ err: error, fileKey }, "Error deleting file");
@@ -295,8 +352,15 @@ export const deleteProfileImage = async (userId: string): Promise<void> => {
 
 		if (user?.image) {
 			const urlMatch = user.image.match(/utfs\.io\/f\/([^/]+)/);
-			if (urlMatch && urlMatch[1]) {
-				await deleteFile(urlMatch[1]);
+			if (urlMatch?.[1]) {
+				const { key, record } = await resolveMediaFileKeyAndRecord(
+					urlMatch[1],
+				);
+				if (!record) {
+					await deleteProviderOnly(key);
+				} else {
+					await deleteProviderAndDbRecord(record);
+				}
 			}
 		}
 
@@ -584,6 +648,7 @@ export const getAvailableProviders = () => {
 export const migrateFile = async (
 	fileKey: string,
 	targetProvider: FileProvider,
+	requester: RequesterContext,
 ): Promise<UploadResult> => {
 	try {
 		// Get current file info
@@ -594,6 +659,8 @@ export const migrateFile = async (
 		if (!fileRecord) {
 			throw new AppError("FILE_NOT_FOUND", "File not found", 404);
 		}
+
+		assertCanManageMediaFile(fileRecord, requester);
 
 		// Get source and target providers
 		const sourceProvider = FileServiceFactory.getProvider(
