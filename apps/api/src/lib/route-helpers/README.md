@@ -9,9 +9,8 @@ Helpers for **authentication from headers**, **pagination**, and **standard JSON
 | Function | Behavior |
 |----------|----------|
 | `getSession` / `requireAuth` | Normalizes `Headers` or a plain header record, calls **`auth.api.getSession`**, throws **`AppError` 401** if no session. |
-| `requireAdmin` | Same as `getSession`, then requires role **ADMIN** or **SUPER_ADMIN**. |
+| `requireAdmin` | Same as `getSession`, then requires role **ADMIN** or **SUPER_ADMIN** (via [`isAdminRole`](../auth-roles/README.md)). |
 | `requireSuperAdmin` | Requires **SUPER_ADMIN** only. |
-| `isAdmin` | String role check (duplicate of admin logic; prefer [`auth-roles`](../auth-roles/README.md) for new code). |
 
 `HeadersLike` = `Record<string, string | undefined> | Headers`.
 

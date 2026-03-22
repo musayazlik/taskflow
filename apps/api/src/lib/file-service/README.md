@@ -7,9 +7,9 @@
 - **`FileProvider`** enum — identifies the active backend (e.g. `UPLOADTHING`).
 - **`FileService` interface** — upload, delete, public URL, “configured?” checks.
 - **`FileServiceFactory`** — resolves the right provider for a file MIME type or explicit preference; reads **storage settings** from DB / env where applicable.
-- **`UploadThingProvider`** — implements `FileService` using env token and UploadThing APIs.
+- **`UploadThingProvider`** — implements `FileService` using the shared **`utapi`** from [`../uploadthing`](../uploadthing/README.md) (same `UTApi` instance as `media.service`; no duplicate client).
 
-Consumers (**`media.service`**, storage settings) depend on **`FileServiceFactory`** and types from this module, not on UploadThing SDK details directly (except where `utapi` is still used for listing/sync).
+Consumers (**`media.service`**, storage settings) depend on **`FileServiceFactory`** and types from this module, not on UploadThing SDK details directly (except where `utapi` is still used directly in `media.service` for listing/sync).
 
 ## Typical flow
 
@@ -34,7 +34,7 @@ import {
 | `interface.ts` | Types + `FileProvider` enum + abstract capabilities. |
 | `factory.ts` | Provider selection and singleton-style access. |
 | `providers/uploadthing.provider.ts` | UploadThing-specific implementation. |
-| `index.ts` | Public exports (also re-exports `FileServiceFactory as FileUploadService` for legacy naming). |
+| `index.ts` | Public exports (`FileServiceFactory`, types, `UploadThingProvider`). |
 
 ## Related
 

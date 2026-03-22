@@ -5,6 +5,7 @@
  */
 
 import { auth } from "@api/lib/auth";
+import { isAdminRole } from "@api/lib/auth-roles";
 import { AppError } from "@api/lib/errors";
 import { PAGINATION } from "@api/constants";
 
@@ -56,23 +57,14 @@ export const getSession = async (headers: HeadersLike) => {
 export const requireAuth = getSession;
 
 /**
- * @param role - `session.user.role`
- * @returns `true` if role is `ADMIN` or `SUPER_ADMIN`.
- *
- * @remarks Prefer `isAdminRole` from `@api/lib/auth-roles` for new code to avoid drift.
- */
-export const isAdmin = (role: string): boolean => {
-  return role === "ADMIN" || role === "SUPER_ADMIN";
-};
-
-/**
  * Like {@link getSession}, but requires an admin role; otherwise **403**.
+ * Uses {@link isAdminRole} from `@api/lib/auth-roles` so admin logic stays in one place.
  *
  * @throws {AppError} `FORBIDDEN` if not admin.
  */
 export const requireAdmin = async (headers: HeadersLike) => {
   const session = await getSession(headers);
-  if (!isAdmin(session.user.role)) {
+  if (!isAdminRole(session.user.role)) {
     throw new AppError("FORBIDDEN", "Admin access required", 403);
   }
   return session;

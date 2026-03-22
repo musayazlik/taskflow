@@ -45,4 +45,4 @@ await deleteFile(key, requester);
 | `auth-roles` | Pure functions / types; no HTTP. |
 | `nest/auth/role.guards.ts` | `CanActivate`, throws `AppError`, reads `req.betterAuthSession`. |
 
-If you change who counts as “admin”, update **`isAdminRole` in one place** and keep guards calling it (already aligned in this codebase).
+If you change who counts as “admin”, update **`isAdminRole` in one place** — guards, services, and `requireAdmin` in [`../route-helpers`](../route-helpers/README.md) all rely on it.

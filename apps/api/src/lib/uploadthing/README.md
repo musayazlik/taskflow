@@ -10,7 +10,7 @@ Instance of UploadThing’s **`UTApi`** when `UPLOADTHING_TOKEN` is valid in env
 
 - If the token is **missing**, a warning is logged and an instance is still created with an empty token — calls may fail until you configure the token (see env schema for expected base64 JSON shape).
 
-- Used by **`media.service`** for uploads, deletes, listing, and URL resolution.
+- Used by **`media.service`**, **`UploadThingProvider`** ([`../file-service`](../file-service/README.md)), and anywhere else that needs server-side UploadThing API calls — **one shared `UTApi` instance** for the process.
 
 ### `uploadRouter` / `OurFileRouter`
 
