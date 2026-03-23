@@ -4,7 +4,7 @@ import express from "express";
 import type { NextFunction, Request, Response } from "express";
 import { toNodeHandler } from "better-auth/node";
 import { NestFactory } from "@nestjs/core";
-import { IoAdapter } from "@nestjs/platform-socket.io";
+import { SocketIoAdapter } from "./common/adapters/socket-io.adapter";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 
 import { env } from "@api/lib/env";
@@ -26,7 +26,7 @@ async function bootstrap(): Promise<void> {
     bodyParser: false,
   });
 
-  app.useWebSocketAdapter(new IoAdapter(app));
+  app.useWebSocketAdapter(new SocketIoAdapter(app));
 
   const allowedOrigins = [
     env.FRONTEND_URL,
