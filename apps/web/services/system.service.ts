@@ -1,23 +1,26 @@
-import { baseApi } from "@/lib/api";
+import { apiClient } from "@/lib/api";
 import type { ApiResponse } from "./types";
 import type { SystemInfo } from "@repo/types";
 
 export const systemService = {
   async getSystemStats(): Promise<ApiResponse<SystemInfo>> {
     try {
-      const { data, error } = await baseApi.system.stats.get();
+      const response = await apiClient.get<{
+        success: boolean;
+        data?: SystemInfo;
+        error?: string;
+        message?: string;
+      }>("/api/system/stats");
 
-      if (error) {
+      if (!response.success) {
         return {
           success: false,
           error: "Request failed",
-          message: String(error.value) || "Failed to fetch system stats",
+          message: response.message || "Failed to fetch system stats",
         };
       }
 
-      const response = data as { success: boolean; data: SystemInfo };
-
-      if (response && response.success && response.data) {
+      if (response.data) {
         return {
           success: true,
           data: response.data,

@@ -192,7 +192,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             router.push("/");
             router.refresh();
           },
-          onError: (error) => {
+          onError: (error: unknown) => {
             console.error("Logout error:", error);
             toast.error("Failed to log out");
             setIsLoggingOut(false);

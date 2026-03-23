@@ -1,4 +1,4 @@
-import { baseApi } from "@/lib/api";
+import { apiClient, buildApiQuery } from "@/lib/api";
 import type { ApiResponse, PaginatedResponse } from "./types";
 import type {
   CreateAiModel,
@@ -14,26 +14,29 @@ export const aiModelService = {
     provider?: string;
   }): Promise<ApiResponse<PaginatedResponse<AiModel>>> {
     try {
-      const { data, error } = await baseApi["ai-models"].get({
-        query: {
-          page: params?.page?.toString(),
-          limit: params?.limit?.toString(),
-          activeOnly: params?.activeOnly?.toString(),
-          provider: params?.provider,
-        },
+      const query = buildApiQuery({
+        page: params?.page?.toString(),
+        limit: params?.limit?.toString(),
+        activeOnly:
+          params?.activeOnly !== undefined ? String(params.activeOnly) : undefined,
+        provider: params?.provider,
       });
 
-      if (error) {
+      const response = await apiClient.get<PaginatedResponse<AiModel>>(
+        `/api/ai-models${query}`,
+      );
+
+      if (!response.success) {
         return {
           success: false,
           error: "Request failed",
-          message: String(error.value) || "Failed to fetch AI models",
+          message: response.message || "Failed to fetch AI models",
         };
       }
 
       return {
         success: true,
-        data: (data as any).data as PaginatedResponse<AiModel>,
+        data: response,
       };
     } catch {
       return {
@@ -46,19 +49,24 @@ export const aiModelService = {
 
   async getAiModelById(id: string): Promise<ApiResponse<AiModel>> {
     try {
-      const { data, error } = await baseApi["ai-models"][id].get();
+      const response = await apiClient.get<{
+        success: boolean;
+        data?: AiModel;
+        error?: string;
+        message?: string;
+      }>(`/api/ai-models/${encodeURIComponent(id)}`);
 
-      if (error) {
+      if (!response.success) {
         return {
           success: false,
           error: "Request failed",
-          message: String(error.value) || "Failed to fetch AI model",
+          message: response.message || "Failed to fetch AI model",
         };
       }
 
       return {
         success: true,
-        data: (data as any).data as AiModel,
+        data: response.data as AiModel,
       };
     } catch {
       return {
@@ -71,19 +79,24 @@ export const aiModelService = {
 
   async createAiModel(modelData: CreateAiModel): Promise<ApiResponse<AiModel>> {
     try {
-      const { data, error } = await baseApi["ai-models"].post(modelData);
+      const response = await apiClient.post<{
+        success: boolean;
+        data?: AiModel;
+        error?: string;
+        message?: string;
+      }>("/api/ai-models", modelData);
 
-      if (error) {
+      if (!response.success) {
         return {
           success: false,
           error: "Request failed",
-          message: String(error.value) || "Failed to create AI model",
+          message: response.message || "Failed to create AI model",
         };
       }
 
       return {
         success: true,
-        data: (data as any).data as AiModel,
+        data: response.data as AiModel,
       };
     } catch {
       return {
@@ -99,21 +112,24 @@ export const aiModelService = {
     modelData: UpdateAiModel,
   ): Promise<ApiResponse<AiModel>> {
     try {
-      const { data, error } = await baseApi["ai-models"][id].patch(
-        modelData,
-      );
+      const response = await apiClient.patch<{
+        success: boolean;
+        data?: AiModel;
+        error?: string;
+        message?: string;
+      }>(`/api/ai-models/${encodeURIComponent(id)}`, modelData);
 
-      if (error) {
+      if (!response.success) {
         return {
           success: false,
           error: "Request failed",
-          message: String(error.value) || "Failed to update AI model",
+          message: response.message || "Failed to update AI model",
         };
       }
 
       return {
         success: true,
-        data: (data as any).data as AiModel,
+        data: response.data as AiModel,
       };
     } catch {
       return {
@@ -126,19 +142,23 @@ export const aiModelService = {
 
   async deleteAiModel(id: string): Promise<ApiResponse<void>> {
     try {
-      const { data, error } = await baseApi["ai-models"][id].delete();
+      const response = await apiClient.delete<{
+        success: boolean;
+        message?: string;
+        error?: string;
+      }>(`/api/ai-models/${encodeURIComponent(id)}`);
 
-      if (error) {
+      if (!response || !response.success) {
         return {
           success: false,
           error: "Request failed",
-          message: String(error.value) || "Failed to delete AI model",
+          message: response?.message || "Failed to delete AI model",
         };
       }
 
       return {
         success: true,
-        message: (data as any)?.message || "AI model deleted successfully",
+        message: response.message || "AI model deleted successfully",
       };
     } catch {
       return {

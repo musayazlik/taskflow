@@ -1,4 +1,4 @@
-import { baseApi } from "@/lib/api";
+import { apiClient } from "@/lib/api";
 import { resolveApiBaseUrl, AUTH_ENDPOINTS } from "@repo/types";
 import type { ApiResponse, AuthResponse, User } from "./types";
 
@@ -146,23 +146,25 @@ export const authService = {
     email: string,
   ): Promise<ApiResponse<{ debug?: { token: string; email: string } }>> {
     try {
-      const { data, error } = await baseApi.auth["forgot-password"].post({
-        email,
-      });
+      const response = await apiClient.post<{
+        success?: boolean;
+        message?: string;
+        error?: string;
+        data?: { debug?: { token: string; email: string } };
+      }>(AUTH_ENDPOINTS.forgotPassword, { email });
 
-      if (error) {
+      if (response && typeof response === "object" && "error" in response && response.error) {
         return {
           success: false,
           error: "Request failed",
-          message:
-            (error.value as any)?.message || "Failed to send reset email",
+          message: response.message || String(response.error) || "Failed to send reset email",
         };
       }
 
       return {
         success: true,
-        data: (data as any)?.data,
-        message: (data as any)?.message,
+        data: response?.data,
+        message: response?.message,
       };
     } catch {
       return {
@@ -179,24 +181,26 @@ export const authService = {
     password: string;
   }): Promise<ApiResponse<void>> {
     try {
-      const { data: responseData, error } = await baseApi.auth[
-        "reset-password"
-      ].post({
+      const response = await apiClient.post<{
+        success?: boolean;
+        message?: string;
+        error?: string;
+      }>(AUTH_ENDPOINTS.resetPassword, {
         newPassword: data.password,
         token: data.token,
       });
 
-      if (error) {
+      if (response && typeof response === "object" && "error" in response && response.error) {
         return {
           success: false,
-          error: (error.value as any)?.message || "Request failed",
+          error: String(response.error) || "Request failed",
           message: "Failed to reset password",
         };
       }
 
       return {
         success: true,
-        message: (responseData as any)?.message,
+        message: response?.message,
       };
     } catch {
       return {
@@ -209,38 +213,43 @@ export const authService = {
 
   async getSession(): Promise<ApiResponse<{ user: User }>> {
     try {
-      const { data, error } = await baseApi.auth["get-session"].get();
+      const data = await apiClient.get<{
+        user?: Record<string, unknown>;
+        session?: unknown;
+      }>(AUTH_ENDPOINTS.session);
 
-      if (error) {
-        return {
-          success: false,
-          error: "Request failed",
-          message: (error.value as any)?.message || "No session",
+      if (data?.user) {
+        const u = data.user as {
+          id: string;
+          email: string;
+          name: string;
+          role?: string;
+          image?: string | null;
+          emailVerified?: boolean;
+          emailVerifiedAt?: string | null;
+          createdAt?: string | Date;
+          updatedAt?: string | Date;
         };
-      }
-
-      if (data && (data as any).user) {
-        const result = data as any;
         return {
           success: true,
           data: {
             user: {
-              id: result.user.id,
-              email: result.user.email,
-              name: result.user.name,
-              role: result.user.role || "USER",
-              image: result.user.image,
-              emailVerified: result.user.emailVerified || false,
-              emailVerifiedAt: (result.user as any).emailVerifiedAt || null,
-              createdAt: result.user.createdAt
-                ? typeof result.user.createdAt === "string"
-                  ? result.user.createdAt
-                  : new Date(result.user.createdAt).toISOString()
+              id: u.id,
+              email: u.email,
+              name: u.name,
+              role: (u.role || "USER") as User["role"],
+              image: u.image,
+              emailVerified: u.emailVerified || false,
+              emailVerifiedAt: u.emailVerifiedAt ?? null,
+              createdAt: u.createdAt
+                ? typeof u.createdAt === "string"
+                  ? u.createdAt
+                  : new Date(u.createdAt).toISOString()
                 : new Date().toISOString(),
-              updatedAt: result.user.updatedAt
-                ? typeof result.user.updatedAt === "string"
-                  ? result.user.updatedAt
-                  : new Date(result.user.updatedAt).toISOString()
+              updatedAt: u.updatedAt
+                ? typeof u.updatedAt === "string"
+                  ? u.updatedAt
+                  : new Date(u.updatedAt).toISOString()
                 : new Date().toISOString(),
             },
           },

@@ -1,4 +1,4 @@
-import { baseApi, apiClient } from "@/lib/api";
+import { apiClient, buildApiQuery } from "@/lib/api";
 import type {
 	ApiResponse,
 	User,
@@ -15,26 +15,28 @@ export const userService = {
 		role?: string;
 	}): Promise<ApiResponse<PaginatedResponse<User>>> {
 		try {
-			const { data, error } = await baseApi.users.get({
-				query: {
-					page: params?.page?.toString(),
-					limit: params?.limit?.toString(),
-					search: params?.search,
-					role: params?.role,
-				},
+			const query = buildApiQuery({
+				page: params?.page?.toString(),
+				limit: params?.limit?.toString(),
+				search: params?.search,
+				role: params?.role,
 			});
 
-			if (error) {
+			const response = await apiClient.get<PaginatedResponse<User>>(
+				`/api/users${query}`,
+			);
+
+			if (!response.success) {
 				return {
 					success: false,
 					error: "Request failed",
-					message: String(error.value) || "Failed to fetch users",
+					message: response.message || "Failed to fetch users",
 				};
 			}
 
 			return {
 				success: true,
-				data: data as unknown as PaginatedResponse<User>,
+				data: response,
 			};
 		} catch {
 			return {
@@ -47,20 +49,24 @@ export const userService = {
 
 	async getUserById(id: string): Promise<ApiResponse<User>> {
 		try {
-			const { data, error } = await baseApi.users({ id }).get();
+			const response = await apiClient.get<{
+				success: boolean;
+				data?: User;
+				error?: string;
+				message?: string;
+			}>(`/api/users/${encodeURIComponent(id)}`);
 
-			if (error) {
+			if (!response.success) {
 				return {
 					success: false,
 					error: "Request failed",
-					message: String(error.value) || "Failed to fetch user",
+					message: response.message || "Failed to fetch user",
 				};
 			}
 
-			const response = data as unknown as { success: boolean; data: User };
 			return {
 				success: true,
-				data: response.data,
+				data: response.data as User,
 			};
 		} catch {
 			return {
@@ -138,21 +144,24 @@ export const userService = {
 
 	async sendPasswordReset(userId: string): Promise<ApiResponse<void>> {
 		try {
-			const { data, error } = await baseApi.users({ id: userId })["send-password-reset"].post();
+			const data = await apiClient.post<{
+				success: boolean;
+				message?: string;
+				error?: string;
+			}>(`/api/users/${encodeURIComponent(userId)}/send-password-reset`, {});
 
-			if (error) {
-				const errorData = error.value as any;
+			if (!data.success) {
 				return {
 					success: false,
-					error: errorData?.error || "Request failed",
-					message: errorData?.message || "Failed to send password reset email",
+					error: data.error || "Request failed",
+					message: data.message || "Failed to send password reset email",
 				};
 			}
 
 			return {
 				success: true,
 				data: undefined,
-				message: (data as any)?.message || "Password reset email sent",
+				message: data.message || "Password reset email sent",
 			};
 		} catch {
 			return {
@@ -165,21 +174,25 @@ export const userService = {
 
 	async verifyEmail(userId: string): Promise<ApiResponse<User>> {
 		try {
-			const { data, error } = await baseApi.users({ id: userId })["verify-email"].post();
+			const data = await apiClient.post<{
+				success: boolean;
+				data?: User;
+				message?: string;
+				error?: string;
+			}>(`/api/users/${encodeURIComponent(userId)}/verify-email`, {});
 
-			if (error) {
-				const errorData = error.value as any;
+			if (!data.success) {
 				return {
 					success: false,
-					error: errorData?.error || "Request failed",
-					message: errorData?.message || "Failed to verify email",
+					error: data.error || "Request failed",
+					message: data.message || "Failed to verify email",
 				};
 			}
 
 			return {
 				success: true,
-				data: (data as any)?.data as User,
-				message: (data as any)?.message,
+				data: data.data as User,
+				message: data.message,
 			};
 		} catch {
 			return {
@@ -192,21 +205,25 @@ export const userService = {
 
 	async unverifyEmail(userId: string): Promise<ApiResponse<User>> {
 		try {
-			const { data, error } = await baseApi.users({ id: userId })["unverify-email"].post();
+			const data = await apiClient.post<{
+				success: boolean;
+				data?: User;
+				message?: string;
+				error?: string;
+			}>(`/api/users/${encodeURIComponent(userId)}/unverify-email`, {});
 
-			if (error) {
-				const errorData = error.value as any;
+			if (!data.success) {
 				return {
 					success: false,
-					error: errorData?.error || "Request failed",
-					message: errorData?.message || "Failed to unverify email",
+					error: data.error || "Request failed",
+					message: data.message || "Failed to unverify email",
 				};
 			}
 
 			return {
 				success: true,
-				data: (data as any)?.data as User,
-				message: (data as any)?.message,
+				data: data.data as User,
+				message: data.message,
 			};
 		} catch {
 			return {
@@ -286,19 +303,24 @@ export const userService = {
 
 	async getProfile(): Promise<ApiResponse<User>> {
 		try {
-			const { data, error } = await baseApi.profile.get();
+			const response = await apiClient.get<{
+				success: boolean;
+				data?: User;
+				error?: string;
+				message?: string;
+			}>("/api/profile");
 
-			if (error) {
+			if (!response.success) {
 				return {
 					success: false,
 					error: "Request failed",
-					message: String(error.value) || "Failed to get profile",
+					message: response.message || "Failed to get profile",
 				};
 			}
 
 			return {
 				success: true,
-				data: (data as any).data as User,
+				data: response.data as User,
 			};
 		} catch {
 			return {
@@ -318,7 +340,6 @@ export const userService = {
 		try {
 			console.log("[updateProfile] Sending request with body:", body);
 
-			// Use apiClient instead of eden treaty for better control
 			const response = await apiClient.patch<{
 				success: boolean;
 				data?: User;
@@ -386,21 +407,24 @@ export const userService = {
 
 	async deleteAvatar(): Promise<ApiResponse<void>> {
 		try {
-			const { data, error } = await baseApi.profile.avatar.delete();
+			const data = await apiClient.delete<{
+				success: boolean;
+				message?: string;
+				error?: string;
+			}>("/api/profile/avatar");
 
-			if (error) {
-				const errorData = error.value as any;
+			if (!data || !data.success) {
 				return {
 					success: false,
-					error: errorData?.error || "Request failed",
-					message: errorData?.message || "Failed to delete avatar",
+					error: data?.error || "Request failed",
+					message: data?.message || "Failed to delete avatar",
 				};
 			}
 
 			return {
 				success: true,
 				data: undefined,
-				message: (data as any)?.message,
+				message: data.message,
 			};
 		} catch {
 			return {

@@ -22,10 +22,11 @@ const nextConfig = {
 			'framer-motion',
 			'motion',
 		],
-		// Monorepo: `next` lives at repo root node_modules (Docker + local hoisting)
-		turbo: {
-			root: resolve(__dirname, '../..'),
-		},
+	},
+
+	// Monorepo: resolve packages from repo root (Docker + hoisted node_modules). Replaces experimental.turbo in Next.js 16+.
+	turbopack: {
+		root: resolve(__dirname, '../..'),
 	},
 
 	transpilePackages: [
