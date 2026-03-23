@@ -2,7 +2,8 @@ import { apiClient } from "@/lib/api";
 import { resolveApiBaseUrl, AUTH_ENDPOINTS } from "@repo/types";
 import type { ApiResponse, AuthResponse, User } from "./types";
 
-const API_BASE_URL = resolveApiBaseUrl();
+// Keep browser auth requests same-origin so session cookies are set on the frontend domain.
+const API_BASE_URL = typeof window === "undefined" ? resolveApiBaseUrl() : "";
 
 export const authService = {
   async register(data: {

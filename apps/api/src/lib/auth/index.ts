@@ -11,6 +11,38 @@ import { env } from "@api/lib/env";
 import { logger } from "@api/lib/logger";
 import { sendVerificationEmail, sendPasswordResetEmail } from "../../emails";
 
+function parseCsvOrigins(value: string | undefined): string[] {
+  if (!value) return [];
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function isNonLocalHttpsUrl(value: string | undefined): boolean {
+  if (!value) return false;
+  try {
+    const u = new URL(value);
+    return u.protocol === "https:" && u.hostname !== "localhost";
+  } catch {
+    return false;
+  }
+}
+
+const trustedOrigins = Array.from(
+  new Set(
+    [
+      env.FRONTEND_URL,
+      env.BETTER_AUTH_URL,
+      ...parseCsvOrigins(process.env.AUTH_TRUSTED_ORIGINS),
+    ].filter((v): v is string => Boolean(v)),
+  ),
+);
+
+const enableCrossSubdomainCookies =
+  (env.NODE_ENV === "production" || env.NODE_ENV === "staging") &&
+  isNonLocalHttpsUrl(env.FRONTEND_URL);
+
 /**
  * Singleton Better Auth instance.
  *
@@ -108,13 +140,13 @@ export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL || env.FRONTEND_URL,
 
   // Trusted origins for CORS
-  trustedOrigins: [env.FRONTEND_URL],
+  trustedOrigins,
 
   // Advanced options
   advanced: {
     generateId: false, // Use Prisma's default cuid()
     crossSubDomainCookies: {
-      enabled: false,
+      enabled: enableCrossSubdomainCookies,
     },
   },
 });

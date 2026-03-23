@@ -63,6 +63,9 @@ async function bootstrap(): Promise<void> {
   // Better Auth expects to be mounted on an Express catch-all route.
   // Keep JSON parsing for all other routes; auth handler comes first.
   const expressApp = app.getHttpAdapter().getInstance();
+  // Respect reverse-proxy headers (x-forwarded-proto, x-forwarded-host) in production.
+  // This is required for correct secure cookie behavior behind TLS-terminating proxies.
+  expressApp.set("trust proxy", 1);
   expressApp.use("/api/auth", toNodeHandler(auth));
 
   const jsonParser = express.json();
