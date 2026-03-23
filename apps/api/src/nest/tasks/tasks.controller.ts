@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -65,16 +66,22 @@ export class TasksController {
               throw new AppError("VALIDATION_ERROR", "Invalid status", 400);
             })();
 
-    const assigneeId =
+    const assigneeIdRaw =
       body.assigneeId === undefined
         ? undefined
         : body.assigneeId === null
           ? null
           : typeof body.assigneeId === "string"
-            ? body.assigneeId
+            ? body.assigneeId.trim()
             : (() => {
                 throw new AppError("VALIDATION_ERROR", "assigneeId must be a string", 400);
               })();
+    const assigneeId =
+      assigneeIdRaw === undefined
+        ? undefined
+        : assigneeIdRaw === null || assigneeIdRaw === ""
+          ? null
+          : assigneeIdRaw;
 
     const task = await this.tasksService.createTask({
       ownerId: session.user.id,
@@ -106,6 +113,15 @@ export class TasksController {
     });
 
     return paginatedResponse(result.tasks, result.total, result.page, result.limit);
+  }
+
+  @Get("assignable-users")
+  async listAssignableUsers(@Req() req: RequestWithSession) {
+    const session = req.betterAuthSession;
+    if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);
+
+    const users = await this.tasksService.listAssignableUsers();
+    return successResponse(users);
   }
 
   @Get("/:id")
@@ -176,6 +192,20 @@ export class TasksController {
     return successResponse(task);
   }
 
+  @Delete("/:id")
+  async remove(@Req() req: RequestWithSession, @Param("id") id: string) {
+    const session = req.betterAuthSession;
+    if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);
+
+    await this.tasksService.deleteTask({
+      taskId: id,
+      userId: session.user.id,
+      role: session.user.role,
+    });
+
+    return successResponse({ id }, "Task deleted");
+  }
+
   @Post("/:id/assign")
   async assign(
     @Req() req: RequestWithSession,
@@ -185,20 +215,23 @@ export class TasksController {
     const session = req.betterAuthSession;
     if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);
 
-    const assigneeId =
+    const assigneeIdRaw =
       body.assigneeId === undefined
         ? undefined
         : body.assigneeId === null
           ? null
           : typeof body.assigneeId === "string"
-            ? body.assigneeId
+            ? body.assigneeId.trim()
             : (() => {
                 throw new AppError("VALIDATION_ERROR", "assigneeId must be a string", 400);
               })();
 
-    if (assigneeId === undefined) {
+    if (assigneeIdRaw === undefined) {
       throw new AppError("VALIDATION_ERROR", "assigneeId is required", 400);
     }
+
+    const assigneeId =
+      assigneeIdRaw === null || assigneeIdRaw === "" ? null : assigneeIdRaw;
 
     const task = await this.tasksService.assignTask({
       taskId: id,

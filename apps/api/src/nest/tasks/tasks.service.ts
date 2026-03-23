@@ -12,12 +12,17 @@ import { AppError } from "@api/lib/errors";
 
 import { NotificationsService } from "../notifications/notifications.service";
 
+import { TasksRealtimeService } from "./tasks-realtime.service";
+
 const isTaskStatus = (status: string): status is TaskStatus =>
   status === "TODO" || status === "IN_PROGRESS" || status === "DONE";
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(
+    private readonly notificationsService: NotificationsService,
+    private readonly tasksRealtime: TasksRealtimeService,
+  ) {}
 
   async createTask(input: {
     ownerId: string;
@@ -58,6 +63,8 @@ export class TasksService {
           })
         : Promise.resolve(),
     ]);
+
+    this.tasksRealtime.emitTaskCreated(created);
 
     return created;
   }
@@ -188,6 +195,8 @@ export class TasksService {
         : Promise.resolve(),
     ]);
 
+    this.tasksRealtime.emitTaskUpdated(updated);
+
     return updated;
   }
 
@@ -239,6 +248,54 @@ export class TasksService {
         : Promise.resolve(),
     ]);
 
+    this.tasksRealtime.emitTaskUpdated(result, {
+      previousAssigneeId: existing.assigneeId,
+    });
+
     return result;
+  }
+
+  async deleteTask(input: {
+    taskId: string;
+    userId: string;
+    role: string;
+  }): Promise<void> {
+    const existing = await this.getTaskById({
+      taskId: input.taskId,
+      userId: input.userId,
+      role: input.role,
+    });
+
+    if (
+      input.role !== "ADMIN" &&
+      input.role !== "SUPER_ADMIN" &&
+      existing.ownerId !== input.userId
+    ) {
+      throw new AppError(
+        "FORBIDDEN",
+        "Only the task owner can delete the task",
+        403,
+      );
+    }
+
+    await prisma.task.delete({
+      where: { id: input.taskId },
+    });
+
+    this.tasksRealtime.emitTaskDeleted(existing.id, {
+      ownerId: existing.ownerId,
+      assigneeId: existing.assigneeId,
+    });
+  }
+
+  /** Minimal user list for assignee pickers (authenticated users only). */
+  async listAssignableUsers(): Promise<
+    { id: string; name: string | null; email: string }[]
+  > {
+    return prisma.user.findMany({
+      select: { id: true, name: true, email: true },
+      orderBy: [{ name: "asc" }, { email: "asc" }],
+      take: 200,
+    });
   }
 }
