@@ -26,14 +26,11 @@ function createNamespaceSocket(base: string, namespace: string): AppSocket {
  * The hook/component subscribes/unsubscribes events, but this module keeps the connection alive.
  */
 export function getNamespaceSocket(namespace: string): AppSocket {
-  // In development, connect directly to API to avoid rewrite/proxy quirks with WS upgrades.
-  // In production, keep same-origin handshake so frontend-domain cookies are always included.
-  const base =
-    typeof window === "undefined"
-      ? resolveApiBaseUrl()
-      : process.env.NODE_ENV === "development"
-        ? resolveApiBaseUrl()
-        : "";
+  // Always use the public API base URL (NEXT_PUBLIC_API_URL). Same-origin rewrites
+  // (/socket.io → backend) often return 404 in standalone / edge deployments because
+  // long-polling and upgrade paths do not proxy reliably. Session cookies scoped to the
+  // parent domain (.example.com) are sent to the API origin when withCredentials is true.
+  const base = resolveApiBaseUrl();
   const key = `${base}::${namespace}`;
 
   if (socketsBase !== base) {
