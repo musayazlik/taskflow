@@ -89,12 +89,11 @@ const quickActions = [
       "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400",
   },
   {
-    icon: Zap,
-    label: "AI Models",
-    description: "Manage AI tools",
-    href: "/panel/ai-models",
-    color:
-      "bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400",
+    icon: Activity,
+    label: "Notifications",
+    description: "Check latest activity",
+    href: "/panel/notifications",
+    color: "bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400",
   },
 ];
 
