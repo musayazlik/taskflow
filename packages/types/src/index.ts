@@ -3,8 +3,6 @@ import { Type as t, TSchema } from "@sinclair/typebox";
 export * from "./users";
 export * from "./products";
 export * from "./auth";
-export * from "./ai-models";
-export * from "./ai";
 export * from "./dashboard";
 export * from "./profile";
 export * from "./settings";
@@ -16,6 +14,7 @@ export * from "./customers";
 export * from "./system";
 export * from "./tasks";
 export * from "./notifications";
+export * from "./chat-history";
 
 // Re-export frontend-compatible types
 export type { ProductFrontend } from "./products";

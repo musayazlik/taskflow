@@ -48,18 +48,30 @@ export class HttpExceptionFilter implements ExceptionFilter {
       (typeof req.headers["x-request-id"] === "string"
         ? req.headers["x-request-id"]
         : undefined);
+    const basePayload = {
+      success: false as const,
+      timestamp: new Date().toISOString(),
+      path: req.originalUrl || req.url,
+      requestId,
+    };
 
     if (exception instanceof AppError) {
       res.status(exception.status).json({
-        success: false,
+        ...basePayload,
         error: exception.code || "INTERNAL_ERROR",
         message: exception.message || "An unexpected error occurred",
         ...(exception.details && { details: exception.details }),
-        ...(requestId && { requestId }),
       });
 
       logger.error(
-        { requestId, code: exception.code, message: exception.message },
+        {
+          requestId,
+          method: req.method,
+          path: req.originalUrl || req.url,
+          code: exception.code,
+          message: exception.message,
+          details: exception.details,
+        },
         `[ERROR] ${exception.code}: ${exception.message}`,
       );
       return;
@@ -83,17 +95,39 @@ export class HttpExceptionFilter implements ExceptionFilter {
         }
         return undefined;
       })();
+      const details =
+        typeof response === "object" && response !== null
+          ? (() => {
+              const record = response as Record<string, unknown>;
+              if (Array.isArray(record.message)) {
+                return record.message.filter(
+                  (item): item is string => typeof item === "string",
+                );
+              }
+              if (record.details && typeof record.details === "object") {
+                return record.details;
+              }
+              return undefined;
+            })()
+          : undefined;
 
       if (status === HttpStatus.BAD_REQUEST) {
         res.status(status).json({
-          success: false,
+          ...basePayload,
           error: "VALIDATION_ERROR",
           message: message || "Validation failed",
-          ...(requestId && { requestId }),
+          ...(details && { details }),
         });
 
         logger.error(
-          { requestId, status, message },
+          {
+            requestId,
+            method: req.method,
+            path: req.originalUrl || req.url,
+            status,
+            message,
+            details,
+          },
           `[ERROR] VALIDATION_ERROR: ${String(message)}`,
         );
         return;
@@ -108,14 +142,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const errorCode = httpExceptionStatusToErrorCode(status);
 
       res.status(status).json({
-        success: false,
+        ...basePayload,
         error: errorCode,
         message: responseMessage,
-        ...(requestId && { requestId }),
+        ...(details && { details }),
       });
 
       logger.error(
-        { requestId, status, message, errorCode },
+        {
+          requestId,
+          method: req.method,
+          path: req.originalUrl || req.url,
+          status,
+          message,
+          errorCode,
+          details,
+        },
         `[ERROR] HTTP ${status} (${errorCode}): ${String(message)}`,
       );
       return;
@@ -126,17 +168,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
       exception instanceof Error ? exception.message : "Unknown error";
 
     res.status(status).json({
-      success: false,
+      ...basePayload,
       error: "INTERNAL_ERROR",
       message:
         env.NODE_ENV === "production"
           ? "An unexpected error occurred"
           : rawMessage || "An unexpected error occurred",
-      ...(requestId && { requestId }),
     });
 
     logger.error(
-      { requestId, rawMessage },
+      {
+        requestId,
+        method: req.method,
+        path: req.originalUrl || req.url,
+        rawMessage,
+        stack: exception instanceof Error ? exception.stack : undefined,
+      },
       `[ERROR] INTERNAL_ERROR: ${rawMessage}`,
     );
   }

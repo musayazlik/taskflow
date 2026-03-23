@@ -12,16 +12,10 @@ import {
   Mail,
   Bell,
   Shield,
-  HelpCircle,
   Menu,
   X,
   Image,
-  Brain,
   Key,
-  MessageSquare,
-  FileEdit,
-  ImageIcon,
-  Search,
 } from "lucide-react";
 import { Button } from "@repo/shadcn-ui/ui/button";
 import {
@@ -104,36 +98,6 @@ const menuItems: MenuSection[] = [
         roles: ["SUPER_ADMIN"],
       },
       {
-        icon: Brain,
-        label: "AI Models",
-        href: "/panel/ai-models",
-        roles: ["ADMIN"],
-      },
-      {
-        icon: MessageSquare,
-        label: "AI Chat",
-        href: "/panel/ai-models/chat",
-        roles: ["USER", "ADMIN"],
-      },
-      {
-        icon: FileEdit,
-        label: "AI Content",
-        href: "/panel/ai-models/content",
-        roles: ["USER", "ADMIN"],
-      },
-      {
-        icon: ImageIcon,
-        label: "AI Image",
-        href: "/panel/ai-models/image",
-        roles: ["USER", "ADMIN"],
-      },
-      {
-        icon: Search,
-        label: "AI SEO",
-        href: "/panel/ai-models/seo",
-        roles: ["USER", "ADMIN"],
-      },
-      {
         icon: Shield,
         label: "Security",
         href: "/panel/security",
@@ -143,12 +107,6 @@ const menuItems: MenuSection[] = [
         icon: Settings,
         label: "Settings",
         href: "/panel/settings",
-        roles: ["USER", "ADMIN"],
-      },
-      {
-        icon: HelpCircle,
-        label: "Help",
-        href: "/panel/help",
         roles: ["USER", "ADMIN"],
       },
     ],
