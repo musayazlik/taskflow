@@ -1,6 +1,11 @@
 import { resolveApiBaseUrl } from "@repo/types";
 
-const API_BASE_URL = resolveApiBaseUrl();
+/**
+ * In browser, prefer same-origin `/api/*` calls so auth cookies created on the
+ * frontend domain are included reliably (especially in production with separate API domain).
+ * On server-side usage, keep absolute API URL resolution.
+ */
+const API_BASE_URL = typeof window === "undefined" ? resolveApiBaseUrl() : "";
 
 /**
  * Build a query string from key-value pairs; omits undefined and empty string values.
