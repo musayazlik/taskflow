@@ -7,7 +7,7 @@ import { FileProvider, FileService } from "./interface";
 import { UploadThingProvider } from "./providers/uploadthing.provider";
 
 /**
- * Static registry of storage providers. Initialized on module load via {@link initialize}.
+ * Static registry of storage providers. Initialized via {@link initialize} from API bootstrap.
  */
 export class FileServiceFactory {
   private static providers: Map<FileProvider, FileService> = new Map();
@@ -92,16 +92,10 @@ export class FileServiceFactory {
   }
 
   /**
-   * Registers built-in providers (UploadThing). Invoked once at module load.
+   * Registers built-in providers (UploadThing). Call once from API bootstrap after
+   * `refreshUploadthingTokenCache` from `@api/lib/uploadthing` so DB-backed tokens apply.
    */
   static initialize(): void {
-    // Register UploadThing
-    const uploadThing = new UploadThingProvider();
-    if (uploadThing.isConfigured()) {
-      this.registerProvider(uploadThing);
-    }
+    this.registerProvider(new UploadThingProvider());
   }
 }
-
-// Initialize on module load
-FileServiceFactory.initialize();

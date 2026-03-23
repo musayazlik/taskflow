@@ -1,12 +1,11 @@
 /**
  * @fileoverview `FileService` implementation backed by UploadThing `UTApi`.
- * Uses the shared `utapi` singleton from `@api/lib/uploadthing` so token handling and logging stay in one place.
+ * Uses {@link getUtapi} from `@api/lib/uploadthing` so token handling and logging stay in one place.
  * @module @api/lib/file-service/providers/uploadthing.provider
  */
 
-import { env } from "@api/lib/env";
 import { logger } from "@api/lib/logger";
-import { utapi } from "@api/lib/uploadthing";
+import { getUtapi, isUploadthingConfigured } from "@api/lib/uploadthing";
 import {
   FileProvider,
   FileService,
@@ -16,14 +15,14 @@ import {
 } from "../interface";
 
 /**
- * UploadThing-backed storage: upload/delete/metadata/URL resolution via `env.UPLOADTHING_TOKEN`.
+ * UploadThing-backed storage: upload/delete/metadata/URL resolution via effective token (DB or env).
  */
 export class UploadThingProvider extends FileService {
   readonly name = "UploadThing";
   readonly provider = FileProvider.UPLOADTHING;
 
   isConfigured(): boolean {
-    return !!env.UPLOADTHING_TOKEN;
+    return isUploadthingConfigured();
   }
 
   async upload(params: UploadFileParams): Promise<UploadResult> {
@@ -41,7 +40,7 @@ export class UploadThingProvider extends FileService {
       fileToUpload = file;
     }
 
-    const response = await utapi.uploadFiles(fileToUpload);
+    const response = await getUtapi().uploadFiles(fileToUpload);
 
     if (response.error) {
       throw new Error(`Upload failed: ${response.error.message}`);
@@ -65,7 +64,7 @@ export class UploadThingProvider extends FileService {
 
   async delete(key: string): Promise<boolean> {
     try {
-      await utapi.deleteFiles(key);
+      await getUtapi().deleteFiles(key);
       return true;
     } catch (error) {
       logger.error({ err: error, key }, "UploadThing delete failed");
@@ -75,7 +74,7 @@ export class UploadThingProvider extends FileService {
 
   async getFile(key: string): Promise<FileMetadata | null> {
     try {
-      const files = await utapi.getFileUrls(key);
+      const files = await getUtapi().getFileUrls(key);
       const file = files.data[0];
       
       if (!file) return null;

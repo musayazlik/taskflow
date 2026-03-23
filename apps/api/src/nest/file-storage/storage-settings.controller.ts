@@ -3,6 +3,7 @@ import { prisma } from "@repo/database";
 
 import { AppError } from "@api/lib/errors";
 import { successResponse } from "@api/lib/route-helpers";
+import { refreshUploadthingTokenCache } from "@api/lib/uploadthing";
 import * as mediaService from "@api/services/media.service";
 import { BetterAuthGuard } from "../auth/better-auth.guard";
 import { AdminGuard } from "../auth/role.guards";
@@ -51,6 +52,8 @@ export class StorageSettingsController {
           ...(body.selectionRules && { selectionRules: body.selectionRules }),
         },
       });
+
+      await refreshUploadthingTokenCache();
 
       return successResponse(settings);
     } catch (error) {

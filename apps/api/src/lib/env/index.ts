@@ -5,18 +5,9 @@
  * @module @api/lib/env
  */
 
-import { config } from "dotenv";
-import { resolve } from "path";
+import "./bootstrap";
 import { z } from "zod";
 import { logger } from "@api/lib/logger";
-
-// Load .env from stable absolute paths so imports work regardless of CWD.
-const rootEnvPath = resolve(import.meta.dir, "../../../../../.env");
-const apiEnvPath = resolve(import.meta.dir, "../../../.env");
-
-// Root first, then api-level overrides (if both exist).
-config({ path: rootEnvPath });
-config({ path: apiEnvPath });
 
 /**
  * Environment variable validation schema

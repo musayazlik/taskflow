@@ -7,7 +7,9 @@ import { NestFactory } from "@nestjs/core";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 
 import { env } from "@api/lib/env";
+import { FileServiceFactory } from "@api/lib/file-service";
 import { logger } from "@api/lib/logger";
+import { refreshUploadthingTokenCache } from "@api/lib/uploadthing";
 
 import { AppModule } from "./app.module";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
@@ -15,6 +17,9 @@ import { mergeBetterAuthPathsIntoSwaggerDocument } from "./swagger/swagger-bette
 import { auth } from "@api/lib/auth";
 
 async function bootstrap(): Promise<void> {
+  await refreshUploadthingTokenCache();
+  FileServiceFactory.initialize();
+
   const app = await NestFactory.create(AppModule, {
     cors: false,
     bodyParser: false,
