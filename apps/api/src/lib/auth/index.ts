@@ -145,6 +145,11 @@ export const auth = betterAuth({
   // Advanced options
   advanced: {
     generateId: false, // Use Prisma's default cuid()
+    // Respect x-forwarded-* headers when API runs behind reverse proxies/CDNs.
+    // This keeps Better Auth's HTTPS/origin detection consistent in production.
+    trustedProxyHeaders: true,
+    // Keep secure cookies enabled in production-like environments.
+    useSecureCookies: env.NODE_ENV === "production" || env.NODE_ENV === "staging",
     crossSubDomainCookies: {
       enabled: enableCrossSubdomainCookies,
     },
