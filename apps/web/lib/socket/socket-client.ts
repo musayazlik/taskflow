@@ -13,7 +13,8 @@ function createNamespaceSocket(base: string, namespace: string): AppSocket {
   return io(`${base}/${namespace}`, {
     path: "/socket.io/",
     withCredentials: true,
-    transports: ["websocket", "polling"],
+    // Keep long-polling fallback first for environments where WS upgrade is blocked.
+    transports: ["polling", "websocket"],
     reconnection: true,
     reconnectionAttempts: 12,
     reconnectionDelay: 1000,
@@ -25,9 +26,14 @@ function createNamespaceSocket(base: string, namespace: string): AppSocket {
  * The hook/component subscribes/unsubscribes events, but this module keeps the connection alive.
  */
 export function getNamespaceSocket(namespace: string): AppSocket {
-  // Keep socket handshake same-origin in browser so auth cookies are always included.
-  // Next.js rewrites forward `/socket.io/*` traffic to the API service in production.
-  const base = typeof window === "undefined" ? resolveApiBaseUrl() : "";
+  // In development, connect directly to API to avoid rewrite/proxy quirks with WS upgrades.
+  // In production, keep same-origin handshake so frontend-domain cookies are always included.
+  const base =
+    typeof window === "undefined"
+      ? resolveApiBaseUrl()
+      : process.env.NODE_ENV === "development"
+        ? resolveApiBaseUrl()
+        : "";
   const key = `${base}::${namespace}`;
 
   if (socketsBase !== base) {

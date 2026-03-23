@@ -8,7 +8,7 @@ import {
 import type { Server, Socket } from "socket.io";
 
 import { auth } from "@api/lib/auth";
-import { env } from "@api/lib/env";
+import { getSocketCorsOptions } from "@api/lib/socket-cors";
 import type { TaskRealtimeMessage } from "@repo/types";
 
 /**
@@ -17,10 +17,7 @@ import type { TaskRealtimeMessage } from "@repo/types";
  */
 @WebSocketGateway({
   namespace: "/tasks",
-  cors: {
-    origin: env.FRONTEND_URL,
-    credentials: true,
-  },
+  cors: getSocketCorsOptions(),
 })
 export class TasksGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()

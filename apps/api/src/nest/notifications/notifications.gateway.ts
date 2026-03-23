@@ -8,7 +8,7 @@ import {
 import type { Server, Socket } from "socket.io";
 
 import { auth } from "@api/lib/auth";
-import { env } from "@api/lib/env";
+import { getSocketCorsOptions } from "@api/lib/socket-cors";
 import type { NotificationRealtimeMessage } from "@repo/types";
 
 /**
@@ -18,10 +18,7 @@ import type { NotificationRealtimeMessage } from "@repo/types";
  */
 @WebSocketGateway({
   namespace: "/notifications",
-  cors: {
-    origin: env.FRONTEND_URL,
-    credentials: true,
-  },
+  cors: getSocketCorsOptions(),
 })
 export class NotificationsGateway
   implements OnGatewayConnection, OnGatewayDisconnect

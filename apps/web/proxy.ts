@@ -21,7 +21,7 @@ export async function proxy(request: NextRequest) {
   // Session check
   let session = null;
   try {
-    session = await getSession();
+    session = await getSession(request.nextUrl.origin);
   } catch (error) {
     // On session failure, redirect panel paths to login
     if (pathname.startsWith("/panel")) {
