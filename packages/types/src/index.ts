@@ -14,7 +14,6 @@ export * from "./customers";
 export * from "./system";
 export * from "./tasks";
 export * from "./notifications";
-export * from "./chat-history";
 
 // Re-export frontend-compatible types
 export type { ProductFrontend } from "./products";

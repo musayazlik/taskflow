@@ -123,7 +123,7 @@ export async function proxy(request: NextRequest) {
     }
 
     const userRole = session.user.role || "USER";
-    const adminOnlyPaths = ["/panel/users", "/panel/security", "/panel/rbac"];
+    const adminOnlyPaths = ["/panel/users"];
 
     for (const adminPath of adminOnlyPaths) {
       if (pathname.startsWith(adminPath)) {
