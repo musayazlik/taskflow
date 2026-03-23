@@ -48,3 +48,8 @@ export function getTasksSocket(): AppSocket {
   return getNamespaceSocket("tasks");
 }
 
+/** Wrapper for the common `/notifications` namespace. */
+export function getNotificationsSocket(): AppSocket {
+  return getNamespaceSocket("notifications");
+}
+
