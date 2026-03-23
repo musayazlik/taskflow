@@ -1,37 +1,89 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth-actions";
+
+interface SessionUser {
+  id: string;
+  email: string;
+  name: string | null;
+  role: string;
+  image?: string | null;
+  emailVerified?: boolean;
+}
+
+interface SessionData {
+  user: SessionUser;
+  session: { token: string; expiresAt: string };
+}
+
+function resolveBackendUrl(): string {
+  return (
+    process.env.INTERNAL_API_URL ||
+    process.env.API_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:4101"
+  ).replace(/\/$/, "");
+}
+
+async function getSessionFromBackend(
+  cookieHeader: string,
+): Promise<SessionData | null> {
+  if (!cookieHeader) return null;
+
+  try {
+    const apiUrl = resolveBackendUrl();
+    const response = await fetch(`${apiUrl}/api/auth/get-session`, {
+      headers: { Cookie: cookieHeader },
+      cache: "no-store",
+    });
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    if (!data?.user) return null;
+
+    return {
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        role: data.user.role || "USER",
+        image: data.user.image,
+        emailVerified: data.user.emailVerified,
+      },
+      session: data.session,
+    };
+  } catch {
+    return null;
+  }
+}
 
 /**
- * Next.js 16 Middleware
+ * Next.js 16 Proxy (replaces middleware.ts)
  * Session check: blocks signed-in users from auth pages and unauthenticated users from panel.
- * Integrates with Better Auth.
+ * Reads cookies directly from the request and validates against the backend API.
  */
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip session check for marketing/public pages (for static render)
   const publicPaths = ["/legal", "/changelog", "/contact"];
-
-  const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
-
-  if (isPublicPath) {
+  if (publicPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.next();
   }
 
-  // Session check
-  let session = null;
-  try {
-    session = await getSession(request.nextUrl.origin);
-  } catch (error) {
-    // On session failure, redirect panel paths to login
-    if (pathname.startsWith("/panel")) {
-      const callbackUrl = encodeURIComponent(pathname);
-      return NextResponse.redirect(
-        new URL(`/login?callbackUrl=${callbackUrl}`, request.url),
-      );
-    }
+  const needsSession =
+    pathname.startsWith("/panel") ||
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/register") ||
+    pathname.startsWith("/forgot-password") ||
+    pathname.startsWith("/reset-password") ||
+    pathname.startsWith("/verify-email") ||
+    pathname.startsWith("/resend-verification");
+
+  if (!needsSession) {
     return NextResponse.next();
   }
+
+  const cookieHeader = request.headers.get("cookie") || "";
+  const session = await getSessionFromBackend(cookieHeader);
 
   // resend-verification: unverified users can access
   if (pathname.startsWith("/resend-verification")) {
@@ -70,7 +122,6 @@ export async function proxy(request: NextRequest) {
       );
     }
 
-    // RBAC: role check for admin-only paths
     const userRole = session.user.role || "USER";
     const adminOnlyPaths = ["/panel/users", "/panel/security", "/panel/rbac"];
 
