@@ -31,7 +31,7 @@ export const ResetPasswordSchema = t.Object({
 export type ResetPassword = Static<typeof ResetPasswordSchema>;
 
 export const SocialSignInParamsSchema = t.Object({
-  provider: t.Union([t.Literal("google"), t.Literal("github")]),
+  provider: t.Literal("google"),
 });
 
 export type SocialSignInParams = Static<typeof SocialSignInParamsSchema>;

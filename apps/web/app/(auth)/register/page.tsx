@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import { Mail, CheckCircle } from "lucide-react";
 import { Iconify } from "@/components/iconify";
 import googleIcon from "@iconify-icons/simple-icons/google";
-import githubIcon from "@iconify-icons/simple-icons/github";
 import { signUp, signIn } from "@/lib/auth-client";
 import { AuthCard, Input, Button } from "@/components/auth";
 
@@ -33,9 +32,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [oauthLoading, setOauthLoading] = useState<"google" | "github" | null>(
-    null,
-  );
+  const [oauthLoading, setOauthLoading] = useState<"google" | null>(null);
   const [registrationComplete, setRegistrationComplete] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
 
@@ -85,14 +82,14 @@ export default function RegisterPage() {
     }
   };
 
-  const handleOAuthLogin = async (provider: "google" | "github") => {
-    setOauthLoading(provider);
+  const handleOAuthLogin = async () => {
+    setOauthLoading("google");
 
     try {
       // Use full frontend URL for callback to avoid redirect to API
       const callbackURL = `${window.location.origin}/oauth/callback`;
       await signIn.social({
-        provider,
+        provider: "google",
         callbackURL,
       });
     } catch (error) {
@@ -257,26 +254,16 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <Button
           variant="outline"
           type="button"
-          onClick={() => handleOAuthLogin("google")}
+          onClick={() => void handleOAuthLogin()}
           loading={oauthLoading === "google"}
           disabled={oauthLoading !== null}
         >
           <Iconify icon={googleIcon} className="w-5 h-5" />
           Google
-        </Button>
-        <Button
-          variant="outline"
-          type="button"
-          onClick={() => handleOAuthLogin("github")}
-          loading={oauthLoading === "github"}
-          disabled={oauthLoading !== null}
-        >
-          <Iconify icon={githubIcon} className="w-5 h-5" />
-          GitHub
         </Button>
       </div>
     </AuthCard>

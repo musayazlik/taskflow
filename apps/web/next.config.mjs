@@ -22,6 +22,10 @@ const nextConfig = {
 			'framer-motion',
 			'motion',
 		],
+		// Monorepo: `next` lives at repo root node_modules (Docker + local hoisting)
+		turbo: {
+			root: resolve(__dirname, '../..'),
+		},
 	},
 
 	transpilePackages: [
