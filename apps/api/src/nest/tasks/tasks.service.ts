@@ -241,4 +241,43 @@ export class TasksService {
 
     return result;
   }
+
+  async deleteTask(input: {
+    taskId: string;
+    userId: string;
+    role: string;
+  }): Promise<void> {
+    const existing = await this.getTaskById({
+      taskId: input.taskId,
+      userId: input.userId,
+      role: input.role,
+    });
+
+    if (
+      input.role !== "ADMIN" &&
+      input.role !== "SUPER_ADMIN" &&
+      existing.ownerId !== input.userId
+    ) {
+      throw new AppError(
+        "FORBIDDEN",
+        "Only the task owner can delete the task",
+        403,
+      );
+    }
+
+    await prisma.task.delete({
+      where: { id: input.taskId },
+    });
+  }
+
+  /** Minimal user list for assignee pickers (authenticated users only). */
+  async listAssignableUsers(): Promise<
+    { id: string; name: string | null; email: string }[]
+  > {
+    return prisma.user.findMany({
+      select: { id: true, name: true, email: true },
+      orderBy: [{ name: "asc" }, { email: "asc" }],
+      take: 200,
+    });
+  }
 }
