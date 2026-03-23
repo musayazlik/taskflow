@@ -13,10 +13,13 @@ import {
   type Task,
   type TaskStatus,
   type TasksListResponse,
+  applyTasksRealtimeMessage,
   TASK_STATUSES,
+  type TaskRealtimeMessage,
   canUserManageTask,
 } from "@repo/types";
 
+import { useSocketRealtime } from "@/lib/socket/use-socket-realtime";
 import { TaskBoardHeader } from "./task-board-header";
 import { TaskCreateDialog } from "./task-create-dialog";
 import { TaskDeleteDialog } from "./task-delete-dialog";
@@ -95,6 +98,15 @@ export function TasksPageClient() {
     void loadAssignableUsers();
   }, [loadTasks, loadAssignableUsers]);
 
+  useSocketRealtime<TaskRealtimeMessage, Task[]>({
+    enabled: !!currentUserId,
+    userId: currentUserId,
+    role: currentRole,
+    event: "tasks:mutation",
+    setStateAction: setTasks,
+    applyMessageAction: applyTasksRealtimeMessage,
+  });
+
   const resetCreateForm = useCallback(() => {
     setNewTitle("");
     setNewDescription("");
@@ -134,7 +146,11 @@ export function TasksPageClient() {
 
       resetCreateForm();
       setCreateOpen(false);
-      setTasks((prev) => [res.data as Task, ...prev]);
+      setTasks((prev) => {
+        const created = res.data as Task;
+        const without = prev.filter((t) => t.id !== created.id);
+        return [created, ...without];
+      });
       toast.success("Task created");
     } catch {
       toast.error("Failed to create task");
@@ -263,7 +279,12 @@ export function TasksPageClient() {
       IN_PROGRESS: [],
       DONE: [],
     };
-    for (const t of filteredTasks) map[t.status].push(t);
+    const seen = new Set<string>();
+    for (const t of filteredTasks) {
+      if (seen.has(t.id)) continue;
+      seen.add(t.id);
+      map[t.status].push(t);
+    }
     return map;
   }, [filteredTasks]);
 
