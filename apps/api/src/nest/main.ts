@@ -4,6 +4,7 @@ import express from "express";
 import type { NextFunction, Request, Response } from "express";
 import { toNodeHandler } from "better-auth/node";
 import { NestFactory } from "@nestjs/core";
+import { ValidationPipe } from "@nestjs/common";
 import { SocketIoAdapter } from "./common/adapters/socket-io.adapter";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 
@@ -41,6 +42,17 @@ async function bootstrap(): Promise<void> {
   });
 
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      validationError: {
+        target: false,
+        value: false,
+      },
+    }),
+  );
 
   if (env.NODE_ENV === "development") {
     const config = new DocumentBuilder()
