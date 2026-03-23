@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 
 import { RequestIdAndLoggingMiddleware } from "./middleware/request-id.middleware";
 import { RateLimitMiddleware } from "./middleware/rate-limit.middleware";
+import { InputSanitizationMiddleware } from "./middleware/input-sanitization.middleware";
 import { AuthModule } from "./auth/auth.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { FileStorageModule } from "./file-storage/file-storage.module";
@@ -34,7 +35,11 @@ import { UsersModule } from "./users/users.module";
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer
-      .apply(RequestIdAndLoggingMiddleware, RateLimitMiddleware)
+      .apply(
+        InputSanitizationMiddleware,
+        RequestIdAndLoggingMiddleware,
+        RateLimitMiddleware,
+      )
       .forRoutes("*");
   }
 }

@@ -12,9 +12,7 @@ import {
   Shield,
   Crown,
   ChevronRight,
-  CreditCard,
   Bell,
-  HelpCircle,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -133,9 +131,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
     {
       group: "secondary",
       items: [
-        { href: "/panel/billing", icon: CreditCard, label: "Billing" },
         { href: "/panel/notifications", icon: Bell, label: "Notifications" },
-        { href: "/panel/help", icon: HelpCircle, label: "Help & Support" },
       ],
     },
   ];
