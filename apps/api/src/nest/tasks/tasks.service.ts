@@ -12,12 +12,17 @@ import { AppError } from "@api/lib/errors";
 
 import { NotificationsService } from "../notifications/notifications.service";
 
+import { TasksRealtimeService } from "./tasks-realtime.service";
+
 const isTaskStatus = (status: string): status is TaskStatus =>
   status === "TODO" || status === "IN_PROGRESS" || status === "DONE";
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(
+    private readonly notificationsService: NotificationsService,
+    private readonly tasksRealtime: TasksRealtimeService,
+  ) {}
 
   async createTask(input: {
     ownerId: string;
@@ -58,6 +63,8 @@ export class TasksService {
           })
         : Promise.resolve(),
     ]);
+
+    this.tasksRealtime.emitTaskCreated(created);
 
     return created;
   }
@@ -188,6 +195,8 @@ export class TasksService {
         : Promise.resolve(),
     ]);
 
+    this.tasksRealtime.emitTaskUpdated(updated);
+
     return updated;
   }
 
@@ -239,6 +248,10 @@ export class TasksService {
         : Promise.resolve(),
     ]);
 
+    this.tasksRealtime.emitTaskUpdated(result, {
+      previousAssigneeId: existing.assigneeId,
+    });
+
     return result;
   }
 
@@ -267,6 +280,11 @@ export class TasksService {
 
     await prisma.task.delete({
       where: { id: input.taskId },
+    });
+
+    this.tasksRealtime.emitTaskDeleted(existing.id, {
+      ownerId: existing.ownerId,
+      assigneeId: existing.assigneeId,
     });
   }
 
