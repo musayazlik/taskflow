@@ -7,16 +7,15 @@ import { UserDashboard } from "./components/user-dashboard";
 import {
   PANEL_DASHBOARD_STATS,
   PANEL_RECENT_ACTIVITY,
-  PANEL_TOP_PRODUCTS,
 } from "@repo/types";
 
 // Force dynamic rendering because this page uses cookies
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Dashboard | TurboStack Admin Panel",
+  title: "Dashboard | TaskFlow",
   description:
-    "Manage your TurboStack dashboard. View analytics, manage users, products, and subscriptions. Get insights into your business performance.",
+    "TaskFlow panel overview: users, tasks, and workspace activity.",
   robots: {
     index: false,
     follow: false,
@@ -39,7 +38,6 @@ export default async function DashboardPage() {
       {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
         <AdminDashboard
           recentActivity={PANEL_RECENT_ACTIVITY}
-          topProducts={PANEL_TOP_PRODUCTS}
         />
       ) : (
         <UserDashboard />

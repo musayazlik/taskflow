@@ -1,15 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Bell,
   Check,
-  Package,
-  CreditCard,
-  UserPlus,
   AlertCircle,
-  Settings,
   Trash2,
   CheckCheck,
   BellOff,
@@ -26,95 +22,176 @@ import {
 import { Badge } from "@repo/shadcn-ui/ui/badge";
 import { ScrollArea } from "@repo/shadcn-ui/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { apiClient } from "@/lib/api";
+import { useSession } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useSocketRealtime } from "@/lib/socket/use-socket-realtime";
+import type {
+  Notification as NotificationWire,
+  NotificationRealtimeMessage,
+} from "@repo/types";
 
 // Types
 export interface Notification {
   id: string;
-  type: "order" | "user" | "payment" | "alert" | "system";
+  type: "success" | "warning" | "info" | "error";
   title: string;
   description: string;
   time: string;
   read: boolean;
 }
 
-// Initial mock data
-const initialNotifications: Notification[] = [
-  {
-    id: "1",
-    type: "order",
-    title: "New order received",
-    description: "Order #1234 has been placed by John Doe",
-    time: "2 min ago",
-    read: false,
-  },
-  {
-    id: "2",
-    type: "user",
-    title: "New user registered",
-    description: "Sarah Wilson just created an account",
-    time: "15 min ago",
-    read: false,
-  },
-  {
-    id: "3",
-    type: "payment",
-    title: "Payment successful",
-    description: "Payment of $299.00 received for Order #1230",
-    time: "1 hour ago",
-    read: false,
-  },
-  {
-    id: "4",
-    type: "alert",
-    title: "Low stock alert",
-    description: "Product 'Wireless Headphones' is running low",
-    time: "2 hours ago",
-    read: true,
-  },
-  {
-    id: "5",
-    type: "system",
-    title: "System update completed",
-    description: "Version 2.4.0 has been deployed successfully",
-    time: "5 hours ago",
-    read: true,
-  },
-];
+function formatTaskNotificationForUi(message: string): {
+  title: string;
+  description: string;
+} {
+  const restClean = (value: string): string => {
+    const t = value.trim();
+    if (!t) return "";
+    // If wrapped in parentheses like "(...)" remove them.
+    if (t.startsWith("(") && t.endsWith(")")) return t.slice(1, -1).trim();
+    return t;
+  };
+
+  // Created / Updated (owner + elevated can see both; message is still string-based).
+  const created = message.match(
+    /^Task created:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (created) {
+    const taskTitle = (created[1] ?? "").trim();
+    const status = created[2] ?? "TODO";
+    const rest = restClean(created[3] ?? "");
+    const desc = rest ? `Task created · ${status} · ${rest}` : `Task created · ${status}`;
+    return { title: taskTitle, description: desc };
+  }
+
+  const updated = message.match(
+    /^Task updated:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (updated) {
+    const taskTitle = (updated[1] ?? "").trim();
+    const status = updated[2] ?? "TODO";
+    const rest = restClean(updated[3] ?? "");
+    const desc = rest ? `Task updated · ${status} · ${rest}` : `Task updated · ${status}`;
+    return { title: taskTitle, description: desc };
+  }
+
+  const deleted = message.match(
+    /^Task deleted:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (deleted) {
+    const taskTitle = (deleted[1] ?? "").trim();
+    const status = deleted[2] ?? "TODO";
+    const rest = restClean(deleted[3] ?? "");
+    const desc = rest ? `Task deleted · ${status} · ${rest}` : `Task deleted · ${status}`;
+    return { title: taskTitle, description: desc };
+  }
+
+  // Owner messages (assignment changed for others + for reassign/unassign).
+  const assignedTo = message.match(
+    /^Task assigned to (.+?):\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (assignedTo) {
+    const assigneeName = (assignedTo[1] ?? "").trim();
+    const taskTitle = (assignedTo[2] ?? "").trim();
+    const status = assignedTo[3] ?? "TODO";
+    const rest = restClean(assignedTo[4] ?? "");
+    const action = `Assigned to ${assigneeName}`;
+    const desc = rest ? `${action} · ${status} · ${rest}` : `${action} · ${status}`;
+    return { title: taskTitle, description: desc };
+  }
+
+  const unassigned = message.match(
+    /^Task unassigned:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (unassigned) {
+    const taskTitle = (unassigned[1] ?? "").trim();
+    const status = unassigned[2] ?? "TODO";
+    const rest = restClean(unassigned[3] ?? "");
+    const action = "Unassigned";
+    const desc = rest ? `${action} · ${status} · ${rest}` : `${action} · ${status}`;
+    return { title: taskTitle, description: desc };
+  }
+
+  const reassignedTo = message.match(
+    /^Task reassigned to (.+?):\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (reassignedTo) {
+    const assigneeName = (reassignedTo[1] ?? "").trim();
+    const taskTitle = (reassignedTo[2] ?? "").trim();
+    const status = reassignedTo[3] ?? "TODO";
+    const rest = restClean(reassignedTo[4] ?? "");
+    const action = `Reassigned to ${assigneeName}`;
+    const desc = rest ? `${action} · ${status} · ${rest}` : `${action} · ${status}`;
+    return { title: taskTitle, description: desc };
+  }
+
+  const assignmentUpdated = message.match(
+    /^Task assignment updated:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (assignmentUpdated) {
+    const taskTitle = (assignmentUpdated[1] ?? "").trim();
+    const status = assignmentUpdated[2] ?? "TODO";
+    const rest = restClean(assignmentUpdated[3] ?? "");
+    const desc = rest ? `Assignment updated · ${status} · ${rest}` : `Assignment updated · ${status}`;
+    return { title: taskTitle, description: desc };
+  }
+
+  // Assignee messages.
+  const youAssigned = message.match(
+    /^You were assigned a task:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (youAssigned) {
+    const taskTitle = (youAssigned[1] ?? "").trim();
+    const status = youAssigned[2] ?? "TODO";
+    const rest = restClean(youAssigned[3] ?? "");
+    const desc = rest ? `Assigned · ${status} · ${rest}` : `Assigned · ${status}`;
+    return { title: taskTitle, description: desc };
+  }
+
+  const youUnassigned = message.match(
+    /^You were unassigned a task:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (youUnassigned) {
+    const taskTitle = (youUnassigned[1] ?? "").trim();
+    const status = youUnassigned[2] ?? "TODO";
+    const rest = restClean(youUnassigned[3] ?? "");
+    const desc = rest ? `Unassigned · ${status} · ${rest}` : `Unassigned · ${status}`;
+    return { title: taskTitle, description: desc };
+  }
+
+  // Fallback: show as-is.
+  return { title: message, description: message };
+}
 
 // Icon configurations
 const notificationIcons = {
-  order: Package,
-  user: UserPlus,
-  payment: CreditCard,
-  alert: AlertCircle,
-  system: Settings,
+  success: Check,
+  warning: AlertCircle,
+  error: AlertCircle,
+  info: Bell,
 };
 
 const notificationColors = {
-  order: {
-    bg: "bg-blue-100 dark:bg-blue-500/20",
-    text: "text-blue-600 dark:text-blue-400",
-    border: "border-blue-200 dark:border-blue-500/30",
-  },
-  user: {
+  success: {
     bg: "bg-emerald-100 dark:bg-emerald-500/20",
     text: "text-emerald-600 dark:text-emerald-400",
     border: "border-emerald-200 dark:border-emerald-500/30",
   },
-  payment: {
-    bg: "bg-green-100 dark:bg-green-500/20",
-    text: "text-green-600 dark:text-green-400",
-    border: "border-green-200 dark:border-green-500/30",
-  },
-  alert: {
+  warning: {
     bg: "bg-amber-100 dark:bg-amber-500/20",
     text: "text-amber-600 dark:text-amber-400",
     border: "border-amber-200 dark:border-amber-500/30",
   },
-  system: {
-    bg: "bg-purple-100 dark:bg-purple-500/20",
-    text: "text-purple-600 dark:text-purple-400",
-    border: "border-purple-200 dark:border-purple-500/30",
+  error: {
+    bg: "bg-red-100 dark:bg-red-500/20",
+    text: "text-red-600 dark:text-red-400",
+    border: "border-red-200 dark:border-red-500/30",
+  },
+  info: {
+    bg: "bg-blue-100 dark:bg-blue-500/20",
+    text: "text-blue-600 dark:text-blue-400",
+    border: "border-blue-200 dark:border-blue-500/30",
   },
 };
 
@@ -125,30 +202,155 @@ interface NotificationsDropdownProps {
 export function NotificationsDropdown({
   className,
 }: NotificationsDropdownProps) {
+  const { data: session } = useSession();
+  const sessionUser = session?.user as
+    | { id?: string; role?: string }
+    | undefined;
+  const currentUserId = sessionUser?.id;
+  const currentRole = sessionUser?.role;
+
   const [notifications, setNotifications] =
-    useState<Notification[]>(initialNotifications);
+    useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
   const hasNotifications = notifications.length > 0;
 
-  const markAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-    );
-  };
+  const mapWireToUi = useCallback((record: NotificationWire): Notification => {
+    const isDeleted = record.message.startsWith("Task deleted:");
 
-  const markAllAsRead = () => {
+    const uiType: Notification["type"] = isDeleted
+      ? "error"
+      : record.type === "TASK_CREATED"
+        ? "success"
+        : record.type === "TASK_UPDATED"
+          ? "info"
+          : "warning";
+
+    const time = record.createdAt
+      ? new Date(record.createdAt).toLocaleString()
+      : "";
+
+    const formatted = formatTaskNotificationForUi(record.message);
+
+    return {
+      id: String(record.id),
+      type: uiType,
+      title: formatted.title,
+      description: formatted.description,
+      time,
+      read: record.read,
+    };
+  }, []);
+
+  const loadNotifications = useCallback(async () => {
+    try {
+      const res = await apiClient.get<{
+        success: boolean;
+        data?: { notifications?: Array<unknown> };
+      }>("/api/notifications");
+
+      const backend = Array.isArray(res?.data?.notifications)
+        ? res.data.notifications
+        : [];
+
+      const mapped: Notification[] = backend.map((n) => {
+        const record = n as {
+          id: string | number;
+          type: string;
+          message: string;
+          read: boolean;
+          createdAt: string | Date;
+        };
+
+        const wire: NotificationWire = {
+          id: String(record.id),
+          type:
+            record.type === "TASK_CREATED"
+              ? "TASK_CREATED"
+              : record.type === "TASK_UPDATED"
+                ? "TASK_UPDATED"
+                : "TASK_ASSIGNED",
+          message: record.message,
+          read: record.read,
+          createdAt:
+            record.createdAt instanceof Date
+              ? record.createdAt.toISOString()
+              : new Date(record.createdAt).toISOString(),
+          taskId: undefined,
+        };
+
+        return mapWireToUi(wire);
+      });
+
+      setNotifications(mapped);
+    } catch {
+      setNotifications([]);
+    }
+  }, [mapWireToUi]);
+
+  useEffect(() => {
+    if (!currentUserId) return;
+    void loadNotifications();
+  }, [currentUserId, loadNotifications]);
+
+  useSocketRealtime<NotificationRealtimeMessage, Notification[]>({
+    enabled: !!currentUserId,
+    userId: currentUserId,
+    role: currentRole,
+    event: "notifications:mutation",
+    setStateAction: setNotifications,
+    applyMessageAction: (prev, message) => {
+      const incoming = mapWireToUi(message.notification);
+      if (message.type === "created") {
+        const without = prev.filter((n) => n.id !== incoming.id);
+        return [incoming, ...without];
+      }
+
+      const idx = prev.findIndex((n) => n.id === incoming.id);
+      if (idx === -1) return [incoming, ...prev];
+      const next = [...prev];
+      next[idx] = incoming;
+      return next;
+    },
+  });
+
+  const markAsRead = useCallback(
+    (id: string) => {
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
+      );
+
+      void apiClient
+        .patch(`/api/notifications/${id}/read`, undefined)
+        .then(() => toast.success("Marked as read"))
+        .catch(() => toast.error("Failed to mark as read"));
+    },
+    [],
+  );
+
+  const markAllAsRead = useCallback(() => {
+    const unreadIds = notifications.filter((n) => !n.read).map((n) => n.id);
+    if (unreadIds.length === 0) return;
+
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  };
+    toast.success("Marking all read...");
+
+    void Promise.all(
+      unreadIds.map((id) => apiClient.patch(`/api/notifications/${id}/read`, undefined)),
+    )
+      .then(() => toast.success("All notifications marked as read"))
+      .catch(() => toast.error("Failed to mark all as read"));
+  }, [notifications]);
 
   const deleteNotification = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    // Backend supports read/unread mutations only; we map "delete" to "mark read".
+    markAsRead(id);
   };
 
   const clearAll = () => {
-    setNotifications([]);
+    markAllAsRead();
   };
 
   return (

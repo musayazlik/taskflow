@@ -6,49 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import helpCircleIcon from "@iconify-icons/lucide/help-circle";
 import chevronDownIcon from "@iconify-icons/lucide/chevron-down";
 import messageCircleIcon from "@iconify-icons/lucide/message-circle";
-
-const faqs = [
-  {
-    question: "What is TurboStack?",
-    answer:
-      "TurboStack is a production-ready monorepo starter kit for building modern SaaS applications. It includes Next.js frontend, Elysia.js backend, Prisma ORM, authentication, payments, and AI integration - all pre-configured and ready to use.",
-  },
-  {
-    question: "Do I need to know TypeScript?",
-    answer:
-      "While TurboStack is built with TypeScript for type safety, you can use it with basic JavaScript knowledge. However, we recommend learning TypeScript as it helps catch errors early and improves developer experience.",
-  },
-  {
-    question: "Can I use TurboStack for commercial projects?",
-    answer:
-      "Yes! Both Free and Pro plans allow commercial use. The Free plan is perfect for learning and small projects, while Pro includes features needed for production SaaS applications.",
-  },
-  {
-    question: "What is included in the Pro version?",
-    answer:
-      "Pro includes everything in Free plus production-ready authentication, Polar payments integration, AI integration with OpenRouter, admin dashboard, email templates with Resend, role-based access control, API rate limiting, and priority support.",
-  },
-  {
-    question: "How do I get support?",
-    answer:
-      "Free users get community support through Discord. Pro users receive priority email support with faster response times. Enterprise customers get a dedicated support channel and SLA guarantee.",
-  },
-  {
-    question: "Can I get a refund?",
-    answer:
-      "Yes, we offer a 14-day refund guarantee. If you're not satisfied with TurboStack Pro, contact us within 14 days of purchase for a full refund.",
-  },
-  {
-    question: "Do I get updates?",
-    answer:
-      "Absolutely! All purchases include lifetime access to updates. When we add new features, fix bugs, or improve the codebase, you'll get access to everything at no additional cost.",
-  },
-  {
-    question: "What technologies are used?",
-    answer:
-      "TurboStack uses Next.js 16, React 19, TypeScript, Tailwind CSS v4, shadcn/ui, Elysia.js, Prisma, PostgreSQL, and Bun. It also integrates with Polar for payments, Resend for emails, and OpenRouter for AI features.",
-  },
-];
+import { LANDING_FAQS } from "@/constant/landing-content";
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -82,7 +40,7 @@ export function FAQ() {
 
         {/* FAQ Items */}
         <div className="space-y-4">
-          {faqs.map((faq, index) => (
+          {LANDING_FAQS.map((faq, index) => (
             <motion.div
               key={faq.question}
               initial={{ opacity: 0, y: 20 }}

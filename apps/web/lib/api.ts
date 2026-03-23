@@ -1,21 +1,27 @@
-import { treaty } from "@elysiajs/eden";
 import { resolveApiBaseUrl } from "@repo/types";
 
-const API_BASE_URL = resolveApiBaseUrl();
+/**
+ * In browser, prefer same-origin `/api/*` calls so auth cookies created on the
+ * frontend domain are included reliably (especially in production with separate API domain).
+ * On server-side usage, keep absolute API URL resolution.
+ */
+const API_BASE_URL = typeof window === "undefined" ? resolveApiBaseUrl() : "";
 
-// Eden Treaty client - type-safe API calls
-// Note: App type is inferred at runtime, no build-time dependency on backend
-export const api = treaty(API_BASE_URL, {
-  fetch: {
-    credentials: "include",
-  },
-});
+/**
+ * Build a query string from key-value pairs; omits undefined and empty string values.
+ */
+export function buildApiQuery(params: Record<string, string | undefined>): string {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== "") {
+      search.set(key, value);
+    }
+  }
+  const q = search.toString();
+  return q ? `?${q}` : "";
+}
 
-// baseApi is typed as any to avoid build-time dependency on backend App type
-// Runtime type safety is maintained by Eden Treaty
-export const baseApi = api.api! as any;
-
-// Traditional REST client wrapper for services that use standard HTTP methods
+/** REST client using fetch; use with NestJS `/api/*` routes. */
 export const apiClient = {
   async get<T>(path: string): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -25,7 +31,6 @@ export const apiClient = {
         "Content-Type": "application/json",
       },
     });
-    // Always return JSON response (includes error responses)
     return response.json();
   },
 
@@ -38,7 +43,6 @@ export const apiClient = {
       },
       body: data ? JSON.stringify(data) : undefined,
     });
-    // Always return JSON response (includes error responses)
     return response.json();
   },
 
@@ -51,7 +55,6 @@ export const apiClient = {
       },
       body: data ? JSON.stringify(data) : undefined,
     });
-    // Always return JSON response (includes error responses)
     return response.json();
   },
 
@@ -63,7 +66,6 @@ export const apiClient = {
         "Content-Type": "application/json",
       },
     });
-    // DELETE might not return content
     const text = await response.text();
     return text ? JSON.parse(text) : undefined;
   },

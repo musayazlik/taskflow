@@ -80,31 +80,6 @@ export type Verification = Prisma.VerificationModel
  */
 export type MediaFile = Prisma.MediaFileModel
 /**
- * Model Product
- * 
- */
-export type Product = Prisma.ProductModel
-/**
- * Model Price
- * 
- */
-export type Price = Prisma.PriceModel
-/**
- * Model Subscription
- * 
- */
-export type Subscription = Prisma.SubscriptionModel
-/**
- * Model Order
- * 
- */
-export type Order = Prisma.OrderModel
-/**
- * Model Customer
- * 
- */
-export type Customer = Prisma.CustomerModel
-/**
  * Model GlobalSettings
  * 
  */
@@ -125,12 +100,12 @@ export type MediaUploadSettings = Prisma.MediaUploadSettingsModel
  */
 export type FileStorageSettings = Prisma.FileStorageSettingsModel
 /**
- * Model Ticket
+ * Model Task
  * 
  */
-export type Ticket = Prisma.TicketModel
+export type Task = Prisma.TaskModel
 /**
- * Model TicketMessage
+ * Model Notification
  * 
  */
-export type TicketMessage = Prisma.TicketMessageModel
+export type Notification = Prisma.NotificationModel

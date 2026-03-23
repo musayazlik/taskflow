@@ -1,4 +1,4 @@
-import { baseApi } from "@/lib/api";
+import { apiClient, buildApiQuery } from "@/lib/api";
 import type { ApiResponse } from "./types";
 import type {
   DashboardStatsFrontend as DashboardStats,
@@ -8,19 +8,24 @@ import type {
 export const dashboardService = {
   async getDashboardStats(): Promise<ApiResponse<DashboardStats>> {
     try {
-      const { data, error } = await baseApi.dashboard.stats.get();
+      const response = await apiClient.get<{
+        success: boolean;
+        data?: DashboardStats;
+        error?: string;
+        message?: string;
+      }>("/api/dashboard/stats");
 
-      if (error) {
+      if (!response.success) {
         return {
           success: false,
           error: "Request failed",
-          message: String(error.value) || "Failed to fetch dashboard stats",
+          message: response.message || "Failed to fetch dashboard stats",
         };
       }
 
       return {
         success: true,
-        data: (data as any).data as DashboardStats,
+        data: response.data as DashboardStats,
       };
     } catch {
       return {
@@ -35,23 +40,27 @@ export const dashboardService = {
     limit?: number,
   ): Promise<ApiResponse<RecentActivity[]>> {
     try {
-      const { data, error } = await baseApi.dashboard.activity.get({
-        query: {
-          limit: limit?.toString(),
-        },
+      const query = buildApiQuery({
+        limit: limit?.toString(),
       });
+      const response = await apiClient.get<{
+        success: boolean;
+        data?: RecentActivity[];
+        error?: string;
+        message?: string;
+      }>(`/api/dashboard/activity${query}`);
 
-      if (error) {
+      if (!response.success) {
         return {
           success: false,
           error: "Request failed",
-          message: String(error.value) || "Failed to fetch recent activity",
+          message: response.message || "Failed to fetch recent activity",
         };
       }
 
       return {
         success: true,
-        data: (data as any).data as RecentActivity[],
+        data: response.data as RecentActivity[],
       };
     } catch {
       return {

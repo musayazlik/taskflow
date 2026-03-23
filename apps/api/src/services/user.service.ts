@@ -54,9 +54,6 @@ export const getAllUsers = async (
 					emailVerified: true,
 					createdAt: true,
 					updatedAt: true,
-					_count: {
-						select: { subscriptions: true },
-					},
 				},
 			}),
 			prisma.user.count({ where }),
@@ -256,28 +253,6 @@ export const isEmailTaken = async(
 	} catch (error) {
 		logger.error({ err: error, email }, "Error checking email");
 		throw new AppError("EMAIL_CHECK_ERROR", "Failed to check email", 500);
-	}
-};
-
-export const getUserWithSubscriptions = async (userId: string) => {
-	try {
-		return await prisma.user.findUnique({
-			where: { id: userId },
-			include: {
-				subscriptions: {
-					include: {
-						product: true,
-						price: true,
-					},
-					orderBy: {
-						createdAt: "desc",
-					},
-				},
-			},
-		});
-	} catch (error) {
-		logger.error({ err: error, userId }, "Error fetching user with subscriptions");
-		throw new AppError("USER_FETCH_ERROR", "Failed to fetch user data", 500);
 	}
 };
 

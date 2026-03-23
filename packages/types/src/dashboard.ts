@@ -1,33 +1,18 @@
 import { Static, Type as t } from "@sinclair/typebox";
 
+/** Admin dashboard: users + task counts (no commerce / billing fields) */
 export const DashboardStatsSchema = t.Object({
   totalUsers: t.Number(),
-  totalProducts: t.Number(),
-  totalOrders: t.Number(),
-  totalRevenue: t.Number(),
-  activeSubscriptions: t.Number(),
   newUsersThisMonth: t.Number(),
-  revenueThisMonth: t.Number(),
+  totalTasks: t.Number(),
+  tasksTodo: t.Number(),
+  tasksInProgress: t.Number(),
+  tasksDone: t.Number(),
 });
 
 export type DashboardStats = Static<typeof DashboardStatsSchema>;
 
 export const RecentActivitySchema = t.Object({
-  recentOrders: t.Array(
-    t.Object({
-      id: t.String(),
-      amount: t.Number(),
-      status: t.String(),
-      createdAt: t.Date(),
-      user: t.Object({
-        name: t.Union([t.String(), t.Null()]),
-        email: t.String(),
-      }),
-      product: t.Object({
-        name: t.String(),
-      }),
-    }),
-  ),
   recentUsers: t.Array(
     t.Object({
       id: t.String(),
@@ -46,12 +31,14 @@ export const ActivityQuerySchema = t.Object({
 
 export type ActivityQuery = Static<typeof ActivityQuerySchema>;
 
-// Frontend service types (simplified versions)
+/** Frontend service shape (aligned with API `DashboardStats`) */
 export interface DashboardStatsFrontend {
-  totalRevenue: number;
-  subscriptions: number;
-  sales: number;
-  activeUsers: number;
+  totalUsers: number;
+  newUsersThisMonth: number;
+  totalTasks: number;
+  tasksTodo: number;
+  tasksInProgress: number;
+  tasksDone: number;
 }
 
 export interface RecentActivityFrontend {

@@ -3,43 +3,13 @@
 import Link from "next/link";
 import { Iconify } from "@/components/iconify";
 import arrowRightIcon from "@iconify-icons/lucide/arrow-right";
-import githubIcon from "@iconify-icons/lucide/github";
 import starIcon from "@iconify-icons/lucide/star";
 import { motion } from "framer-motion";
 import { Particles } from "@/components/particles";
 import { AuroraText } from "@/components/aurora-text";
 import { AvatarCircles } from "@/components/avatar-circles";
 import { BorderBeam } from "@/components/border-beam";
-
-const avatars = [
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/16860528",
-    profileUrl: "https://github.com/dillionverma",
-  },
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/20110627",
-    profileUrl: "https://github.com/tomonari",
-  },
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/124599",
-    profileUrl: "https://github.com/zenorocha",
-  },
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/1011721",
-    profileUrl: "https://github.com/peduarte",
-  },
-  {
-    imageUrl: "https://avatars.githubusercontent.com/u/1500684",
-    profileUrl: "https://github.com/kentcdodds",
-  },
-];
-
-const features = [
-  "Production-ready auth",
-  "Payments integrated",
-  "AI-powered",
-  "Type-safe",
-];
+import { LANDING_HERO_AVATARS, LANDING_HERO_PILLS } from "@/constant/landing-content";
 
 export function Hero() {
   return (
@@ -76,7 +46,7 @@ export function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              Now with AI integration & Polar payments
+              Real-time collaboration for modern teams
             </motion.div>
 
             {/* Main Headline */}
@@ -86,13 +56,13 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-center font-bold tracking-tight mb-6 leading-[1.1]"
             >
-              <span className="text-foreground">Build SaaS faster with</span>
+              <span className="text-foreground">Stay on top of every</span>
               <br />
               <AuroraText
                 colors={["#8b5cf6", "#ec4899", "#06b6d4", "#a855f7"]}
                 speed={1.5}
               >
-                modern architecture
+                task in real time
               </AuroraText>
             </motion.h1>
 
@@ -103,8 +73,7 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg md:text-xl text-center text-muted-foreground max-w-2xl mb-8 leading-relaxed"
             >
-              Production-ready monorepo starter with Next.js, Elysia.js, and
-              Prisma. Skip the boilerplate and focus on building your product.
+              Taskflow is a real-time task management platform that helps teams assign work, track progress, and stay aligned without endless status meetings.
             </motion.p>
 
             {/* Avatar Circles + Social Proof */}
@@ -114,7 +83,7 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.25 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8"
             >
-              <AvatarCircles avatarUrls={avatars} numPeople={99} />
+              <AvatarCircles avatarUrls={[...LANDING_HERO_AVATARS]} numPeople={99} />
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
@@ -139,7 +108,7 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap justify-center gap-3 mb-10"
             >
-              {features.map((feature) => (
+              {LANDING_HERO_PILLS.map((feature) => (
                 <div
                   key={feature}
                   className="flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border"
@@ -161,21 +130,12 @@ export function Hero() {
                 href="/register"
                 className="group relative flex items-center gap-2 px-8 py-4 rounded-full bg-linear-to-r from-primary to-purple-600 text-white font-semibold text-lg hover:opacity-90 transition-all hover:scale-105 overflow-hidden"
               >
-                Start Building Free
+                Start using Taskflow
                 <Iconify
                   icon={arrowRightIcon}
                   className="w-5 h-5 group-hover:translate-x-1 transition-transform"
                 />
               </Link>
-              <a
-                href="https://github.com/turbostack"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-8 py-4 rounded-full bg-card border-2 border-border hover:border-primary/50 font-semibold text-lg transition-all"
-              >
-                <Iconify icon={githubIcon} className="w-5 h-5" />
-                View on GitHub
-              </a>
             </motion.div>
           </div>
         </div>

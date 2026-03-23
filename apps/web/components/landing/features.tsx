@@ -2,67 +2,9 @@
 
 import { Iconify } from "@/components/iconify";
 import { motion } from "framer-motion";
-import zapIcon from "@iconify-icons/lucide/zap";
-import shieldIcon from "@iconify-icons/lucide/shield";
-import layersIcon from "@iconify-icons/lucide/layers";
-import refreshCwIcon from "@iconify-icons/lucide/refresh-cw";
 import code2Icon from "@iconify-icons/lucide/code-2";
-import rocketIcon from "@iconify-icons/lucide/rocket";
-import botIcon from "@iconify-icons/lucide/bot";
-import creditCardIcon from "@iconify-icons/lucide/credit-card";
-import mailIcon from "@iconify-icons/lucide/mail";
 import { CardSpotlight } from "@/components/card-spotlight";
-
-const features = [
-  {
-    icon: zapIcon,
-    title: "Lightning Fast DX",
-    description:
-      "Hot reload, instant feedback, and optimized builds with Turborepo caching for rapid development.",
-  },
-  {
-    icon: shieldIcon,
-    title: "Type-Safe End-to-End",
-    description:
-      "Full TypeScript support from frontend to backend with shared types across the entire stack.",
-  },
-  {
-    icon: layersIcon,
-    title: "Monorepo Architecture",
-    description:
-      "Shared packages for database, validations, types, and UI components. One codebase to rule them all.",
-  },
-  {
-    icon: botIcon,
-    title: "AI Integration Ready",
-    description:
-      "Built-in OpenRouter integration for AI features. Add chat, content generation, or image processing.",
-  },
-  {
-    icon: creditCardIcon,
-    title: "Payments Built-in",
-    description:
-      "Polar.sh integration with webhooks, subscriptions, and checkout flows ready to monetize.",
-  },
-  {
-    icon: mailIcon,
-    title: "Email Infrastructure",
-    description:
-      "Resend integration with React Email templates for transactional and marketing emails.",
-  },
-  {
-    icon: refreshCwIcon,
-    title: "Auto API Documentation",
-    description:
-      "Elysia.js backend with auto-generated OpenAPI/Swagger docs. Your API documents itself.",
-  },
-  {
-    icon: rocketIcon,
-    title: "Production Ready",
-    description:
-      "Best practices, rate limiting, error handling, and security headers included from day one.",
-  },
-];
+import { LANDING_FEATURES } from "@/constant/landing-content";
 
 export function Features() {
   return (
@@ -83,19 +25,18 @@ export function Features() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Everything you need to{" "}
               <span className="bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                ship faster
+                manage work together
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A complete toolkit for building modern SaaS applications. No more
-              piecing together different tools and services.
+              Taskflow keeps tasks, owners, and context in one place so teams can move quickly without losing clarity.
             </p>
           </motion.div>
         </div>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
+          {LANDING_FEATURES.map((feature, index) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}

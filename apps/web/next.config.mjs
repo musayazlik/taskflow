@@ -24,6 +24,11 @@ const nextConfig = {
 		],
 	},
 
+	// Monorepo: resolve packages from repo root (Docker + hoisted node_modules). Replaces experimental.turbo in Next.js 16+.
+	turbopack: {
+		root: resolve(__dirname, '../..'),
+	},
+
 	transpilePackages: [
 		'@repo/shadcn-ui',
 		'@repo/database',
@@ -36,6 +41,7 @@ const nextConfig = {
 	},
 
 	async rewrites() {
+		// Baked at `next build` time — set NEXT_PUBLIC_API_URL in CI/Docker build args for production.
 		const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4101';
 		return [
 			{

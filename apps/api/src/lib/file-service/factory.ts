@@ -1,23 +1,27 @@
 /**
- * File Upload Service Factory
- * Provides runtime provider selection and dependency injection support
+ * @fileoverview Registry and selector for `FileService` implementations.
+ * @module @api/lib/file-service/factory
  */
 
 import { FileProvider, FileService } from "./interface";
 import { UploadThingProvider } from "./providers/uploadthing.provider";
 
+/**
+ * Static registry of storage providers. Initialized via {@link initialize} from API bootstrap.
+ */
 export class FileServiceFactory {
   private static providers: Map<FileProvider, FileService> = new Map();
 
   /**
-   * Register a provider instance
+   * Registers a provider instance (normally called from {@link initialize}).
    */
   static registerProvider(provider: FileService): void {
     this.providers.set(provider.provider, provider);
   }
 
   /**
-   * Get a provider by type
+   * @param type - Registered provider enum.
+   * @throws If no provider registered for `type`.
    */
   static getProvider(type: FileProvider): FileService {
     const provider = this.providers.get(type);
@@ -27,31 +31,24 @@ export class FileServiceFactory {
     return provider;
   }
 
-  /**
-   * Get all registered providers
-   */
+  /** @returns All registered instances (configured or not). */
   static getAllProviders(): FileService[] {
     return Array.from(this.providers.values());
   }
 
-  /**
-   * Get all configured (ready-to-use) providers
-   */
+  /** Providers where `isConfigured()` is true. */
   static getConfiguredProviders(): FileService[] {
     return this.getAllProviders().filter((p) => p.isConfigured());
   }
 
-  /**
-   * Check if a provider is available
-   */
+  /** Whether `type` is registered and configured. */
   static isProviderAvailable(type: FileProvider): boolean {
     const provider = this.providers.get(type);
     return provider?.isConfigured() ?? false;
   }
 
   /**
-   * Get default provider based on configuration
-   * Priority: 1. Explicit default, 2. First configured, 3. None
+   * Picks a default backend: `preferredProvider` if configured, else first configured, else `null`.
    */
   static getDefaultProvider(
     preferredProvider?: FileProvider
@@ -67,9 +64,9 @@ export class FileServiceFactory {
   }
 
   /**
-   * Select best provider for a file type
-   * Images -> Cloudinary (better transformations)
-   * Others -> UploadThing
+   * Chooses provider for a MIME type: honors `preferredProvider`, then UploadThing when available.
+   *
+   * @throws When no provider is configured at all.
    */
   static getProviderForFile(
     mimeType: string,
@@ -95,17 +92,10 @@ export class FileServiceFactory {
   }
 
   /**
-   * Initialize all providers
-   * Call this at application startup
+   * Registers built-in providers (UploadThing). Call once from API bootstrap after
+   * `refreshUploadthingTokenCache` from `@api/lib/uploadthing` so DB-backed tokens apply.
    */
   static initialize(): void {
-    // Register UploadThing
-    const uploadThing = new UploadThingProvider();
-    if (uploadThing.isConfigured()) {
-      this.registerProvider(uploadThing);
-    }
+    this.registerProvider(new UploadThingProvider());
   }
 }
-
-// Initialize on module load
-FileServiceFactory.initialize();

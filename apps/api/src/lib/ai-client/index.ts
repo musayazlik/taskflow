@@ -1,10 +1,6 @@
 /**
- * AI Client Module
- * 
- * HTTP clients and utilities for AI service integrations.
- * 
- * @module ai-client
+ * @fileoverview AI integrations: `OpenRouterClient` (chat completions via OpenRouter SDK).
+ * @module @api/lib/ai-client
  */
 
-export * from "./http-client";
 export * from "./openrouter-client";

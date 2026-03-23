@@ -18,7 +18,6 @@ export const AUTH_ENDPOINTS = {
   },
 
   oauthGoogleStart: "/api/auth/oauth/google/start",
-  oauthGithubStart: "/api/auth/oauth/github/start",
   oauthCallback: (provider: string) => `/api/auth/oauth/${provider}/callback`,
 
   get session() {
@@ -82,34 +81,35 @@ export const AUTH = {
   SESSION_TOKEN_TTL_SECONDS: 24 * 60 * 60,
 } as const;
 
+/** Demo tiles for the panel dashboard (TaskFlow — users & tasks, no billing) */
 export const PANEL_DASHBOARD_STATS = [
   {
-    title: "Total Revenue",
-    value: "$45,231.89",
-    change: "+20.1%",
+    title: "Total Users",
+    value: "128",
+    change: "+12%",
     trend: "up" as const,
-    description: "from last month",
+    description: "vs. last month",
   },
   {
-    title: "Subscriptions",
-    value: "+2,350",
-    change: "+180.1%",
+    title: "New This Month",
+    value: "24",
+    change: "+8%",
     trend: "up" as const,
-    description: "from last month",
+    description: "new sign-ups",
   },
   {
-    title: "Sales",
-    value: "+12,234",
-    change: "+19%",
+    title: "Total Tasks",
+    value: "1,024",
+    change: "+5.2%",
     trend: "up" as const,
-    description: "from last month",
+    description: "all time",
   },
   {
-    title: "Active Now",
-    value: "+573",
-    change: "-2%",
+    title: "Open Tasks",
+    value: "186",
+    change: "-3%",
     trend: "down" as const,
-    description: "from last hour",
+    description: "todo + in progress",
   },
 ] as const;
 
@@ -117,14 +117,14 @@ export const PANEL_RECENT_ACTIVITY = [
   {
     id: 1,
     user: "John Doe",
-    action: "Created new account",
+    action: "Signed up",
     time: "2 minutes ago",
     status: "success" as const,
   },
   {
     id: 2,
     user: "Jane Smith",
-    action: "Purchased Pro Plan",
+    action: "Completed a task",
     time: "15 minutes ago",
     status: "success" as const,
   },
@@ -138,24 +138,17 @@ export const PANEL_RECENT_ACTIVITY = [
   {
     id: 4,
     user: "Sarah Wilson",
-    action: "Submitted support ticket",
+    action: "Created a new task",
     time: "2 hours ago",
     status: "warning" as const,
   },
   {
     id: 5,
     user: "Chris Brown",
-    action: "Cancelled subscription",
+    action: "Moved task to Done",
     time: "5 hours ago",
-    status: "error" as const,
+    status: "success" as const,
   },
-] as const;
-
-export const PANEL_TOP_PRODUCTS = [
-  { name: "Premium Plan", sales: 1234, revenue: "$12,340" },
-  { name: "Basic Plan", sales: 987, revenue: "$4,935" },
-  { name: "Enterprise Plan", sales: 456, revenue: "$45,600" },
-  { name: "Starter Pack", sales: 321, revenue: "$1,605" },
 ] as const;
 
 export const PANEL_ANALYTICS_DATA = [

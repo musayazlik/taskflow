@@ -1,21 +1,25 @@
-import { baseApi, apiClient } from "@/lib/api";
+import { apiClient } from "@/lib/api";
 import type { ApiResponse } from "./types";
-import type { UserSettings, GlobalSettings } from "@repo/types";
+import type { GlobalSettings } from "@repo/types";
 
 export const settingsService = {
 	async getPublicSettings(): Promise<ApiResponse<GlobalSettings | null>> {
 		try {
-			const { data, error } = await baseApi.settings.get();
+			const response = await apiClient.get<{
+				success: boolean;
+				data: GlobalSettings | null;
+				error?: string;
+				message?: string;
+			}>("/api/settings");
 
-			if (error) {
+			if (!response.success) {
 				return {
 					success: false,
 					error: "Request failed",
-					message: String(error.value) || "Failed to get settings",
+					message: response.message || "Failed to get settings",
 				};
 			}
 
-			const response = data as { success: boolean; data: GlobalSettings | null };
 			return {
 				success: true,
 				data: response.data,

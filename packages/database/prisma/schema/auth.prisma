@@ -19,14 +19,13 @@ model User {
   // Relations
   sessions      Session[]
   accounts      Account[]
-  subscriptions Subscription[]
-  orders        Order[]
-  customer      Customer?
   mediaFiles    MediaFile[]
-  tickets       Ticket[]
-  ticketMessages TicketMessage[]
-  assignedTickets Ticket[] @relation("AssignedTickets")
   chatSessions  ChatSession[]
+
+  // TaskFlow relations
+  tasks          Task[]        @relation("UserTasks")
+  assignedTasks  Task[]        @relation("AssignedTasks")
+  notifications  Notification[]
 
   @@map("user")
 }

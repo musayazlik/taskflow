@@ -1,4 +1,4 @@
-import { apiClient, baseApi } from "@/lib/api";
+import { apiClient } from "@/lib/api";
 import type { ApiResponse } from "./types";
 import type {
 	MediaFile,
@@ -226,20 +226,25 @@ export const mediaService = {
 		ApiResponse<ImageOptimizationSettings>
 	> {
 		try {
-			const { data, error } = await baseApi.settings["image-optimization"].get();
+			const response = await apiClient.get<{
+				success: boolean;
+				data?: ImageOptimizationSettings;
+				error?: string;
+				message?: string;
+			}>("/api/settings/image-optimization");
 
-			if (error) {
+			if (!response.success) {
 				return {
 					success: false,
 					error: "Request failed",
 					message:
-						String(error.value) || "Failed to get image optimization settings",
+						response.message || "Failed to get image optimization settings",
 				};
 			}
 
 			return {
 				success: true,
-				data: data.data as ImageOptimizationSettings,
+				data: response.data as ImageOptimizationSettings,
 			};
 		} catch {
 			return {
@@ -254,23 +259,26 @@ export const mediaService = {
 		body: Partial<ImageOptimizationSettings>,
 	): Promise<ApiResponse<ImageOptimizationSettings>> {
 		try {
-			const { data, error } = await baseApi.settings["image-optimization"].patch(
-				body,
-			);
+			const response = await apiClient.patch<{
+				success: boolean;
+				data?: ImageOptimizationSettings;
+				error?: string;
+				message?: string;
+			}>("/api/settings/image-optimization", body);
 
-			if (error) {
+			if (!response.success) {
 				return {
 					success: false,
 					error: "Request failed",
 					message:
-						String(error.value) ||
+						response.message ||
 						"Failed to update image optimization settings",
 				};
 			}
 
 			return {
 				success: true,
-				data: data.data as ImageOptimizationSettings,
+				data: response.data as ImageOptimizationSettings,
 			};
 		} catch {
 			return {

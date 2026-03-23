@@ -34,6 +34,13 @@ COPY packages/ ./packages/
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
+# Rewrites in next.config.mjs embed NEXT_PUBLIC_* at build time.
+# Without NEXT_PUBLIC_API_URL, /api and /socket.io proxy default to localhost and break production.
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+
 # Generate Prisma client (only if schema changed)
 RUN bun run db:generate
 # Build Next.js application

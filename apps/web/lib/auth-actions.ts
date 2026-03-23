@@ -42,12 +42,21 @@ async function getCookieHeader(): Promise<string> {
  * Backend API URL (server-side direct call)
  * Server-side'dan backend'e doğrudan istek atar (rewrite yerine).
  */
-function getApiUrl(): string {
-  const apiUrl = env.NEXT_PUBLIC_API_URL;
-  if (!apiUrl) {
-    throw new Error("NEXT_PUBLIC_API_URL is not configured");
+function getApiUrl(preferredBaseUrl?: string): string {
+  if (preferredBaseUrl) {
+    return preferredBaseUrl.replace(/\/$/, "");
   }
-  return apiUrl;
+
+  const internalApiUrl =
+    process.env.INTERNAL_API_URL ||
+    process.env.API_URL ||
+    env.NEXT_PUBLIC_API_URL;
+
+  if (!internalApiUrl) {
+    throw new Error("API URL is not configured");
+  }
+
+  return internalApiUrl.replace(/\/$/, "");
 }
 
 /**
@@ -56,9 +65,9 @@ function getApiUrl(): string {
  * Server-side'dan backend'e doğrudan istek atar.
  * Cookie'ler incoming request'ten okunup Cookie header'ında iletilir.
  */
-export async function getSession(): Promise<SessionData | null> {
+export async function getSession(baseUrl?: string): Promise<SessionData | null> {
   try {
-    const apiUrl = getApiUrl();
+    const apiUrl = getApiUrl(baseUrl);
     const cookieHeader = await getCookieHeader();
 
     if (!cookieHeader) {

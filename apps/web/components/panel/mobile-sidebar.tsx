@@ -9,7 +9,6 @@ import {
   Settings,
   FileText,
   BarChart3,
-  Package,
   Mail,
   Bell,
   Shield,
@@ -69,12 +68,6 @@ const menuItems: MenuSection[] = [
     title: "Management",
     items: [
       { icon: Users, label: "Users", href: "/panel/users", roles: ["ADMIN"] },
-      {
-        icon: Package,
-        label: "Products",
-        href: "/panel/products",
-        roles: ["ADMIN"],
-      },
       {
         icon: FileText,
         label: "Content",
