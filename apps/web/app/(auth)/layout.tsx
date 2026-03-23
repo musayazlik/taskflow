@@ -12,8 +12,8 @@ export default function AuthLayout({
       {/* Header */}
       <header className="p-6 relative z-10">
         <Link href="/" className="inline-flex items-center gap-4 group">
-          <Image src={"/logo.svg"} alt="Taskflow Logo" width={36} height={36} />
-          <span className="font-bold gradient-text text-2xl">Taskflow</span>
+          <Image src={"/logo.svg"} alt="TaskFlow Logo" width={36} height={36} />
+          <span className="font-bold gradient-text text-2xl">TaskFlow</span>
         </Link>
       </header>
 
@@ -25,7 +25,7 @@ export default function AuthLayout({
       {/* Footer */}
       <footer className="p-6 text-center relative z-10">
         <p className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Taskflow. All rights reserved.
+          © {new Date().getFullYear()} TaskFlow. All rights reserved.
         </p>
       </footer>
     </div>

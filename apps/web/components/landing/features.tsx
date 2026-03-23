@@ -29,7 +29,7 @@ export function Features() {
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Taskflow keeps tasks, owners, and context in one place so teams can move quickly without losing clarity.
+              TaskFlow keeps tasks, owners, and context in one place so teams can move quickly without losing clarity.
             </p>
           </motion.div>
         </div>

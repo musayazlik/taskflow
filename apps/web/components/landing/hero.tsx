@@ -73,7 +73,7 @@ export function Hero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg md:text-xl text-center text-muted-foreground max-w-2xl mb-8 leading-relaxed"
             >
-              Taskflow is a real-time task management platform that helps teams assign work, track progress, and stay aligned without endless status meetings.
+              TaskFlow is a real-time task management platform that helps teams assign work, track progress, and stay aligned without endless status meetings.
             </motion.p>
 
             {/* Avatar Circles + Social Proof */}
@@ -130,7 +130,7 @@ export function Hero() {
                 href="/register"
                 className="group relative flex items-center gap-2 px-8 py-4 rounded-full bg-linear-to-r from-primary to-purple-600 text-white font-semibold text-lg hover:opacity-90 transition-all hover:scale-105 overflow-hidden"
               >
-                Start using Taskflow
+                Start using TaskFlow
                 <Iconify
                   icon={arrowRightIcon}
                   className="w-5 h-5 group-hover:translate-x-1 transition-transform"

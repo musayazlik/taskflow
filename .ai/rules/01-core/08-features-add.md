@@ -1,6 +1,6 @@
 # Adding New Features Roadmap
 
-This document describes the step-by-step process to follow when adding a new feature to the TurboStack project. All features should be developed following this order.
+This document describes the step-by-step process to follow when adding a new feature to the TaskFlow project. All features should be developed following this order.
 
 ## 🎯 Overview
 

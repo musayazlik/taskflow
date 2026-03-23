@@ -21,9 +21,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Taskflow – Real-time task management",
+  title: "TaskFlow – Real-time task management",
   description:
-    "Taskflow helps teams manage tasks, collaborate in real time, and keep projects on track in a single workspace.",
+    "TaskFlow helps teams manage tasks, collaborate in real time, and keep projects on track in a single workspace.",
 };
 
 export default function RootLayout({

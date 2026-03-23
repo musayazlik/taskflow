@@ -20,7 +20,7 @@ async function chatCompletion(params: {
       "Authorization": `Bearer ${env.OPENROUTER_API_KEY}`,
       "Content-Type": "application/json",
       "HTTP-Referer": env.FRONTEND_URL,
-      "X-Title": "TurboStack",
+      "X-Title": "TaskFlow",
     },
     body: JSON.stringify({
       model: params.model,

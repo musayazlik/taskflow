@@ -157,7 +157,7 @@ export default function RegisterPage() {
   return (
     <AuthCard
       title="Create an account"
-      description="Get started with Taskflow today"
+      description="Get started with TaskFlow today"
       footer={
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}

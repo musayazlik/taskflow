@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ============================================
-# TurboStack frontend - Next.js Frontend
+# TaskFlow frontend - Next.js Frontend
 # Optimized for layer caching
 # ============================================
 

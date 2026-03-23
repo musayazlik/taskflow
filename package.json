@@ -1,5 +1,5 @@
 {
-	"name": "turbostack",
+	"name": "taskflow",
 	"private": true,
 	"packageManager": "bun@1.1.45",
 	"version": "1.0.0",
@@ -8,7 +8,6 @@
 		"dev": "turbo run dev",
 		"dev:web": "turbo run dev --filter=web",
 		"dev:api": "turbo run dev --filter=api",
-		"dev:docs": "turbo run dev --filter=docs",
 		"lint": "turbo run lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
 		"check-types": "turbo run check-types",
@@ -28,7 +27,6 @@
 		"docker:down": "docker compose down",
 		"docker:up:web": "docker compose up -d web",
 		"docker:up:api": "docker compose up -d api",
-		"docker:up:docs": "docker compose up -d docs",
 		"docker:build": "docker compose build",
 		"docker:logs": "docker compose logs -f",
 		"docker:restart": "docker compose restart",
@@ -48,8 +46,5 @@
 		"apps/*",
 		"packages/*"
 	],
-	"license": "UNLICENSED",
-	"dependencies": {
-		"@nestjs/platform-socket.io": "^11.1.17"
-	}
+	"license": "UNLICENSED"
 }

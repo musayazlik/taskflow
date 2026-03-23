@@ -27,7 +27,7 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: "starter",
     name: "Starter",
-    description: "Perfect for trying out TurboStack",
+    description: "Perfect for trying out TaskFlow",
     monthlyPrice: 0,
     currency: "USD",
     monthlyPriceId:

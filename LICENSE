@@ -1,16 +1,16 @@
 PROPRIETARY SOFTWARE LICENSE
 
-Copyright (c) 2026 TurboStack. All rights reserved.
+Copyright (c) 2026 TaskFlow. All rights reserved.
 
 NOTICE: This software and associated documentation files (the "Software") are 
-the proprietary and confidential property of TurboStack. Unauthorized copying, 
+the proprietary and confidential property of TaskFlow. Unauthorized copying, 
 modification, distribution, or use of this Software, via any medium, is strictly 
 prohibited.
 
 TERMS AND CONDITIONS:
 
 1. GRANT OF LICENSE
-   Subject to the terms and conditions of this License, TurboStack grants you 
+   Subject to the terms and conditions of this License, TaskFlow grants you 
    a limited, non-exclusive, non-transferable license to use the Software for 
    personal or commercial projects.
 
@@ -25,7 +25,7 @@ TERMS AND CONDITIONS:
    b) Share the Software with third parties, whether for free or for a fee;
    c) Use the Software to create derivative works that are directly competing 
       commercial products (such as boilerplates, starter kits, or frameworks) 
-      that serve the same purpose as TurboStack;
+      that serve the same purpose as TaskFlow;
    d) Remove or alter any copyright, trademark, or other proprietary notices 
       from the Software;
    e) Reverse engineer, decompile, or disassemble the Software, except to the 
@@ -42,7 +42,7 @@ TERMS AND CONDITIONS:
 
 4. OWNERSHIP
    The Software is protected by copyright laws and international copyright 
-   treaties, as well as other intellectual property laws and treaties. TurboStack 
+   treaties, as well as other intellectual property laws and treaties. TaskFlow 
    retains all rights, title, and interest in and to the Software, including all 
    intellectual property rights therein.
 
@@ -52,14 +52,14 @@ TERMS AND CONDITIONS:
    of its terms. Upon termination, you must destroy all copies of the Software 
    in your possession.
 
-   TurboStack reserves the right to terminate this License only in the event 
+   TaskFlow reserves the right to terminate this License only in the event 
    of a material breach of the terms and conditions contained herein.
 
 6. NO WARRANTY
    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-   TURBOSTACK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN 
+   TASKFLOW BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN 
    AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
@@ -71,7 +71,7 @@ TERMS AND CONDITIONS:
 
 8. CONTACT
    For licensing inquiries or questions about this License, please contact:
-   support@turbostack.pro
+   support@taskflow.pro
 
 By using the Software, you acknowledge that you have read this License, 
 understand it, and agree to be bound by its terms and conditions.

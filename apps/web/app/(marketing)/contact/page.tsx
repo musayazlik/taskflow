@@ -8,9 +8,9 @@ import clockIcon from "@iconify-icons/lucide/clock";
 import messageSquareIcon from "@iconify-icons/lucide/message-square";
 
 export const metadata: Metadata = {
-  title: "Contact Us - TurboStack",
+  title: "Contact Us - TaskFlow",
   description:
-    "Get in touch with the TurboStack team for support, partnerships, or custom solutions.",
+    "Get in touch with the TaskFlow team for support, partnerships, or custom solutions.",
 };
 
 const contactInfo = [
@@ -48,7 +48,7 @@ export default function ContactPage() {
             Contact <span className="gradient-text">Us</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Have questions about TurboStack? Need a custom solution for your
+            Have questions about TaskFlow? Need a custom solution for your
             team? We'd love to hear from you.
           </p>
         </div>
@@ -101,7 +101,7 @@ export default function ContactPage() {
               <h3 className="font-semibold mb-4">Follow us</h3>
               <div className="flex gap-4">
                 <a
-                  href="https://twitter.com/turbostack"
+                  href="https://twitter.com/taskflow"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-colors"
@@ -115,7 +115,7 @@ export default function ContactPage() {
                   </svg>
                 </a>
                 <a
-                  href="https://github.com/turbostack"
+                  href="https://github.com/taskflow"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-colors"
@@ -133,7 +133,7 @@ export default function ContactPage() {
                   </svg>
                 </a>
                 <a
-                  href="https://discord.gg/turbostack"
+                  href="https://discord.gg/taskflow"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-colors"

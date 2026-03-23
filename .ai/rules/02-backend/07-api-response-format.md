@@ -1,6 +1,6 @@
 # API Response Structure
 
-This document defines the standard response format that all API endpoints in the TurboStack project must adhere to. It standardizes frontend-backend communication by providing a common structure for successful and error operations.
+This document defines the standard response format that all API endpoints in the TaskFlow project must adhere to. It standardizes frontend-backend communication by providing a common structure for successful and error operations.
 
 ## Standard Response Format
 

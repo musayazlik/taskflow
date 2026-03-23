@@ -34,7 +34,7 @@ taskflow/
 │   ├── eslint-config/    # Shared ESLint configuration
 │   └── typescript-config/ # Shared TypeScript configuration
 ├── scripts/              # CLI scripts (env sync, setup, deployment)
-├── docs/                 # Project documentation
+├── .ai/                  # Internal AI/coding guidelines (see .ai/README.md)
 ├── Dockerfile.api        # API production Docker image
 ├── Dockerfile.web        # Web production Docker image
 ├── docker-compose.yml    # Full-stack Docker Compose

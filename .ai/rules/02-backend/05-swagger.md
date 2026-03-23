@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-TurboStack API uses **@elysiajs/openapi** for automatic OpenAPI specification generation and Swagger UI.
+TaskFlow API uses **@elysiajs/openapi** for automatic OpenAPI specification generation and Swagger UI.
 
 **Swagger UI**: `http://localhost:4101/openapi`
 
@@ -19,7 +19,7 @@ const app = new Elysia().use(
   openapi({
     documentation: {
       info: {
-        title: "TurboStack API",
+        title: "TaskFlow API",
         version: "1.0.0",
         description: "API documentation",
       },

@@ -4,7 +4,7 @@
 
 ## 🎯 Overview
 
-TurboStack supports multiple file storage providers:
+TaskFlow supports multiple file storage providers:
 - **UploadThing** - General file storage
 - **Cloudinary** - Image optimization and transformations
 

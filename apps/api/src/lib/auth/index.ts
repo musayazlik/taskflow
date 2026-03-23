@@ -69,7 +69,7 @@ const cookieDomain = enableCrossSubdomainCookies
  * - **Database**: PostgreSQL via Prisma adapter; user `role` is an additional field for guards.
  * - **Emails**: verification and password reset use `src/emails` (Resend).
  * - **URLs**: `baseURL` is `env.BETTER_AUTH_URL || env.FRONTEND_URL` for OAuth and magic links.
- * - **Session**: cookie name `turbostack_session`, 7-day expiry (see config block below).
+ * - **Session**: cookie name `taskflow_session`, 7-day expiry (see config block below).
  *
  * Use `auth.api.getSession({ headers })` or Nest `BetterAuthGuard` for request authentication.
  */
@@ -152,7 +152,7 @@ export const auth = betterAuth({
     },
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // 1 day (updates session if older than this)
-    cookieName: "turbostack_session",
+    cookieName: "taskflow_session",
   },
 
   // Base URL for email links and OAuth callbacks

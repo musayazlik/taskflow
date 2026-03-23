@@ -127,7 +127,7 @@ export const LANDING_HOW_IT_WORKS_STEPS = [
     number: "01",
     title: "Create your workspace",
     description:
-      "Set up a Taskflow workspace for your team and organize projects by product, squad, or client.",
+      "Set up a TaskFlow workspace for your team and organize projects by product, squad, or client.",
     icon: downloadIcon,
     checks: ["Create workspace", "Define projects", "Invite first members"],
   },
@@ -198,14 +198,14 @@ export type LandingTestimonial = {
 export const LANDING_TESTIMONIALS: LandingTestimonial[] = [
   {
     quote:
-      "Taskflow finally gave us one place to see who is working on what. Standups are shorter and far more focused.",
+      "TaskFlow finally gave us one place to see who is working on what. Standups are shorter and far more focused.",
     author: "Sarah Chen",
     role: "CTO at TechStart",
     avatar: "SC",
   },
   {
     quote:
-      "Our team used to live in spreadsheets and chat threads. With Taskflow, every task has a clear owner and status.",
+      "Our team used to live in spreadsheets and chat threads. With TaskFlow, every task has a clear owner and status.",
     author: "Marcus Johnson",
     role: "Senior Developer",
     avatar: "MJ",
@@ -219,7 +219,7 @@ export const LANDING_TESTIMONIALS: LandingTestimonial[] = [
   },
   {
     quote:
-      "Real-time updates in Taskflow mean I do not have to chase people for status. I just open the board and see reality.",
+      "Real-time updates in TaskFlow mean I do not have to chase people for status. I just open the board and see reality.",
     author: "David Kim",
     role: "Lead Engineer",
     avatar: "DK",
@@ -233,7 +233,7 @@ export const LANDING_TESTIMONIALS: LandingTestimonial[] = [
   },
   {
     quote:
-      "Simple, fast, and opinionated in the right ways. Taskflow is now where all of our projects start.",
+      "Simple, fast, and opinionated in the right ways. TaskFlow is now where all of our projects start.",
     author: "Alex Martinez",
     role: "Full Stack Developer",
     avatar: "AM",
@@ -256,7 +256,7 @@ export type LandingPricingPlan = {
 export const LANDING_PRICING_PLANS: LandingPricingPlan[] = [
   {
     name: "Free",
-    description: "Perfect for trying Taskflow with a small team",
+    description: "Perfect for trying TaskFlow with a small team",
     price: "$0",
     originalPrice: undefined,
     period: "forever",
@@ -315,17 +315,17 @@ export const LANDING_PRICING_PLANS: LandingPricingPlan[] = [
 
 export const LANDING_FAQS = [
   {
-    question: "What is Taskflow?",
+    question: "What is TaskFlow?",
     answer:
-      "Taskflow is a real-time task management platform that helps teams organize work, assign owners, and track progress in a single place.",
+      "TaskFlow is a real-time task management platform that helps teams organize work, assign owners, and track progress in a single place.",
   },
   {
     question: "Do I need to know TypeScript?",
     answer:
-      "No. Taskflow is a web application you access in your browser. If you integrate it with your own systems, TypeScript is helpful but not required.",
+      "No. TaskFlow is a web application you access in your browser. If you integrate it with your own systems, TypeScript is helpful but not required.",
   },
   {
-    question: "Can I use Taskflow with my team?",
+    question: "Can I use TaskFlow with my team?",
     answer:
       "Yes. You can invite your teammates to a shared workspace, assign tasks to each other, and control access with roles and permissions.",
   },
@@ -342,17 +342,17 @@ export const LANDING_FAQS = [
   {
     question: "Can I get a refund?",
     answer:
-      "Yes, we offer a 14-day refund window for paid plans. If Taskflow is not a fit, you can contact us within 14 days of purchase.",
+      "Yes, we offer a 14-day refund window for paid plans. If TaskFlow is not a fit, you can contact us within 14 days of purchase.",
   },
   {
     question: "Do I get updates?",
     answer:
-      "Absolutely. We continuously improve Taskflow and roll out new features. You automatically get access to updates as they are released.",
+      "Absolutely. We continuously improve TaskFlow and roll out new features. You automatically get access to updates as they are released.",
   },
   {
     question: "Is my data secure?",
     answer:
-      "Taskflow is built with modern security best practices. We use encryption in transit, role-based access control, and follow strict security guidelines to keep your data safe.",
+      "TaskFlow is built with modern security best practices. We use encryption in transit, role-based access control, and follow strict security guidelines to keep your data safe.",
   },
 ];
 

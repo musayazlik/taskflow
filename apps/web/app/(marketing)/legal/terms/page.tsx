@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service - TurboStack",
+  title: "Terms of Service - TaskFlow",
   description:
-    "TurboStack Terms of Service - Rules and regulations for using our services in compliance with EU regulations.",
+    "TaskFlow Terms of Service - Rules and regulations for using our services in compliance with EU regulations.",
 };
 
 export default function TermsOfServicePage() {
@@ -31,7 +31,7 @@ export default function TermsOfServicePage() {
               1. General Provisions
             </h2>
             <p className="text-muted-foreground mb-4">
-              These Terms of Service apply when using TurboStack services. By
+              These Terms of Service apply when using TaskFlow services. By
               using our services, you agree to these terms. If you do not agree
               to these terms, please do not use our services.
             </p>
@@ -47,7 +47,7 @@ export default function TermsOfServicePage() {
               2. Service Description
             </h2>
             <p className="text-muted-foreground mb-4">
-              TurboStack provides a ready-to-use monorepo starter kit for
+              TaskFlow provides a ready-to-use monorepo starter kit for
               building modern full-stack applications. Our services include:
             </p>
             <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
@@ -113,13 +113,13 @@ export default function TermsOfServicePage() {
               5. Intellectual Property Rights
             </h2>
             <p className="text-muted-foreground mb-4">
-              All TurboStack content (code, documentation, design, logo, etc.)
+              All TaskFlow content (code, documentation, design, logo, etc.)
               is protected by copyright and other intellectual property laws.
-              TurboStack is proprietary software licensed under a proprietary license.
+              TaskFlow is proprietary software licensed under a proprietary license.
               You may not copy, distribute, share, or modify our content without permission.
             </p>
             <p className="text-muted-foreground">
-              When using TurboStack code in your own projects, you must comply
+              When using TaskFlow code in your own projects, you must comply
               with the proprietary license terms. See the LICENSE file for details.
             </p>
           </section>

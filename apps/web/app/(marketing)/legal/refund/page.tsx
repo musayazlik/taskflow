@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Refund Policy - TurboStack",
+  title: "Refund Policy - TaskFlow",
   description:
-    "TurboStack Refund Policy - Learn about our refund terms and conditions.",
+    "TaskFlow Refund Policy - Learn about our refund terms and conditions.",
 };
 
 export default function RefundPolicyPage() {
@@ -32,13 +32,13 @@ export default function RefundPolicyPage() {
             </h2>
             <p className="text-muted-foreground mb-4">
               This Refund Policy outlines the terms and conditions under which
-              you may request a refund for TurboStack products and services.
+              you may request a refund for TaskFlow products and services.
               This policy is compliant with European Union consumer protection
               laws, including the Consumer Rights Directive (2011/83/EU) and the
               Digital Content Directive (2019/770/EU).
             </p>
             <p className="text-muted-foreground">
-              By purchasing TurboStack products, you agree to the terms outlined
+              By purchasing TaskFlow products, you agree to the terms outlined
               in this policy.
             </p>
           </section>

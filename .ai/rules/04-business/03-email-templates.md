@@ -4,7 +4,7 @@ This document explains the design standards, component structure, and delivery s
 
 ## 🎯 Overview
 
-TurboStack uses **React Email** for all email templates. Email templates should be:
+TaskFlow uses **React Email** for all email templates. Email templates should be:
 
 - Written as React components using **@react-email/components**
 - Type-safe with TypeScript interfaces
@@ -65,7 +65,7 @@ export const TemplateNameEmail: React.FC<Readonly<TemplateNameEmailProps>> = ({
     <Body style={main}>
       <Container style={container}>
         <Section style={logoSection}>
-          <Heading style={logo}>TurboStack</Heading>
+          <Heading style={logo}>TaskFlow</Heading>
         </Section>
 
         <Heading style={h1}>Email Heading</Heading>
@@ -85,7 +85,7 @@ export const TemplateNameEmail: React.FC<Readonly<TemplateNameEmailProps>> = ({
         <Hr style={divider} />
 
         <Text style={footerSmall}>
-          © {new Date().getFullYear()} TurboStack. All rights reserved.
+          © {new Date().getFullYear()} TaskFlow. All rights reserved.
         </Text>
       </Container>
     </Body>
@@ -166,7 +166,7 @@ Every email template should include:
 
    ```typescript
    <Section style={logoSection}>
-     <Heading style={logo}>TurboStack</Heading>
+     <Heading style={logo}>TaskFlow</Heading>
    </Section>
    ```
 
@@ -205,7 +205,7 @@ Every email template should include:
 7. **Footer**: Legal/copyright info
    ```typescript
    <Text style={footerSmall}>
-     © {new Date().getFullYear()} TurboStack. All rights reserved.
+     © {new Date().getFullYear()} TaskFlow. All rights reserved.
    </Text>
    ```
 
@@ -285,7 +285,7 @@ Required in `.env`:
 ```bash
 RESEND_API_KEY=re_your_api_key
 FROM_EMAIL=noreply@yourdomain.com
-APP_NAME=TurboStack
+APP_NAME=TaskFlow
 ```
 
 ---
@@ -338,7 +338,7 @@ For emails requiring user action (verification, password reset):
 For informational emails (welcome, confirmation):
 
 ```typescript
-<Heading style={h1}>Welcome to TurboStack!</Heading>
+<Heading style={h1}>Welcome to TaskFlow!</Heading>
 
 <Text style={text}>Hi {userName},</Text>
 
@@ -399,7 +399,7 @@ react: VerificationEmail({ userName, url })
 <div style={{ color: "#0f172a", fontSize: "16px" }}>
 
 // ✅ Always provide alt text
-<Img src="logo.png" alt="TurboStack Logo" />
+<Img src="logo.png" alt="TaskFlow Logo" />
 
 // ✅ Handle undefined props
 <Text>{userName || "there"}</Text>

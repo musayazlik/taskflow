@@ -41,7 +41,7 @@ import {
 } from "@/lib/menu-items";
 
 const SIDEBAR_BRAND = {
-  name: "TurboStack",
+  name: "TaskFlow",
   subtitle: "Admin Panel",
 } as const;
 
@@ -510,7 +510,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
               <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary/80 text-white font-bold shadow-lg shadow-primary/25 group-hover:shadow-primary/40 transition-shadow">
                 <Image
                   src={"/logo.svg"}
-                  alt="TurboStack Logo"
+                  alt="TaskFlow Logo"
                   width={36}
                   height={36}
                   priority

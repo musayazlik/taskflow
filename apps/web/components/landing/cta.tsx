@@ -37,7 +37,7 @@ export function CTA() {
               ?
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              Create your first workspace in minutes and start collaborating with your team in Taskflow.
+              Create your first workspace in minutes and start collaborating with your team in TaskFlow.
             </p>
 
             {/* CTAs */}
