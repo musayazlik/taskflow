@@ -29,6 +29,21 @@ function isNonLocalHttpsUrl(value: string | undefined): boolean {
   }
 }
 
+function extractRootDomain(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  try {
+    const hostname = new URL(value).hostname;
+    if (hostname === "localhost" || hostname === "127.0.0.1") return undefined;
+    const parts = hostname.split(".");
+    if (parts.length >= 2) {
+      return `.${parts.slice(-2).join(".")}`;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 const trustedOrigins = Array.from(
   new Set(
     [
@@ -42,6 +57,10 @@ const trustedOrigins = Array.from(
 const enableCrossSubdomainCookies =
   (env.NODE_ENV === "production" || env.NODE_ENV === "staging") &&
   isNonLocalHttpsUrl(env.FRONTEND_URL);
+
+const cookieDomain = enableCrossSubdomainCookies
+  ? extractRootDomain(env.FRONTEND_URL)
+  : undefined;
 
 /**
  * Singleton Better Auth instance.
@@ -152,6 +171,7 @@ export const auth = betterAuth({
     useSecureCookies: env.NODE_ENV === "production" || env.NODE_ENV === "staging",
     crossSubDomainCookies: {
       enabled: enableCrossSubdomainCookies,
+      domain: cookieDomain,
     },
   },
 });

@@ -28,8 +28,13 @@ async function bootstrap(): Promise<void> {
 
   app.useWebSocketAdapter(new IoAdapter(app));
 
+  const allowedOrigins = [
+    env.FRONTEND_URL,
+    env.BETTER_AUTH_URL,
+  ].filter((v): v is string => Boolean(v));
+
   app.enableCors({
-    origin: env.FRONTEND_URL,
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "x-request-id"],
