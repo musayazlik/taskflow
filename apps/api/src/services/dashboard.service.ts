@@ -8,21 +8,31 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [totalUsers, newUsersThisMonth] = await Promise.all([
+    const [
+      totalUsers,
+      newUsersThisMonth,
+      totalTasks,
+      tasksTodo,
+      tasksInProgress,
+      tasksDone,
+    ] = await Promise.all([
       prisma.user.count(),
       prisma.user.count({
         where: { createdAt: { gte: startOfMonth } },
       }),
+      prisma.task.count(),
+      prisma.task.count({ where: { status: "TODO" } }),
+      prisma.task.count({ where: { status: "IN_PROGRESS" } }),
+      prisma.task.count({ where: { status: "DONE" } }),
     ]);
 
     return {
       totalUsers,
-      totalProducts: 0,
-      totalOrders: 0,
-      totalRevenue: 0,
-      revenueThisMonth: 0,
-      activeSubscriptions: 0,
       newUsersThisMonth,
+      totalTasks,
+      tasksTodo,
+      tasksInProgress,
+      tasksDone,
     };
   } catch (error) {
     logger.error({ err: error }, "Error fetching dashboard stats");
@@ -38,23 +48,19 @@ export const getRecentActivity = async (
   limit = 10,
 ): Promise<RecentActivity> => {
   try {
-    const [recentUsers] = await Promise.all([
-      prisma.user.findMany({
-        take: limit,
-        orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-        },
-      }),
-      [],
-    ]);
+    const recentUsers = await prisma.user.findMany({
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+      },
+    });
 
     return {
       recentUsers,
-      recentOrders: [],
     };
   } catch (error) {
     logger.error({ err: error, limit }, "Error fetching recent activity");

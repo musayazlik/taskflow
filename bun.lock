@@ -14,8 +14,6 @@
       "name": "api",
       "version": "1.0.0",
       "dependencies": {
-        "@elysiajs/cors": "^1.3.5",
-        "@elysiajs/openapi": "^1.4.13",
         "@nestjs/common": "^10.4.5",
         "@nestjs/core": "^10.4.5",
         "@nestjs/microservices": "^10.4.5",
@@ -26,12 +24,12 @@
         "@repo/database": "packages/database",
         "@repo/types": "packages/types",
         "@repo/validations": "packages/validations",
+        "@sinclair/typebox": "^0.34.0",
         "better-auth": "^1.4.15",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.1",
         "dotenv": "^16.5.0",
         "effect": "^3.19.14",
-        "elysia": "^1.4.21",
         "multer": "^1.4.5-lts.1",
         "pino": "^10.3.0",
         "pino-pretty": "^13.1.3",
@@ -331,11 +329,7 @@
 
     "@electric-sql/pglite-tools": ["@electric-sql/pglite-tools@0.2.7", "", { "peerDependencies": { "@electric-sql/pglite": "0.3.2" } }, "sha512-9dAccClqxx4cZB+Ar9B+FZ5WgxDc/Xvl9DPrTWv+dYTf0YNubLzi4wHHRGRGhrJv15XwnyKcGOZAP1VXSneSUg=="],
 
-    "@elysiajs/cors": ["@elysiajs/cors@1.4.1", "", { "peerDependencies": { "elysia": ">= 1.4.0" } }, "sha512-lQfad+F3r4mNwsxRKbXyJB8Jg43oAOXjRwn7sKUL6bcOW3KjUqUimTS+woNpO97efpzjtDE0tEjGk9DTw8lqTQ=="],
-
     "@elysiajs/eden": ["@elysiajs/eden@1.4.6", "", { "peerDependencies": { "elysia": ">=1.4.19" } }, "sha512-Tsa4NwXEWg/u73vWiYZQ3L5/ecgZSxqiEjYwpS+4qBKXeTZqZKl2hcgHJSVBL+InEDMi35Xugct7qyAXE5oM4Q=="],
-
-    "@elysiajs/openapi": ["@elysiajs/openapi@1.4.13", "", { "peerDependencies": { "elysia": ">= 1.4.0" } }, "sha512-5BNI7yuFo8zjacTWA8a/wYE0tNZ4ecD7PAkeUDEU7lj6Iep0t2i5Rml6q4/+roM5oZFdtvvzoX4DH8zGKFEo0w=="],
 
     "@emnapi/core": ["@emnapi/core@1.7.1", "", { "dependencies": { "@emnapi/wasi-threads": "1.1.0", "tslib": "^2.4.0" } }, "sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg=="],
 
@@ -987,7 +981,7 @@
 
     "ansi-styles": ["ansi-styles@4.3.0", "", { "dependencies": { "color-convert": "^2.0.1" } }, "sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg=="],
 
-    "api": ["api@workspace:apps/api", { "dependencies": { "@elysiajs/cors": "^1.3.5", "@elysiajs/openapi": "^1.4.13", "@nestjs/common": "^10.4.5", "@nestjs/core": "^10.4.5", "@nestjs/microservices": "^10.4.5", "@nestjs/platform-express": "^10.4.5", "@nestjs/swagger": "^8.0.0", "@nestjs/websockets": "^10.4.5", "@openrouter/sdk": "^0.3.15", "@repo/database": "packages/database", "@repo/types": "packages/types", "@repo/validations": "packages/validations", "better-auth": "^1.4.15", "class-transformer": "^0.5.1", "class-validator": "^0.14.1", "dotenv": "^16.5.0", "effect": "^3.19.14", "elysia": "^1.4.21", "multer": "^1.4.5-lts.1", "pino": "^10.3.0", "pino-pretty": "^13.1.3", "reflect-metadata": "^0.2.2", "resend": "^6.7.0", "rxjs": "^7.8.1", "sharp": "^0.34.5", "swagger-ui-express": "^5.0.1", "uploadthing": "^7.7.4", "zod": "^3.25.0" }, "devDependencies": { "@repo/typescript-config": "packages/typescript-config", "@types/bun": "latest", "@types/express": "^4.17.21", "@types/multer": "^1.4.12", "typescript": "5.9.2" } }],
+    "api": ["api@workspace:apps/api", { "dependencies": { "@nestjs/common": "^10.4.5", "@nestjs/core": "^10.4.5", "@nestjs/microservices": "^10.4.5", "@nestjs/platform-express": "^10.4.5", "@nestjs/swagger": "^8.0.0", "@nestjs/websockets": "^10.4.5", "@openrouter/sdk": "^0.3.15", "@repo/database": "packages/database", "@repo/types": "packages/types", "@repo/validations": "packages/validations", "@sinclair/typebox": "^0.34.0", "better-auth": "^1.4.15", "class-transformer": "^0.5.1", "class-validator": "^0.14.1", "dotenv": "^16.5.0", "effect": "^3.19.14", "multer": "^1.4.5-lts.1", "pino": "^10.3.0", "pino-pretty": "^13.1.3", "reflect-metadata": "^0.2.2", "resend": "^6.7.0", "rxjs": "^7.8.1", "sharp": "^0.34.5", "swagger-ui-express": "^5.0.1", "uploadthing": "^7.7.4", "zod": "^3.25.0" }, "devDependencies": { "@repo/typescript-config": "packages/typescript-config", "@types/bun": "latest", "@types/express": "^4.17.21", "@types/multer": "^1.4.12", "typescript": "5.9.2" } }],
 
     "append-field": ["append-field@1.0.0", "https://registry.npmmirror.com/append-field/-/append-field-1.0.0.tgz", {}, "sha512-klpgFSWLW1ZEs8svjfb7g4qWY0YS5imI82dTg+QahUvJ8YqAY0P10Uk8tTyh9ZGuYEZEMaeJYCF5BFuX552hsw=="],
 

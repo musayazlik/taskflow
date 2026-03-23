@@ -9,8 +9,7 @@ import {
   CardTitle,
 } from "@repo/shadcn-ui/card";
 import {
-  ShoppingCart,
-  TrendingUp,
+  ListTodo,
   Activity,
   Clock,
   ChevronRight,
@@ -29,48 +28,46 @@ import { SystemStats } from "@/components/system-stats";
 import { cn } from "@/lib/utils";
 import type { PANEL_RECENT_ACTIVITY } from "@repo/types";
 
-const revenueChartData = [
-  { month: "Jan", revenue: 4500, target: 4000 },
-  { month: "Feb", revenue: 5200, target: 4500 },
-  { month: "Mar", revenue: 4800, target: 5000 },
-  { month: "Apr", revenue: 6100, target: 5500 },
-  { month: "May", revenue: 5900, target: 6000 },
-  { month: "Jun", revenue: 7200, target: 6500 },
+const tasksCompletedChartData = [
+  { month: "Jan", completed: 42, goal: 40 },
+  { month: "Feb", completed: 55, goal: 45 },
+  { month: "Mar", completed: 48, goal: 50 },
+  { month: "Apr", completed: 61, goal: 55 },
+  { month: "May", completed: 59, goal: 60 },
+  { month: "Jun", completed: 72, goal: 65 },
 ];
 
-const revenueChartConfig = {
-  revenue: {
-    label: "Revenue",
+const tasksCompletedChartConfig = {
+  completed: {
+    label: "Completed",
     color: "hsl(var(--chart-1))",
   },
-  target: {
-    label: "Target",
+  goal: {
+    label: "Goal",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
-const salesChartData = [
-  { category: "Electronics", sales: 450 },
-  { category: "Clothing", sales: 380 },
-  { category: "Books", sales: 290 },
-  { category: "Home", sales: 320 },
-  { category: "Sports", sales: 210 },
+const tasksByStatusChartData = [
+  { status: "To do", count: 86 },
+  { status: "In progress", count: 64 },
+  { status: "Done", count: 412 },
 ];
 
-const salesChartConfig = {
-  sales: {
-    label: "Sales",
+const tasksByStatusChartConfig = {
+  count: {
+    label: "Tasks",
     color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
 
 const activeUsersData = [
-  { name: "active", value: 573, fill: "hsl(var(--chart-1))" },
+  { name: "active", value: 42, fill: "hsl(var(--chart-1))" },
 ];
 
 const activeUsersConfig = {
   active: {
-    label: "Active Users",
+    label: "Active today",
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
@@ -85,9 +82,9 @@ const quickActions = [
   },
   {
     icon: FileText,
-    label: "View Reports",
-    description: "Sales & analytics",
-    href: "/panel/analytics",
+    label: "Tasks",
+    description: "View and manage tasks",
+    href: "/panel/tasks",
     color:
       "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400",
   },
@@ -122,32 +119,32 @@ export function AdminDashboard({
     <>
       {/* Charts Row */}
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-7">
-        {/* Revenue Trend */}
+        {/* Tasks completed trend (illustrative) */}
         <Card className="lg:col-span-4 bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-primary" />
-                Revenue Trend
+                Tasks completed
               </CardTitle>
               <CardDescription className="text-gray-500 dark:text-gray-400">
-                Monthly revenue vs target comparison
+                Monthly completed tasks vs goal (sample data)
               </CardDescription>
             </div>
             <Link
-              href="/panel/analytics"
+              href="/panel/tasks"
               className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
             >
-              View Details
+              View tasks
               <ChevronRight className="h-3 w-3" />
             </Link>
           </CardHeader>
           <CardContent className="p-2 pt-0">
             <LineChartComponent
-              data={revenueChartData}
-              config={revenueChartConfig}
+              data={tasksCompletedChartData}
+              config={tasksCompletedChartConfig}
               xAxisKey="month"
-              dataKeys={["revenue", "target"]}
+              dataKeys={["completed", "goal"]}
               className="h-[280px] w-full"
               showDots={true}
               curveType="monotone"
@@ -164,7 +161,7 @@ export function AdminDashboard({
               Active Users
             </CardTitle>
             <CardDescription className="text-gray-500 dark:text-gray-400">
-              Users currently browsing your store
+              Users active in the workspace (sample)
             </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center justify-center p-4 pt-0">
@@ -172,7 +169,7 @@ export function AdminDashboard({
               data={activeUsersData}
               config={activeUsersConfig}
               className="h-[220px] w-full max-w-[220px]"
-              centerValue="573"
+              centerValue="42"
               centerLabel="Online"
               endAngle={250}
               innerRadius={70}
@@ -184,23 +181,23 @@ export function AdminDashboard({
 
       {/* Sales & Activity Row */}
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-7">
-        {/* Sales by Category */}
+        {/* Tasks by status */}
         <Card className="lg:col-span-3 bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 overflow-hidden">
           <CardHeader className="pb-2">
             <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
-              <ShoppingCart className="h-5 w-5 text-violet-500" />
-              Sales by Category
+              <ListTodo className="h-5 w-5 text-violet-500" />
+              Tasks by status
             </CardTitle>
             <CardDescription className="text-gray-500 dark:text-gray-400">
-              Top performing categories this month
+              Snapshot by column (sample data)
             </CardDescription>
           </CardHeader>
           <CardContent className="p-2 pt-0">
             <BarChartComponent
-              data={salesChartData}
-              config={salesChartConfig}
-              xAxisKey="category"
-              dataKeys={["sales"]}
+              data={tasksByStatusChartData}
+              config={tasksByStatusChartConfig}
+              xAxisKey="status"
+              dataKeys={["count"]}
               className="h-[240px] w-full"
               showLegend={false}
             />

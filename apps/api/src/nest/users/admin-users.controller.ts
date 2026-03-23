@@ -20,44 +20,34 @@ import { PAGINATION } from "@api/constants";
 import { BetterAuthGuard } from "../auth/better-auth.guard";
 import { AdminGuard } from "../auth/role.guards";
 import type { RequestWithSession } from "../auth/better-auth.guard";
+import { parseQueryInt } from "@api/lib/parse-query-int";
 
 import * as userService from "@api/services/user.service";
 import { auth } from "@api/lib/auth";
 
 import type { UpdateUserData, UserListParams } from "@repo/types";
 
-type UserQuery = {
-  page?: string;
-  limit?: string;
-  search?: string;
-  role?: string;
-};
-
-type UpdateUserBody = Partial<{
-  name: string;
-  email: string;
-  image: string;
-}>;
-
-type BulkIdsBody = {
-  ids: string[];
-};
-
-type CreateUserBody = {
-  email: string;
-  name: string;
-  role: "USER" | "ADMIN" | "SUPER_ADMIN";
-  password: string;
-};
+import type {
+  BulkIdsBody,
+  CreateUserBody,
+  UpdateUserBody,
+  UserQuery,
+} from "./dto/admin-users.dto";
 
 @Controller("/api/users")
 @UseGuards(BetterAuthGuard, AdminGuard)
 export class AdminUsersController {
   @Get("/")
-  async listUsers(@Query() query: UserQuery, @Req() req: RequestWithSession) {
+  async listUsers(@Query() query: UserQuery) {
     const params: UserListParams = {
-      page: query.page ? parseInt(query.page) : PAGINATION.DEFAULT_PAGE,
-      limit: query.limit ? parseInt(query.limit) : PAGINATION.DEFAULT_LIMIT,
+      page: parseQueryInt(query.page, PAGINATION.DEFAULT_PAGE, {
+        min: 1,
+        max: 10_000,
+      }),
+      limit: parseQueryInt(query.limit, PAGINATION.DEFAULT_LIMIT, {
+        min: 1,
+        max: PAGINATION.MAX_LIMIT,
+      }),
       search: query.search,
       role: query.role as UserListParams["role"],
     };

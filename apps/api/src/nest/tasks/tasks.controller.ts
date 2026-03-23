@@ -19,16 +19,13 @@ import {
 import { BetterAuthGuard } from "../auth/better-auth.guard";
 import type { RequestWithSession } from "../auth/better-auth.guard";
 import { TasksService } from "./tasks.service";
-
-type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
-
-const isValidTaskStatus = (status: unknown): status is TaskStatus => {
-  return (
-    status === "TODO" ||
-    status === "IN_PROGRESS" ||
-    status === "DONE"
-  );
-};
+import {
+  isValidTaskStatus,
+  type AssignTaskBodyInput,
+  type CreateTaskBodyInput,
+  type TaskListQuery,
+  type UpdateTaskBodyInput,
+} from "./dto/tasks.dto";
 
 @Controller("/api/tasks")
 @UseGuards(BetterAuthGuard)
@@ -39,12 +36,7 @@ export class TasksController {
   async create(
     @Req() req: RequestWithSession,
     @Body()
-    body: {
-      title?: unknown;
-      description?: unknown;
-      status?: unknown;
-      assigneeId?: unknown;
-    },
+    body: CreateTaskBodyInput,
   ) {
     const session = req.betterAuthSession;
     if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);
@@ -98,7 +90,7 @@ export class TasksController {
   @Get("/")
   async list(
     @Req() req: RequestWithSession,
-    @Query() query: { page?: string; limit?: string; status?: string },
+    @Query() query: TaskListQuery,
   ) {
     const session = req.betterAuthSession;
     if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);
@@ -138,11 +130,7 @@ export class TasksController {
     @Req() req: RequestWithSession,
     @Param("id") id: string,
     @Body()
-    body: {
-      title?: unknown;
-      description?: unknown;
-      status?: unknown;
-    },
+    body: UpdateTaskBodyInput,
   ) {
     const session = req.betterAuthSession;
     if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);
@@ -192,7 +180,7 @@ export class TasksController {
   async assign(
     @Req() req: RequestWithSession,
     @Param("id") id: string,
-    @Body() body: { assigneeId?: unknown },
+    @Body() body: AssignTaskBodyInput,
   ) {
     const session = req.betterAuthSession;
     if (!session) throw new AppError("UNAUTHORIZED", "Authentication required", 401);

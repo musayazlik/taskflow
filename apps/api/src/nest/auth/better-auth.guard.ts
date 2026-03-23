@@ -4,7 +4,7 @@ import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "@api/lib/auth";
 import { AppError } from "@api/lib/errors";
 
-import type { RequestWithRequestId } from "../types/request-with-request-id";
+import type { RequestWithRequestId } from "../middleware/request-id.middleware";
 
 type Session = Awaited<ReturnType<typeof auth.api.getSession>>;
 

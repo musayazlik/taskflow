@@ -1,32 +1,17 @@
-import { Body, Controller, Get, Patch } from "@nestjs/common";
+import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
 
 import { prisma } from "@repo/database";
 import { AppError } from "@api/lib/errors";
 import { successResponse } from "@api/lib/route-helpers";
 import * as mediaService from "@api/services/media.service";
+import { BetterAuthGuard } from "../auth/better-auth.guard";
+import { AdminGuard } from "../auth/role.guards";
 
-type NullableString = string | null;
-
-type UpdateGlobalSettingsBody = Partial<{
-  primaryColor: NullableString;
-  primaryForeground: NullableString;
-  secondaryColor: NullableString;
-  secondaryForeground: NullableString;
-}>;
-
-type UpdateImageOptimizationBody = Partial<{
-  enabled: boolean;
-  maxWidth: number | null;
-  maxHeight: number | null;
-  quality: number | null;
-  format: string | null;
-}>;
-
-type UpdateMediaUploadBody = Partial<{
-  maxFileSize: number;
-  maxFileCount: number;
-  allowedMimeTypes: string[];
-}>;
+import type {
+  UpdateGlobalSettingsBody,
+  UpdateImageOptimizationBody,
+  UpdateMediaUploadBody,
+} from "./dto/settings.dto";
 
 @Controller("/api/settings")
 export class SettingsController {
@@ -40,6 +25,7 @@ export class SettingsController {
   }
 
   @Patch("/")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async updateSettings(@Body() body: UpdateGlobalSettingsBody) {
     let settings = await prisma.globalSettings.findFirst();
 
@@ -79,12 +65,14 @@ export class SettingsController {
   }
 
   @Get("/image-optimization")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async getImageOptimization() {
     const settings = await mediaService.getImageOptimizationSettings();
     return successResponse(settings);
   }
 
   @Patch("/image-optimization")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async updateImageOptimization(
     @Body() body: UpdateImageOptimizationBody,
   ) {
@@ -105,12 +93,14 @@ export class SettingsController {
   }
 
   @Get("/media-upload")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async getMediaUploadSettings() {
     const settings = await mediaService.getMediaUploadSettings();
     return successResponse(settings);
   }
 
   @Patch("/media-upload")
+  @UseGuards(BetterAuthGuard, AdminGuard)
   async updateMediaUploadSettings(@Body() body: UpdateMediaUploadBody) {
     const validMimeTypes = [
       "image/jpeg",

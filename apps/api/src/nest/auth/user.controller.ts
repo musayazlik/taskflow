@@ -15,7 +15,7 @@ import type { UpdateUserData } from "@repo/types";
 import { UpdateUserSchema } from "@repo/types";
 import * as userService from "@api/services/user.service";
 import { Req } from "@nestjs/common";
-import { TypeBoxValidationPipe } from "../validation/typebox-validation.pipe";
+import { TypeBoxValidationPipe } from "../common/pipes/typebox-validation.pipe";
 
 @Controller("/api/user")
 export class UserController {

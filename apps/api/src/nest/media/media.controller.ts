@@ -23,17 +23,29 @@ import { AdminGuard } from "../auth/role.guards";
 import { MEDIA_UPLOAD_DEFAULTS, PAGINATION } from "@api/constants";
 import * as mediaService from "@api/services/media.service";
 import { successResponse } from "@api/lib/route-helpers";
-import { multerFileToDomFile, multerFilesToDomFiles } from "../utils/multer-to-file";
+import {
+  multerFileToDomFile,
+  multerFilesToDomFiles,
+} from "../common/utils/multer-to-file";
+
+import type { MediaListQuery, OptimizeImageBody } from "./dto/media.dto";
+import { parseQueryInt } from "@api/lib/parse-query-int";
 
 @Controller("/api/media")
 @UseGuards(BetterAuthGuard, AdminGuard)
 export class MediaController {
   @Get("/")
   async list(
-    @Query() query: { limit?: string; offset?: string },
+    @Query() query: MediaListQuery,
   ) {
-    const limit = query.limit ? parseInt(query.limit) : PAGINATION.DEFAULT_LIMIT;
-    const offset = query.offset ? parseInt(query.offset) : PAGINATION.DEFAULT_OFFSET;
+    const limit = parseQueryInt(query.limit, PAGINATION.DEFAULT_LIMIT, {
+      min: 1,
+      max: 200,
+    });
+    const offset = parseQueryInt(query.offset, PAGINATION.DEFAULT_OFFSET, {
+      min: 0,
+      max: 1_000_000,
+    });
 
     const result = await mediaService.listFiles({ limit, offset });
     return {
@@ -66,8 +78,16 @@ export class MediaController {
   }
 
   @Delete("/:key")
-  async deleteFile(@Param("key") key: string) {
-    await mediaService.deleteFile(key);
+  async deleteFile(@Req() req: RequestWithSession, @Param("key") key: string) {
+    const session = req.betterAuthSession;
+    if (!session) {
+      throw new AppError("UNAUTHORIZED", "Authentication required", 401);
+    }
+
+    await mediaService.deleteFile(key, {
+      userId: session.user.id,
+      role: session.user.role,
+    });
     return { success: true, message: "File deleted successfully" };
   }
 
@@ -84,12 +104,7 @@ export class MediaController {
   @Post("/:key/optimize")
   async optimize(
     @Param("key") key: string,
-    @Body() body: {
-      quality?: number;
-      format?: "webp" | "jpeg" | "png" | "original";
-      maxWidth?: number;
-      maxHeight?: number;
-    },
+    @Body() body: OptimizeImageBody,
   ) {
     const result = await mediaService.optimizeImage(key, {
       quality: body.quality,

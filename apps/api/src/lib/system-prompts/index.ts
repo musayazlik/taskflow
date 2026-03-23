@@ -1,10 +1,6 @@
 /**
- * System Prompts Module
- * 
- * Centralized system prompts organized by category.
- * Each category contains specialized prompts for different use cases.
- * 
- * @module system-prompts
+ * @fileoverview Category-based LLM system prompts and {@link getSystemPrompt}.
+ * @module @api/lib/system-prompts
  */
 
 export * from "./text-generation";
@@ -12,17 +8,19 @@ export * from "./image-generation";
 export * from "./seo-optimization";
 export * from "./code-generation";
 
-// Re-export SystemPromptCategory from types package
 export { SystemPromptCategory } from "@repo/types";
 import { SystemPromptCategory } from "@repo/types";
 
 /**
- * Get system prompt by category and type
- * 
- * @param category - The prompt category
- * @param type - The specific prompt type within the category
- * @returns The system prompt string
- * @throws Error if category or type is invalid
+ * Resolves the system prompt string for a `SystemPromptCategory` and optional prompt key.
+ *
+ * @param category - Which prompt family to load (text, image, SEO, code).
+ * @param type - Key inside that family’s prompt map; defaults to **`"GENERAL"`** when missing or unknown.
+ * @returns The prompt text to send as the system message in chat completions.
+ * @throws If `category` is not handled (should not happen for valid enum values).
+ *
+ * @remarks Uses `require()` internally to load category modules — avoid calling from hot paths
+ * if startup-time loading becomes necessary.
  */
 export function getSystemPrompt(
   category: SystemPromptCategory,

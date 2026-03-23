@@ -1,10 +1,6 @@
 /**
- * OpenRouter API Client
- * 
- * Specialized HTTP client for OpenRouter AI API integration using @openrouter/sdk.
- * Handles authentication, request formatting, and response parsing.
- * 
- * @module ai-client/openrouter-client
+ * @fileoverview OpenRouter SDK wrapper: chat completions, API key from `env`, `AppError` on failures.
+ * @module @api/lib/ai-client/openrouter-client
  */
 
 import { OpenRouter } from "@openrouter/sdk";
@@ -73,9 +69,9 @@ export interface OpenRouterClientConfig {
 }
 
 /**
- * OpenRouter API Client
- * 
- * Wrapper around @openrouter/sdk with additional error handling and logging.
+ * Thin wrapper around `@openrouter/sdk` with logging and consistent errors.
+ *
+ * @remarks Call {@link isConfigured} before user-facing flows when the key may be missing.
  */
 export class OpenRouterClient {
   private sdk: OpenRouter;

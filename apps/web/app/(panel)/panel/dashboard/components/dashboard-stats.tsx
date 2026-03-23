@@ -2,10 +2,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@repo/shadcn-ui/card";
 import {
-  DollarSign,
   Users,
-  ShoppingCart,
-  TrendingUp,
+  UserPlus,
+  ClipboardList,
+  ListTodo,
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
@@ -13,29 +13,29 @@ import { cn } from "@/lib/utils";
 import type { PANEL_DASHBOARD_STATS } from "@repo/types";
 
 const iconMap = {
-  "Total Revenue": DollarSign,
-  Subscriptions: Users,
-  Sales: ShoppingCart,
-  "Active Now": TrendingUp,
+  "Total Users": Users,
+  "New This Month": UserPlus,
+  "Total Tasks": ClipboardList,
+  "Open Tasks": ListTodo,
 } as const;
 
 const iconColorMap = {
-  "Total Revenue": {
-    bg: "bg-emerald-100 dark:bg-emerald-500/20",
-    text: "text-emerald-600 dark:text-emerald-400",
-    shadow: "shadow-emerald-500/20",
-  },
-  Subscriptions: {
+  "Total Users": {
     bg: "bg-blue-100 dark:bg-blue-500/20",
     text: "text-blue-600 dark:text-blue-400",
     shadow: "shadow-blue-500/20",
   },
-  Sales: {
+  "New This Month": {
+    bg: "bg-emerald-100 dark:bg-emerald-500/20",
+    text: "text-emerald-600 dark:text-emerald-400",
+    shadow: "shadow-emerald-500/20",
+  },
+  "Total Tasks": {
     bg: "bg-violet-100 dark:bg-violet-500/20",
     text: "text-violet-600 dark:text-violet-400",
     shadow: "shadow-violet-500/20",
   },
-  "Active Now": {
+  "Open Tasks": {
     bg: "bg-amber-100 dark:bg-amber-500/20",
     text: "text-amber-600 dark:text-amber-400",
     shadow: "shadow-amber-500/20",
@@ -55,7 +55,11 @@ export function DashboardStats({ stats, userRole }: DashboardStatsProps) {
       colors: iconColorMap[stat.title as keyof typeof iconColorMap],
     }))
     .filter(
-      (stat) => userRole === "ADMIN" || stat.title === "Subscriptions",
+      (stat) =>
+        userRole === "ADMIN" ||
+        userRole === "SUPER_ADMIN" ||
+        stat.title === "Total Tasks" ||
+        stat.title === "Open Tasks",
     );
 
   return (
@@ -67,7 +71,6 @@ export function DashboardStats({ stats, userRole }: DashboardStatsProps) {
             key={stat.title}
             className="relative overflow-hidden bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 hover:shadow-lg transition-all duration-300 group"
           >
-            {/* Gradient accent */}
             <div
               className={cn(
                 "absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2 transition-opacity group-hover:opacity-30",

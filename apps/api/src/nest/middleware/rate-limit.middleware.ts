@@ -5,7 +5,7 @@ import { AppError } from "@api/lib/errors";
 import { env } from "@api/lib/env";
 import { logger } from "@api/lib/logger";
 import { RATE_LIMIT } from "@api/constants";
-import type { RequestWithRequestId } from "../types/request-with-request-id";
+import type { RequestWithRequestId } from "./request-id.middleware";
 
 type RateLimitEntry = { count: number; resetAt: number };
 
