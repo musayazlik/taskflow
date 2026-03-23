@@ -25,7 +25,9 @@ function createNamespaceSocket(base: string, namespace: string): AppSocket {
  * The hook/component subscribes/unsubscribes events, but this module keeps the connection alive.
  */
 export function getNamespaceSocket(namespace: string): AppSocket {
-  const base = resolveApiBaseUrl();
+  // Keep socket handshake same-origin in browser so auth cookies are always included.
+  // Next.js rewrites forward `/socket.io/*` traffic to the API service in production.
+  const base = typeof window === "undefined" ? resolveApiBaseUrl() : "";
   const key = `${base}::${namespace}`;
 
   if (socketsBase !== base) {
