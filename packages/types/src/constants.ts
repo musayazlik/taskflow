@@ -18,7 +18,6 @@ export const AUTH_ENDPOINTS = {
   },
 
   oauthGoogleStart: "/api/auth/oauth/google/start",
-  oauthGithubStart: "/api/auth/oauth/github/start",
   oauthCallback: (provider: string) => `/api/auth/oauth/${provider}/callback`,
 
   get session() {

@@ -28,9 +28,9 @@ import {
 } from "./dto/ai.schemas";
 
 @Controller("/api/ai")
-@UseGuards(BetterAuthGuard)
 export class AiController {
   @Post("/chat")
+  @UseGuards(BetterAuthGuard)
   async chat(
     @Req() req: RequestWithSession,
     @Body(new TypeBoxValidationPipe(chatSchema)) body: ChatRequest,
@@ -83,6 +83,7 @@ export class AiController {
   }
 
   @Post("/seo")
+  @UseGuards(BetterAuthGuard)
   async seo(
     @Body(new TypeBoxValidationPipe(seoSchema)) body: SeoRequest,
   ) {
@@ -98,6 +99,7 @@ export class AiController {
   }
 
   @Post("/content")
+  @UseGuards(BetterAuthGuard)
   async content(
     @Body(new TypeBoxValidationPipe(contentSchema)) body: ContentRequest,
   ) {
@@ -115,6 +117,7 @@ export class AiController {
   }
 
   @Post("/image")
+  @UseGuards(BetterAuthGuard)
   async image(
     @Req() req: RequestWithSession,
     @Body(new TypeBoxValidationPipe(imageSchema)) body: ImageRequest,
@@ -140,18 +143,21 @@ export class AiController {
   }
 
   @Get("/models")
+  @UseGuards(BetterAuthGuard)
   async models() {
     const models = await aiService.listModels();
     return successResponse(models);
   }
 
   @Get("/models/image")
+  @UseGuards(BetterAuthGuard)
   async imageModels() {
     const models = await aiService.getImageGenerationModels();
     return successResponse(models);
   }
 
   @Post("/process")
+  @UseGuards(BetterAuthGuard)
   async process(
     @Body(new TypeBoxValidationPipe(processSchema)) body: ProcessRequest,
   ) {

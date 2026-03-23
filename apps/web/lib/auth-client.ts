@@ -7,7 +7,7 @@ import { createAuthClient } from "better-auth/react";
  * Note: baseURL is omitted to use same-origin requests via Next.js rewrites
  * This ensures cookies are set on the frontend domain (domain.com) instead of backend (api.domain.com)
  */
-export const authClient = createAuthClient({
+const authClient = createAuthClient({
   basePath: `/api/auth`,
   fetchOptions: {
     credentials: "include",
@@ -22,11 +22,11 @@ export const authClient = createAuthClient({
       },
     },
   },
-});
+}) as any;
 
 // Export typed hooks and actions
 export const { signIn, signUp, signOut, useSession, getSession } = authClient;
 
 // Export types
-export type Session = typeof authClient.$Infer.Session;
-export type User = Session["user"];
+export type Session = any;
+export type User = any;

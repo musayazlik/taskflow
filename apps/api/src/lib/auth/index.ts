@@ -86,17 +86,10 @@ export const auth = betterAuth({
 
   // Social OAuth Providers
   socialProviders: {
-    // Google OAuth
     google: {
       clientId: env.GOOGLE_CLIENT_ID || "",
       clientSecret: env.GOOGLE_CLIENT_SECRET || "",
       // Callback URL: {baseURL}/api/auth/callback/google
-    },
-    // GitHub OAuth
-    github: {
-      clientId: env.GITHUB_CLIENT_ID || "",
-      clientSecret: env.GITHUB_CLIENT_SECRET || "",
-      // Callback URL: {baseURL}/api/auth/callback/github
     },
   },
 

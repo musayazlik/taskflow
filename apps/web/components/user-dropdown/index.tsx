@@ -107,7 +107,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
             router.push("/");
             router.refresh();
           },
-          onError: (error) => {
+          onError: (error: unknown) => {
             console.error("Logout error:", error);
             toast.error("Logout failed");
             setIsPending(false);

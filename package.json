@@ -48,5 +48,8 @@
 		"apps/*",
 		"packages/*"
 	],
-	"license": "UNLICENSED"
+	"license": "UNLICENSED",
+	"dependencies": {
+		"@nestjs/platform-socket.io": "^11.1.17"
+	}
 }

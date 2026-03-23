@@ -24,6 +24,11 @@ const nextConfig = {
 		],
 	},
 
+	// Monorepo: resolve packages from repo root (Docker + hoisted node_modules). Replaces experimental.turbo in Next.js 16+.
+	turbopack: {
+		root: resolve(__dirname, '../..'),
+	},
+
 	transpilePackages: [
 		'@repo/shadcn-ui',
 		'@repo/database',
