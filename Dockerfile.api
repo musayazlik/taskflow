@@ -38,6 +38,9 @@ COPY packages/ ./packages/
 # Generate Prisma client (only if schema changed)
 RUN bun run db:generate
 
+# Build NestJS app to JS (avoids running TS directly in Bun)
+RUN cd apps/api && bun run build
+
 # Production stage - minimal runtime image
 FROM oven/bun:1 AS runner
 WORKDIR /app
@@ -47,13 +50,13 @@ ENV PORT=4101
 
 # Copy only runtime dependencies
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages ./packages
+# Copy generated Prisma client + workspace packages from builder
+COPY --from=builder /app/packages ./packages
 # Copy application code
 COPY --from=builder /app/apps/api ./apps/api
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/turbo.json ./
 
 EXPOSE 4101
 
-# Run source directly instead of bundled code
-CMD ["bun", "run", "--bun", "apps/api/src/nest/main.ts"]
+# Run compiled JS entrypoint
+WORKDIR /app/apps/api
+CMD ["bun", "run", "dist/main.js"]
