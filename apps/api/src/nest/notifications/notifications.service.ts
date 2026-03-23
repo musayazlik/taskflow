@@ -4,8 +4,14 @@ import { prisma, type Notification, NotificationType } from "@repo/database";
 
 import { AppError } from "@api/lib/errors";
 
+import { NotificationsRealtimeService } from "./notifications-realtime.service";
+
 @Injectable()
 export class NotificationsService {
+  constructor(
+    private readonly notificationsRealtime: NotificationsRealtimeService,
+  ) {}
+
   async listByUser(userId: string): Promise<Notification[]> {
     return prisma.notification.findMany({
       where: { userId },
@@ -27,10 +33,14 @@ export class NotificationsService {
       );
     }
 
-    return prisma.notification.update({
+    const updated = await prisma.notification.update({
       where: { id: input.notificationId },
       data: { read: true },
     });
+
+    this.notificationsRealtime.emitNotificationUpdated(updated);
+
+    return updated;
   }
 
   async createForTask(input: {
@@ -39,7 +49,7 @@ export class NotificationsService {
     taskId?: string;
     message: string;
   }): Promise<Notification> {
-    return prisma.notification.create({
+    const created = await prisma.notification.create({
       data: {
         type: input.type,
         message: input.message,
@@ -48,5 +58,9 @@ export class NotificationsService {
         taskId: input.taskId ?? null,
       },
     });
+
+    this.notificationsRealtime.emitNotificationCreated(created);
+
+    return created;
   }
 }

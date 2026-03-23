@@ -15,6 +15,7 @@ export * from "./rbac";
 export * from "./customers";
 export * from "./system";
 export * from "./tasks";
+export * from "./notifications";
 
 // Re-export frontend-compatible types
 export type { ProductFrontend } from "./products";
