@@ -18,12 +18,12 @@ Imports use the path alias:
 import { env } from "@api/lib/env";
 ```
 
-TypeScript resolves `@api/lib/<name>` to `<name>/index.ts`. Deeper paths are allowed when a submodule is intentionally public (e.g. `@api/lib/ai-client/openrouter-client`).
+TypeScript resolves `@api/lib/<name>` to `<name>/index.ts`.
 
 ## How modules relate (high level)
 
 ```text
-env ─────────────► logger, resend, auth, ai-client, …
+env ─────────────► logger, resend, auth, …
 auth ◄──────────── resend, emails (verification / reset)
 uploadthing ◄───── env, logger
 file-service ◄──── env (UploadThing token), logger
@@ -36,7 +36,6 @@ media.service ───► file-service, utils (Sharp), uploadthing (utapi)
 |--------|------------------|
 | [`auth`](./auth/README.md) | Better Auth instance (sessions, OAuth, email flows) |
 | [`auth-roles`](./auth-roles/README.md) | `isAdminRole`, `RequesterContext` without Nest imports |
-| [`ai-client`](./ai-client/README.md) | OpenRouter SDK wrapper for chat completions |
 | [`env`](./env/README.md) | Zod-validated `process.env`, fail-fast at startup |
 | [`errors`](./errors/README.md) | `AppError` and subclasses; works with global exception filter |
 | [`file-service`](./file-service/README.md) | Storage provider abstraction (UploadThing implementation) |
@@ -44,7 +43,6 @@ media.service ───► file-service, utils (Sharp), uploadthing (utapi)
 | [`parse-query-int`](./parse-query-int/README.md) | Safe integer parsing from query strings |
 | [`resend`](./resend/README.md) | Resend email client; dev fallback when API key missing |
 | [`route-helpers`](./route-helpers/README.md) | Session helpers, pagination, standard JSON response shapes |
-| [`system-prompts`](./system-prompts/README.md) | AI system prompts by category (`getSystemPrompt`) |
 | [`uploadthing`](./uploadthing/README.md) | Shared `UTApi` singleton for server-side UploadThing |
 | [`utils`](./utils/README.md) | Passwords, media normalization, Sharp image optimization |
 

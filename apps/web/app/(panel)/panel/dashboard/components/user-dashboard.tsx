@@ -15,9 +15,6 @@ import {
   Clock,
   BarChart3,
   Zap,
-  Brain,
-  FileText,
-  ImagePlus,
   Settings,
   ArrowUpRight,
 } from "lucide-react";
@@ -136,11 +133,11 @@ export function UserDashboard() {
           <CardContent className="p-2 pt-0">
             <BarChartComponent
               data={[
-                { feature: "AI Chat", usage: 45 },
-                { feature: "Content", usage: 32 },
-                { feature: "Images", usage: 28 },
-                { feature: "SEO", usage: 15 },
-                { feature: "Analytics", usage: 22 },
+                { feature: "Tasks", usage: 45 },
+                { feature: "Notifications", usage: 32 },
+                { feature: "Profile", usage: 28 },
+                { feature: "Media", usage: 15 },
+                { feature: "Dashboard", usage: 22 },
               ]}
               config={{
                 usage: {
@@ -174,28 +171,25 @@ export function UserDashboard() {
             <div className="grid gap-3 grid-cols-2">
               {[
                 {
-                  icon: Brain,
-                  label: "AI Chat",
-                  description: "Start a conversation",
-                  href: "/panel/ai-models/chat",
-                  color:
-                    "bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400",
+                  icon: Activity,
+                  label: "Tasks",
+                  description: "View your tasks",
+                  href: "/panel/tasks",
+                  color: "bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400",
                 },
                 {
-                  icon: FileText,
-                  label: "Create Content",
-                  description: "Generate new content",
-                  href: "/panel/ai-models/content",
-                  color:
-                    "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400",
+                  icon: Clock,
+                  label: "Notifications",
+                  description: "Review recent updates",
+                  href: "/panel/notifications",
+                  color: "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400",
                 },
                 {
-                  icon: ImagePlus,
-                  label: "Generate Image",
-                  description: "Create AI images",
-                  href: "/panel/ai-models/image",
-                  color:
-                    "bg-violet-100 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400",
+                  icon: BarChart3,
+                  label: "Dashboard",
+                  description: "Track your activity",
+                  href: "/panel/dashboard",
+                  color: "bg-violet-100 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400",
                 },
                 {
                   icon: Settings,
@@ -250,9 +244,9 @@ export function UserDashboard() {
             <div className="space-y-3">
               {[
                 {
-                  action: "Generated AI content",
+                  action: "Completed a task",
                   time: "2 hours ago",
-                  icon: FileText,
+                  icon: Activity,
                 },
                 {
                   action: "Updated profile settings",
@@ -260,9 +254,9 @@ export function UserDashboard() {
                   icon: Settings,
                 },
                 {
-                  action: "Created new image",
+                  action: "Read notifications",
                   time: "Yesterday",
-                  icon: ImagePlus,
+                  icon: Clock,
                 },
                 {
                   action: "Viewed analytics",

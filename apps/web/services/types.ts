@@ -18,23 +18,6 @@ export type {
   RolePermission,
   ImageOptimizationSettings,
   CustomerFrontend as Customer,
-  // AI types
-  ChatMessage,
-  ChatCompletionParams,
-  ChatCompletionResponse,
-  SEOGenerationParams,
-  SEOResult,
-  ContentGenerationParams,
-  ContentResult,
-  ImageGenerationParams,
-  GeneratedImage,
-  AIManagementRequest,
-  AIManagementResponse,
-  TokenUsage,
-  AIProvider,
-  SystemPromptCategory,
-  // AI Models types
-  AiModelFrontend as AiModel,
   // Dashboard types
   DashboardStatsFrontend as DashboardStats,
   RecentActivityFrontend as RecentActivity,
