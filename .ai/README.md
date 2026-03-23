@@ -1,4 +1,4 @@
-# TurboStack AI Rules
+# TaskFlow AI Rules
 
 This directory contains universal project rules that can be read by any AI coding assistant.
 
@@ -39,7 +39,7 @@ This directory contains universal project rules that can be read by any AI codin
 
 ## 📖 Usage
 
-All AI assistants should reference these rules when working on the TurboStack codebase. The rules provide:
+All AI assistants should reference these rules when working on the TaskFlow codebase. The rules provide:
 
 - **Project structure and conventions** - How the monorepo is organized
 - **Technology stack documentation** - Complete tech stack reference
@@ -62,7 +62,7 @@ All AI assistants should reference these rules when working on the TurboStack co
 | Security Review       | [`security.md`](./rules/security.md)                 |
 | Code Quality          | [`clean-code.md`](./rules/clean-code.md)              |
 
-Ensure your AI assistant is configured to read from the `.ai/rules/` directory for consistent and accurate code generation aligned with TurboStack's standards.
+Ensure your AI assistant is configured to read from the `.ai/rules/` directory for consistent and accurate code generation aligned with TaskFlow's standards.
 
 
 ---

@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ============================================
-# TurboStack API - NestJS API
+# TaskFlow API - NestJS API
 # Coolify için root'tan çalışan Dockerfile
 # Optimized for layer caching
 # ============================================

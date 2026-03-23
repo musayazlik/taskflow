@@ -118,7 +118,7 @@ export function MobileSidebar() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
               T
             </div>
-            <span className="font-semibold text-lg">TurboStack</span>
+            <span className="font-semibold text-lg">TaskFlow</span>
           </Link>
           <Button
             variant="ghost"

@@ -16,7 +16,7 @@ The **Better Auth** server instance for TaskFlow: database-backed users (Prisma)
 
 - **OAuth**: Client IDs/secrets from `env`; callback URLs follow Better Auth’s `{baseURL}/api/auth/callback/{provider}` pattern. **`baseURL`** is `env.BETTER_AUTH_URL || env.FRONTEND_URL`.
 
-- **Session**: Cookie name `turbostack_session`, 7-day expiry, cookie cache enabled for performance.
+- **Session**: Cookie name `taskflow_session`, 7-day expiry, cookie cache enabled for performance.
 
 ## Typical usage in code
 

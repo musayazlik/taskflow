@@ -6,7 +6,7 @@ import { ProfilePageClient } from "./components/profile-page-client";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "My Profile | TurboStack Admin Panel",
+  title: "My Profile | TaskFlow Admin Panel",
   description:
     "Manage your personal information and avatar. Update your profile details, change your avatar, and view your account statistics.",
   robots: {

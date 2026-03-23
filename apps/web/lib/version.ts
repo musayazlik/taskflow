@@ -6,7 +6,7 @@
 export const APP_VERSION = "1.0.0";
 export type VersionStatus = "stable" | "beta" | "alpha" | "dev";
 export const VERSION_STATUS: VersionStatus = "stable";
-export const APP_NAME = "TurboStack";
+export const APP_NAME = "TaskFlow";
 
 // Get version display string
 export function getVersionDisplay(

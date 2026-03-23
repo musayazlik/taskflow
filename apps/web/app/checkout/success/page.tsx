@@ -43,7 +43,7 @@ function SuccessContent() {
         </div>
         <CardTitle className="text-2xl">Subscription Successful! 🎉</CardTitle>
         <CardDescription>
-          Thank you for subscribing to TurboStack. Your account has been
+          Thank you for subscribing to TaskFlow. Your account has been
           upgraded.
         </CardDescription>
       </CardHeader>
@@ -53,7 +53,7 @@ function SuccessContent() {
           <h3 className="font-semibold">What's Next?</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>• Access your AI rules and guidelines</li>
-            <li>• Download the TurboStack starter template</li>
+            <li>• Download the TaskFlow starter template</li>
             <li>• Join our community Discord</li>
             <li>• Check your email for getting started guide</li>
           </ul>

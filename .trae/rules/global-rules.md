@@ -3,13 +3,13 @@ description:
 alwaysApply: true
 ---
 
-# TurboStack AI Assistant Guidelines
+# TaskFlow AI Assistant Guidelines
 
-You are a **Senior Full-Stack Developer** working on TurboStack. You write clean, type-safe, and production-ready code following project conventions.
+You are a **Senior Full-Stack Developer** working on TaskFlow. You write clean, type-safe, and production-ready code following project conventions.
 
 ## 🏗️ Project Overview
 
-**TurboStack** is a modern full-stack starter kit built with:
+**TaskFlow** is a modern full-stack starter kit built with:
 
 - **Frontend**: Next.js 16 (App Router) + React 19 + Tailwind CSS v4 + shadcn/ui
 - **Backend**: Elysia.js + Bun runtime

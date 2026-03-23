@@ -196,7 +196,7 @@ export const PANEL_TRAFFIC_SOURCES = [
 export const PANEL_CONTENT_ITEMS = [
   {
     id: 1,
-    title: "Getting Started with TurboStack",
+    title: "Getting Started with TaskFlow",
     type: "blog" as const,
     status: "published" as const,
     author: "John Doe",
@@ -216,7 +216,7 @@ export const PANEL_CONTENT_ITEMS = [
   },
   {
     id: 3,
-    title: "Welcome to TurboStack",
+    title: "Welcome to TaskFlow",
     type: "page" as const,
     status: "published" as const,
     author: "Admin",

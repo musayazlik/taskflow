@@ -1,10 +1,10 @@
 # Security Guidelines
 
-This document outlines the security standards and best practices for the TurboStack project. It covers authentication, password hashing, input validation, and API protection measures to ensure the integrity and safety of the application.
+This document outlines the security standards and best practices for the TaskFlow project. It covers authentication, password hashing, input validation, and API protection measures to ensure the integrity and safety of the application.
 
 ## 🎯 Overview
 
-Security is a core principle of TurboStack. This document covers security best practices for authentication, data handling, API protection, and general application security.
+Security is a core principle of TaskFlow. This document covers security best practices for authentication, data handling, API protection, and general application security.
 
 ---
 

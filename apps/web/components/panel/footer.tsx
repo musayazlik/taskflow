@@ -42,7 +42,7 @@ export function PanelFooter() {
           {/* Right: Links */}
           <div className="flex items-center gap-3">
             <a
-              href="https://github.com/turbostack"
+              href="https://github.com/taskflow"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-all p-2 rounded-lg hover:bg-muted hover:scale-110"

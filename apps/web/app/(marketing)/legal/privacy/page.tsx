@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - TurboStack",
+  title: "Privacy Policy - TaskFlow",
   description:
-    "TurboStack Privacy Policy - Learn how we protect and handle your personal data in compliance with GDPR and EU regulations.",
+    "TaskFlow Privacy Policy - Learn how we protect and handle your personal data in compliance with GDPR and EU regulations.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -31,7 +31,7 @@ export default function PrivacyPolicyPage() {
               1. General Information
             </h2>
             <p className="text-muted-foreground mb-4">
-              At TurboStack, we take your privacy seriously. This Privacy Policy
+              At TaskFlow, we take your privacy seriously. This Privacy Policy
               explains how we collect, use, store, and protect your personal
               data. This policy is compliant with the European Union General
               Data Protection Regulation (GDPR) and applicable data protection
@@ -45,7 +45,7 @@ export default function PrivacyPolicyPage() {
               The data controller responsible for processing your personal data:
             </p>
             <div className="bg-card border border-border rounded-lg p-6">
-              <p className="font-semibold mb-2">TurboStack</p>
+              <p className="font-semibold mb-2">TaskFlow</p>
               <p className="text-sm text-muted-foreground">
                 Email:{" "}
                 <a

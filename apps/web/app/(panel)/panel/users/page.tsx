@@ -4,7 +4,7 @@ import { getUsersServer } from "@/services/server";
 import { UsersPageClient } from "./components/users-page-client";
 
 export const metadata: Metadata = {
-  title: "Users | TurboStack Admin Panel",
+  title: "Users | TaskFlow Admin Panel",
   description:
     "Manage user accounts and permissions. View, create, edit, and delete users. Manage user roles and email verification.",
   robots: {

@@ -1,6 +1,6 @@
 # Technology Stack Documentation
 
-This document provides a comprehensive overview of the modern, high-performance technology stack used in TurboStack. It details the versions and configurations for core tools, frontend and backend frameworks, and shared packages to maintain a consistent development environment.
+This document provides a comprehensive overview of the modern, high-performance technology stack used in TaskFlow. It details the versions and configurations for core tools, frontend and backend frameworks, and shared packages to maintain a consistent development environment.
 
 ## 🎯 Overview
 
@@ -240,11 +240,11 @@ const app = new Elysia()
   .use(
     openapi({
       documentation: {
-        info: { title: "TurboStack API", version: "1.0.0" },
+        info: { title: "TaskFlow API", version: "1.0.0" },
       },
     })
   )
-  .get("/", () => ({ message: "Welcome to TurboStack API" }))
+  .get("/", () => ({ message: "Welcome to TaskFlow API" }))
   .listen(process.env.PORT || 3001);
 ```
 
@@ -450,7 +450,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmail(to: string, subject: string, html: string) {
   return await resend.emails.send({
-    from: "TurboStack <noreply@example.com>",
+    from: "TaskFlow <noreply@example.com>",
     to,
     subject,
     html,

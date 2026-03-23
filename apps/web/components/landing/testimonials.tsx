@@ -69,7 +69,7 @@ export function Testimonials() {
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              See how teams use Taskflow to keep work moving and everyone aligned.
+              See how teams use TaskFlow to keep work moving and everyone aligned.
             </p>
           </motion.div>
         </div>

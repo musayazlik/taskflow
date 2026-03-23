@@ -18,8 +18,8 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Image src={"/logo.svg"} alt="Taskflow Logo" width={36} height={36} />
-              <span className="text-lg font-bold">Taskflow</span>
+              <Image src={"/logo.svg"} alt="TaskFlow Logo" width={36} height={36} />
+              <span className="text-lg font-bold">TaskFlow</span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
               Real-time task management to keep your team aligned and projects on track.
@@ -93,7 +93,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Taskflow. All rights reserved.
+            © {new Date().getFullYear()} TaskFlow. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
             Built for fast, focused teamwork & ❤️

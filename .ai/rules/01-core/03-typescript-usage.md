@@ -4,7 +4,7 @@
 
 ## 🎯 Strict Mode
 
-TurboStack uses TypeScript strict mode. All code must pass type checking.
+TaskFlow uses TypeScript strict mode. All code must pass type checking.
 
 ## 📘 Interface vs Type
 

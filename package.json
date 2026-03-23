@@ -1,5 +1,5 @@
 {
-	"name": "turbostack",
+	"name": "taskflow",
 	"private": true,
 	"packageManager": "bun@1.1.45",
 	"version": "1.0.0",

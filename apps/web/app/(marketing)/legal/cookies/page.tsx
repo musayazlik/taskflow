@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy - TurboStack",
+  title: "Cookie Policy - TaskFlow",
   description:
-    "TurboStack Cookie Policy - Information about cookies used on our website in compliance with GDPR and EU regulations.",
+    "TaskFlow Cookie Policy - Information about cookies used on our website in compliance with GDPR and EU regulations.",
 };
 
 export default function CookiePolicyPage() {

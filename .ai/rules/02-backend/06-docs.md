@@ -4,7 +4,7 @@ This document summarizes the technical documentation structure, MDX usage, and c
 
 ## 🎯 Overview
 
-The TurboStack documentation is built with **Mintlify** - a modern documentation framework that provides beautiful, interactive documentation with zero configuration.
+The TaskFlow documentation is built with **Mintlify** - a modern documentation framework that provides beautiful, interactive documentation with zero configuration.
 
 - **Port**: `4102` (development)
 - **URL**: `http://localhost:4102`
@@ -58,7 +58,7 @@ The `docs.json` file is the main configuration for Mintlify:
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "TurboStack",
+  "name": "TaskFlow",
   "description": "Modern fullstack monorepo starter",
   "colors": {
     "primary": "#6366f1",
@@ -68,7 +68,7 @@ The `docs.json` file is the main configuration for Mintlify:
   "logo": {
     "dark": "/logo-dark.svg",
     "light": "/logo-light.svg",
-    "href": "https://turbostack.pro"
+    "href": "https://taskflow.pro"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -91,7 +91,7 @@ The `docs.json` file is the main configuration for Mintlify:
     ]
   },
   "footerSocials": {
-    "github": "https://github.com/musayazlik/turbostack",
+    "github": "https://github.com/musayazlik/taskflow",
     "twitter": "https://twitter.com/yourusername"
   }
 }
@@ -134,7 +134,7 @@ Your content here...
 
 ```mdx
 <Card title="Quick Start" icon="rocket" href="/quickstart">
-  Get started with TurboStack in minutes
+  Get started with TaskFlow in minutes
 </Card>
 
 <CardGroup cols={2}>
@@ -187,8 +187,8 @@ bun run dev
 
 ```mdx
 <AccordionGroup>
-  <Accordion title="What is TurboStack?">
-    TurboStack is a modern fullstack monorepo starter...
+  <Accordion title="What is TaskFlow?">
+    TaskFlow is a modern fullstack monorepo starter...
   </Accordion>
   <Accordion title="How do I get started?">
     Run `bun install` to install dependencies...
@@ -247,7 +247,7 @@ bun run dev
 ````mdx
 ## Creating a New Route
 
-Here's how to create a new API endpoint in TurboStack:
+Here's how to create a new API endpoint in TaskFlow:
 
 ```typescript
 // src/routes/products.ts
@@ -615,7 +615,7 @@ description: Clear description with keywords (150-160 chars)
 ```mdx
 # Building a Feature
 
-Learn how to build X in TurboStack.
+Learn how to build X in TaskFlow.
 
 ## What You'll Build
 

@@ -4,12 +4,12 @@
 
 ## 🏗️ Monorepo Architecture
 
-TurboStack uses **Turborepo** with **Bun** as the package manager.
+TaskFlow uses **Turborepo** with **Bun** as the package manager.
 
 ### Root Structure
 
 ```
-turbostack/
+taskflow/
 ├── apps/
 │   ├── web/              # Next.js 16 web (port 4100)
 │   ├── api/              # Elysia.js API (port 4101)
