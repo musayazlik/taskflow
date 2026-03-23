@@ -41,6 +41,7 @@ function Button({
   variant = "default",
   size = "default",
   asChild = false,
+  type,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -48,12 +49,14 @@ function Button({
   }) {
   const Comp = asChild ? Slot : "button";
 
+  // Default type="button" matches shadcn/ui: prevents implicit submit inside <form> (e.g. DialogTrigger).
   return (
     <Comp
       data-slot="button"
       data-variant={variant}
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
+      type={asChild ? undefined : (type ?? "button")}
       {...props}
     />
   );

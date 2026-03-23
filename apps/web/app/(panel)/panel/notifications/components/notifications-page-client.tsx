@@ -23,6 +23,9 @@ import {
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api";
 import { StatsGrid, type StatItem } from "@/components/stats";
+import { useSession } from "@/lib/auth-client";
+import { useSocketRealtime } from "@/lib/socket/use-socket-realtime";
+import type { NotificationRealtimeMessage } from "@repo/types";
 
 import { NotificationsTab } from "./organisms/notifications-tab";
 import { PreferencesTab } from "./organisms/preferences-tab";
@@ -44,7 +47,168 @@ type NotificationType =
   | "error"
   | "info";
 
+function formatTaskNotificationForPage(message: string): {
+  title: string;
+  detailedMessage: string;
+} {
+  const restClean = (value: string): string => {
+    const t = value.trim();
+    if (!t) return "";
+    if (t.startsWith("(") && t.endsWith(")")) return t.slice(1, -1).trim();
+    return t;
+  };
+
+  const created = message.match(
+    /^Task created:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (created) {
+    const taskTitle = (created[1] ?? "").trim();
+    const status = created[2] ?? "TODO";
+    const rest = restClean(created[3] ?? "");
+    return {
+      title: taskTitle,
+      detailedMessage: rest
+        ? `Task created · ${status} · ${rest}`
+        : `Task created · ${status}`,
+    };
+  }
+
+  const updated = message.match(
+    /^Task updated:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (updated) {
+    const taskTitle = (updated[1] ?? "").trim();
+    const status = updated[2] ?? "TODO";
+    const rest = restClean(updated[3] ?? "");
+    return {
+      title: taskTitle,
+      detailedMessage: rest
+        ? `Task updated · ${status} · ${rest}`
+        : `Task updated · ${status}`,
+    };
+  }
+
+  const deleted = message.match(
+    /^Task deleted:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (deleted) {
+    const taskTitle = (deleted[1] ?? "").trim();
+    const status = deleted[2] ?? "TODO";
+    const rest = restClean(deleted[3] ?? "");
+    return {
+      title: taskTitle,
+      detailedMessage: rest
+        ? `Task deleted · ${status} · ${rest}`
+        : `Task deleted · ${status}`,
+    };
+  }
+
+  const assignedTo = message.match(
+    /^Task assigned to (.+?):\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (assignedTo) {
+    const assigneeName = (assignedTo[1] ?? "").trim();
+    const taskTitle = (assignedTo[2] ?? "").trim();
+    const status = assignedTo[3] ?? "TODO";
+    const rest = restClean(assignedTo[4] ?? "");
+    const action = `Assigned to ${assigneeName}`;
+    return {
+      title: taskTitle,
+      detailedMessage: rest
+        ? `${action} · ${status} · ${rest}`
+        : `${action} · ${status}`,
+    };
+  }
+
+  const unassigned = message.match(
+    /^Task unassigned:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (unassigned) {
+    const taskTitle = (unassigned[1] ?? "").trim();
+    const status = unassigned[2] ?? "TODO";
+    const rest = restClean(unassigned[3] ?? "");
+    const action = "Unassigned";
+    return {
+      title: taskTitle,
+      detailedMessage: rest
+        ? `${action} · ${status} · ${rest}`
+        : `${action} · ${status}`,
+    };
+  }
+
+  const reassignedTo = message.match(
+    /^Task reassigned to (.+?):\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (reassignedTo) {
+    const assigneeName = (reassignedTo[1] ?? "").trim();
+    const taskTitle = (reassignedTo[2] ?? "").trim();
+    const status = reassignedTo[3] ?? "TODO";
+    const rest = restClean(reassignedTo[4] ?? "");
+    const action = `Reassigned to ${assigneeName}`;
+    return {
+      title: taskTitle,
+      detailedMessage: rest
+        ? `${action} · ${status} · ${rest}`
+        : `${action} · ${status}`,
+    };
+  }
+
+  const assignmentUpdated = message.match(
+    /^Task assignment updated:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (assignmentUpdated) {
+    const taskTitle = (assignmentUpdated[1] ?? "").trim();
+    const status = assignmentUpdated[2] ?? "TODO";
+    const rest = restClean(assignmentUpdated[3] ?? "");
+    return {
+      title: taskTitle,
+      detailedMessage: rest
+        ? `Assignment updated · ${status} · ${rest}`
+        : `Assignment updated · ${status}`,
+    };
+  }
+
+  const youAssigned = message.match(
+    /^You were assigned a task:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (youAssigned) {
+    const taskTitle = (youAssigned[1] ?? "").trim();
+    const status = youAssigned[2] ?? "TODO";
+    const rest = restClean(youAssigned[3] ?? "");
+    return {
+      title: taskTitle,
+      detailedMessage: rest
+        ? `Assigned · ${status} · ${rest}`
+        : `Assigned · ${status}`,
+    };
+  }
+
+  const youUnassigned = message.match(
+    /^You were unassigned a task:\s*(.+?)\s*\((TODO|IN_PROGRESS|DONE)\)(.*)$/,
+  );
+  if (youUnassigned) {
+    const taskTitle = (youUnassigned[1] ?? "").trim();
+    const status = youUnassigned[2] ?? "TODO";
+    const rest = restClean(youUnassigned[3] ?? "");
+    return {
+      title: taskTitle,
+      detailedMessage: rest
+        ? `Unassigned · ${status} · ${rest}`
+        : `Unassigned · ${status}`,
+    };
+  }
+
+  return { title: message, detailedMessage: message };
+}
+
 export function NotificationsPageClient() {
+  const { data: session } = useSession();
+  const sessionUser = session?.user as
+    | { id?: string; role?: string }
+    | undefined;
+  const currentUserId = sessionUser?.id;
+  const currentRole = sessionUser?.role;
+
   const [activeTab, setActiveTab] = useState<NotificationType>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedNotifications, setSelectedNotifications] = useState<string[]>(
@@ -78,7 +242,9 @@ export function NotificationsPageClient() {
         };
 
         const uiType: UiNotification["type"] =
-          record.type === "TASK_CREATED"
+        record.message.startsWith("Task deleted:")
+          ? "error"
+          : record.type === "TASK_CREATED"
             ? "success"
             : record.type === "TASK_UPDATED"
               ? "info"
@@ -86,10 +252,12 @@ export function NotificationsPageClient() {
 
         const time = new Date(record.createdAt).toLocaleString();
 
+        const formatted = formatTaskNotificationForPage(record.message);
+
         return {
           id: String(record.id),
-          title: record.message,
-          message: record.message,
+          title: formatted.title,
+          message: formatted.detailedMessage,
           type: uiType,
           category: "Tasks",
           time,
@@ -113,6 +281,58 @@ export function NotificationsPageClient() {
   useEffect(() => {
     void loadNotifications();
   }, [loadNotifications]);
+
+  useSocketRealtime<NotificationRealtimeMessage, UiNotification[]>({
+    enabled: !!currentUserId,
+    userId: currentUserId,
+    role: currentRole,
+    event: "notifications:mutation",
+    setStateAction: setNotifications,
+    applyMessageAction: (prev, message) => {
+      const record = message.notification;
+      const uiType: UiNotification["type"] =
+        record.message.startsWith("Task deleted:")
+          ? "error"
+          : record.type === "TASK_CREATED"
+            ? "success"
+            : record.type === "TASK_UPDATED"
+              ? "info"
+              : "warning";
+
+      const time = record.createdAt
+        ? new Date(record.createdAt).toLocaleString()
+        : "";
+
+      const formatted = formatTaskNotificationForPage(record.message);
+
+      const incoming: UiNotification = {
+        id: record.id,
+        title: formatted.title,
+        message: formatted.detailedMessage,
+        type: uiType,
+        category: "Tasks",
+        time,
+      };
+
+      setReadNotifications((prevRead) => {
+        const set = new Set(prevRead);
+        if (record.read) set.add(incoming.id);
+        else set.delete(incoming.id);
+        return Array.from(set);
+      });
+
+      if (message.type === "created") {
+        const without = prev.filter((n) => n.id !== incoming.id);
+        return [incoming, ...without];
+      }
+
+      const idx = prev.findIndex((n) => n.id === incoming.id);
+      if (idx === -1) return [incoming, ...prev];
+      const next = [...prev];
+      next[idx] = incoming;
+      return next;
+    },
+  });
 
   const [preferences, setPreferences] = useState([
     {

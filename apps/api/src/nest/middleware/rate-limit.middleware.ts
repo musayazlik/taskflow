@@ -19,6 +19,12 @@ declare global {
 @Injectable()
 export class RateLimitMiddleware implements NestMiddleware {
   use(req: RequestWithRequestId, res: Response, next: NextFunction): void {
+    // Socket.IO long-polling must not consume HTTP rate-limit budget.
+    if (req.path.startsWith("/socket.io")) {
+      next();
+      return;
+    }
+
     if (env.NODE_ENV === "development") {
       res.setHeader("x-ratelimit-limit", String(RATE_LIMIT.GLOBAL.max));
       res.setHeader("x-ratelimit-remaining", "999999");

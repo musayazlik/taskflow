@@ -46,7 +46,7 @@ export function Header({
         <ThemeToggle />
 
         {/* Notifications */}
-        <NotificationsDropdown />
+        {!isPending ? <NotificationsDropdown /> : null}
 
         {/* User Menu */}
         {!isPending && user ? <UserDropdown user={user} /> : null}

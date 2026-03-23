@@ -4,6 +4,7 @@ import express from "express";
 import type { NextFunction, Request, Response } from "express";
 import { toNodeHandler } from "better-auth/node";
 import { NestFactory } from "@nestjs/core";
+import { IoAdapter } from "@nestjs/platform-socket.io";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 
 import { env } from "@api/lib/env";
@@ -24,6 +25,8 @@ async function bootstrap(): Promise<void> {
     cors: false,
     bodyParser: false,
   });
+
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   app.enableCors({
     origin: env.FRONTEND_URL,
