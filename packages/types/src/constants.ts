@@ -57,21 +57,6 @@ export const HEALTH_ENDPOINTS = {
   live: "/health/live",
 } as const;
 
-export const POLAR_ENDPOINTS = {
-  products: "/polar/products",
-  checkout: "/polar/checkout",
-} as const;
-
-export const WEBHOOK_ENDPOINTS = {
-  polar: "/webhooks/polar",
-} as const;
-
-export const POLAR_DEFAULTS = {
-  productsLimit: 10,
-  isArchived: false,
-  page: 1,
-} as const;
-
 export const AUTH = {
   ACCESS_TOKEN_TTL: "5m",
   REFRESH_TOKEN_TTL: "5d",
@@ -355,15 +340,6 @@ export const PANEL_DRAFT_MESSAGES = [
 
 export const PANEL_NOTIFICATIONS = [
   {
-    id: 1,
-    type: "success" as const,
-    title: "Payment received",
-    message: "A payment of $99.00 has been successfully processed.",
-    time: "2 minutes ago",
-    read: false,
-    category: "payment",
-  },
-  {
     id: 2,
     type: "info" as const,
     title: "New user registered",
@@ -371,15 +347,6 @@ export const PANEL_NOTIFICATIONS = [
     time: "15 minutes ago",
     read: false,
     category: "user",
-  },
-  {
-    id: 3,
-    type: "warning" as const,
-    title: "Low inventory",
-    message: "Product 'Premium Plan' is running low on stock.",
-    time: "1 hour ago",
-    read: true,
-    category: "inventory",
   },
   {
     id: 4,
@@ -525,12 +492,6 @@ export const PANEL_FAQ_CATEGORIES = [
     color: "text-blue-600 dark:text-blue-500",
   },
   {
-    id: 2,
-    title: "Account & Billing",
-    count: 8,
-    color: "text-green-600 dark:text-green-500",
-  },
-  {
     id: 3,
     title: "API & Integration",
     count: 12,
@@ -551,13 +512,6 @@ export const PANEL_FAQS = [
     question: "How do I create my first project?",
     answer:
       "To create your first project, navigate to the Projects section and click the 'New Project' button. Fill in the project details and click 'Create'.",
-  },
-  {
-    id: 2,
-    category: "Account & Billing",
-    question: "How do I update my payment method?",
-    answer:
-      "Go to Settings > Billing and click on 'Update Payment Method'. You can add a new card or update your existing one.",
   },
   {
     id: 3,

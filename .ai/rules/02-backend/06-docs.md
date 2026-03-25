@@ -27,7 +27,6 @@ apps/docs/
 │   ├── routes.mdx            # Route development
 │   ├── authentication.mdx    # Auth implementation
 │   ├── email.mdx             # Email service
-│   ├── polar.mdx             # Payment integration
 │   ├── webhooks.mdx          # Webhook handlers
 │   └── upload.mdx            # File upload
 ├── database/                 # Database documentation
