@@ -20,7 +20,6 @@ model User {
   sessions      Session[]
   accounts      Account[]
   mediaFiles    MediaFile[]
-  chatSessions  ChatSession[]
 
   // TaskFlow relations
   tasks          Task[]        @relation("UserTasks")

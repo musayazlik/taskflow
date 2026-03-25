@@ -5,7 +5,6 @@ import {
   HowItWorks,
   Stats,
   Testimonials,
-  Pricing,
   FAQ,
   CTA,
   Footer,
@@ -34,9 +33,6 @@ export default function Home() {
 
         {/* Testimonials */}
         <Testimonials />
-
-        {/* Pricing */}
-        <Pricing />
 
         {/* FAQ */}
         <FAQ />

@@ -13,8 +13,6 @@
 		"clean": "rm -rf .next .turbo"
 	},
 	"dependencies": {
-		"@ai-sdk/openai": "^3.0.2",
-		"@ai-sdk/react": "^3.0.5",
 		"@codemirror/lang-html": "^6.4.11",
 		"@codemirror/language": "^6.12.1",
 		"@codemirror/state": "^6.5.4",
@@ -39,7 +37,6 @@
 		"@t3-oss/env-nextjs": "^0.13.10",
 		"@tailwindcss/postcss": "^4.1.0",
 		"@uploadthing/react": "^7.3.3",
-		"ai": "^6.0.5",
 		"better-auth": "^1.4.15",
 		"codemirror": "^6.0.2",
 		"framer-motion": "^11.11.17",

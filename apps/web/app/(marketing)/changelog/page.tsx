@@ -35,8 +35,6 @@ const changelogEntries = [
     date: "2026-01-21",
     changes: {
       added: [
-        "AI Models management system with OpenRouter integration",
-        "AI Chat, SEO Generator, Image Generator, and Content Writer features",
         "Media library with UploadThing integration",
         "Modern notifications system with preferences",
         "Enhanced security dashboard with audit logs",
