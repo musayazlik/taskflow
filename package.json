@@ -21,7 +21,6 @@
 		"env:sync": "./scripts/sync-env-by-branch.sh",
 		"env:setup": "./scripts/setup-env-sync.sh",
 		"env:sync-all": "./scripts/sync-to-all-branches.sh",
-		"polar:setup": "./scripts/setup-polar.sh",
 		"deploy:setup": "./scripts/setup-deployment.sh",
 		"docker:up": "docker compose up -d",
 		"docker:down": "docker compose down",

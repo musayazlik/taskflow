@@ -1,9 +1,7 @@
-import type { IconifyIcon } from "@iconify/types";
 import homeIcon from "@iconify-icons/lucide/home";
 import zapIcon from "@iconify-icons/lucide/zap";
 import workflowIcon from "@iconify-icons/lucide/workflow";
 import usersIcon from "@iconify-icons/lucide/users";
-import tagIcon from "@iconify-icons/lucide/tag";
 import helpIcon from "@iconify-icons/lucide/help-circle";
 import mailIcon from "@iconify-icons/lucide/mail";
 
@@ -20,14 +18,11 @@ import lockIcon from "@iconify-icons/lucide/lock";
 import clockIcon from "@iconify-icons/lucide/clock";
 import codeIcon from "@iconify-icons/lucide/code";
 
-import starIcon from "@iconify-icons/lucide/star";
-import sparklesIcon from "@iconify-icons/lucide/sparkles";
 
 export const LANDING_HEADER_NAV_LINKS = [
   { href: "#features", label: "Features" },
   { href: "#how-it-works", label: "How It Works" },
   { href: "#testimonials", label: "Testimonials" },
-  { href: "#pricing", label: "Pricing" },
   { href: "#faq", label: "FAQ" },
 ];
 
@@ -36,7 +31,6 @@ export const LANDING_FLOATING_DOCK_ITEMS = [
   { icon: zapIcon, label: "Features", href: "#features" },
   { icon: workflowIcon, label: "How It Works", href: "#how-it-works" },
   { icon: usersIcon, label: "Testimonials", href: "#testimonials" },
-  { icon: tagIcon, label: "Pricing", href: "#pricing" },
   { icon: helpIcon, label: "FAQ", href: "#faq" },
   { icon: mailIcon, label: "Contact", href: "#cta" },
 ];
@@ -240,79 +234,6 @@ export const LANDING_TESTIMONIALS: LandingTestimonial[] = [
   },
 ];
 
-export type LandingPricingPlan = {
-  name: string;
-  description: string;
-  price: string;
-  originalPrice?: string;
-  period?: string;
-  icon: IconifyIcon;
-  features: string[];
-  cta: string;
-  href: string;
-  popular: boolean;
-};
-
-export const LANDING_PRICING_PLANS: LandingPricingPlan[] = [
-  {
-    name: "Free",
-    description: "Perfect for trying TaskFlow with a small team",
-    price: "$0",
-    originalPrice: undefined,
-    period: "forever",
-    icon: sparklesIcon,
-    features: [
-      "Up to 1 workspace",
-      "Basic task lists and statuses",
-      "Assignees and due dates",
-      "Email notifications",
-      "Community support",
-    ],
-    cta: "Get Started",
-    href: "/register",
-    popular: false,
-  },
-  {
-    name: "Pro",
-    description: "For growing teams that need clarity at scale",
-    price: "$149",
-    originalPrice: "$299",
-    period: "one-time",
-    icon: starIcon,
-    features: [
-      "Everything in Free",
-      "Unlimited projects and workspaces",
-      "Advanced filters and saved views",
-      "Role-based access control",
-      "Team activity history",
-      "Priority support",
-      "Custom fields and tags",
-    ],
-    cta: "Get Pro",
-    href: "#",
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    description: "For organizations with multiple teams and strict requirements",
-    price: "Custom",
-    originalPrice: undefined,
-    period: "",
-    icon: usersIcon,
-    features: [
-      "Everything in Pro",
-      "Multiple workspaces and teams",
-      "Single sign-on (SSO) ready",
-      "Security and compliance reviews",
-      "Dedicated success manager",
-      "Custom onboarding and training",
-    ],
-    cta: "Contact Sales",
-    href: "/contact",
-    popular: false,
-  },
-];
-
 export const LANDING_FAQS = [
   {
     question: "What is TaskFlow?",
@@ -330,19 +251,9 @@ export const LANDING_FAQS = [
       "Yes. You can invite your teammates to a shared workspace, assign tasks to each other, and control access with roles and permissions.",
   },
   {
-    question: "What is included in the Pro plan?",
-    answer:
-      "Pro includes everything in Free plus unlimited projects and workspaces, advanced filters and views, role-based access control, activity history, and priority support.",
-  },
-  {
     question: "How do I get support?",
     answer:
-      "Free users get community support. Paid plans include email support with faster response times, and Enterprise customers get a dedicated success manager.",
-  },
-  {
-    question: "Can I get a refund?",
-    answer:
-      "Yes, we offer a 14-day refund window for paid plans. If TaskFlow is not a fit, you can contact us within 14 days of purchase.",
+      "You can reach us through our community channels or by contacting our support team directly.",
   },
   {
     question: "Do I get updates?",

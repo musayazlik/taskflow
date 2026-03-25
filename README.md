@@ -12,7 +12,6 @@
 - 🗄️ **Prisma** — Type-safe PostgreSQL ORM with migrations and Prisma Studio
 - 🔐 **Better Auth** — Email/password and Google OAuth with cross-subdomain cookie support
 - 🔄 **Socket.IO** — Real-time task and notification updates via authenticated WebSocket namespaces
-- 🤖 **AI Integration** — AI-powered features via OpenRouter SDK (Vercel AI SDK on frontend)
 - 📧 **Resend** — Transactional emails for verification, password reset, and notifications
 - 📁 **UploadThing** — File uploads with image processing (Sharp)
 - 🎨 **Tailwind CSS v4** — Modern styling with shadcn/ui component library
@@ -52,7 +51,6 @@ taskflow/
 | **Auth** | [Better Auth](https://better-auth.com) (email/password, Google OAuth, sessions) |
 | **Email** | [Resend](https://resend.com) · React Email |
 | **File Storage** | [UploadThing](https://uploadthing.com) · Sharp |
-| **AI** | [OpenRouter](https://openrouter.ai) SDK · Vercel AI SDK |
 | **Monorepo** | [Turborepo](https://turbo.build) |
 | **Deployment** | Docker · Coolify / Vercel / Railway |
 
@@ -102,7 +100,6 @@ cp apps/web/.env.example apps/web/.env
 | `FROM_EMAIL` | Sender email address | `noreply@yourdomain.com` |
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID | *(from Google Cloud Console)* |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | *(from Google Cloud Console)* |
-| `OPENROUTER_API_KEY` | OpenRouter API key for AI features | `sk-or-...` |
 | `UPLOADTHING_TOKEN` | UploadThing token (base64 encoded) | *(from UploadThing dashboard)* |
 
 #### Web (`apps/web/.env`)

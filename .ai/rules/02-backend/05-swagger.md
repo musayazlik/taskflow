@@ -53,7 +53,6 @@ Tags should be defined for each route group:
 | `Health`   | Health check endpoints                     |
 | `Auth`     | Authentication endpoints (via better-auth) |
 | `Users`    | User management endpoints                  |
-| `Polar`    | Polar.sh products and payments             |
 | `Webhooks` | Webhook endpoints                          |
 | `Upload`   | File upload endpoints                      |
 

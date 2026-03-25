@@ -23,9 +23,8 @@ Central **environment configuration** for the API process. All sensitive and ope
 | `BETTER_AUTH_SECRET` | Secret for signing sessions/tokens; required in prod/staging. |
 | `BETTER_AUTH_URL` | Optional public API base URL for OAuth callbacks; falls back to `FRONTEND_URL` in auth config. |
 | `RESEND_API_KEY` / `FROM_EMAIL` | Email; optional in dev. |
-| `OPENROUTER_API_KEY` | AI features. |
 | `UPLOADTHING_TOKEN` | Base64 JSON token; validated format when present (see schema `refine`). |
-| OAuth / Polar | Optional integrations. |
+| OAuth | Optional integrations. |
 
 ## Usage
 

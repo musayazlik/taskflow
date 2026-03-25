@@ -24,7 +24,6 @@ import {
 import {
 	Bell,
 	Palette,
-	CreditCard,
 	Key,
 	Eye,
 	EyeOff,
@@ -46,7 +45,7 @@ import { Slider } from "@repo/shadcn-ui/slider";
 import { useTheme } from "next-themes";
 import { PageHeader } from "@/components/panel/page-header";
 
-type SettingsTab = "notifications" | "appearance" | "billing" | "api" | "media";
+type SettingsTab = "notifications" | "appearance" | "api" | "media";
 
 // Available MIME types for media upload
 const AVAILABLE_MIME_TYPES = [
@@ -511,16 +510,6 @@ export function SettingsPageClient() {
 								Notifications
 							</button>
 							<button
-								onClick={() => setActiveTab("billing")}
-								className={`flex items-center gap-3 w-full px-3 py-2 text-sm rounded-lg transition-colors ${activeTab === "billing"
-									? "bg-primary text-primary-foreground"
-									: "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-									}`}
-							>
-								<CreditCard className="h-4 w-4" />
-								Billing
-							</button>
-							<button
 								onClick={() => setActiveTab("api")}
 								className={`flex items-center gap-3 w-full px-3 py-2 text-sm rounded-lg transition-colors ${activeTab === "api"
 									? "bg-primary text-primary-foreground"
@@ -872,8 +861,7 @@ export function SettingsPageClient() {
 								<CardHeader>
 									<CardTitle>Image Optimization</CardTitle>
 									<CardDescription>
-										Control how product images are optimized when uploaded to
-										Polar.
+										Control how images are optimized when uploaded.
 									</CardDescription>
 								</CardHeader>
 								<CardContent className="space-y-6">
@@ -883,8 +871,8 @@ export function SettingsPageClient() {
 												Enable Optimization
 											</Label>
 											<p className="text-xs text-muted-foreground">
-												When enabled, uploaded product images will be resized
-												and compressed before being sent to Polar.
+												When enabled, uploaded images will be resized
+												and compressed automatically.
 											</p>
 										</div>
 										<Switch
@@ -1066,76 +1054,6 @@ export function SettingsPageClient() {
 										<Button variant="outline" size="sm">
 											Disabled
 										</Button>
-									</div>
-								</CardContent>
-							</Card>
-						</>
-					)}
-
-					{/* Billing Tab */}
-					{activeTab === "billing" && (
-						<>
-							<Card>
-								<CardHeader>
-									<CardTitle>Payment Method</CardTitle>
-									<CardDescription>Manage your payment methods</CardDescription>
-								</CardHeader>
-								<CardContent className="space-y-4">
-									<div className="flex items-center justify-between p-4 rounded-lg border border-border">
-										<div className="flex items-center gap-3">
-											<CreditCard className="h-5 w-5 text-muted-foreground" />
-											<div>
-												<p className="font-medium text-sm">
-													•••• •••• •••• 4242
-												</p>
-												<p className="text-xs text-muted-foreground">
-													Expires 12/25
-												</p>
-											</div>
-										</div>
-										<Button variant="outline" size="sm">
-											Update
-										</Button>
-									</div>
-									<Button variant="outline" className="w-full">
-										<CreditCard className="h-4 w-4 mr-2" />
-										Add Payment Method
-									</Button>
-								</CardContent>
-							</Card>
-							<Card>
-								<CardHeader>
-									<CardTitle>Billing History</CardTitle>
-									<CardDescription>
-										View and download your invoices
-									</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<div className="space-y-3">
-										<div className="flex items-center justify-between p-3 rounded-lg border border-border">
-											<div>
-												<p className="font-medium text-sm">January 2024</p>
-												<p className="text-xs text-muted-foreground">Pro Plan</p>
-											</div>
-											<div className="flex items-center gap-2">
-												<span className="text-sm font-medium">$99.00</span>
-												<Button variant="ghost" size="sm">
-													Download
-												</Button>
-											</div>
-										</div>
-										<div className="flex items-center justify-between p-3 rounded-lg border border-border">
-											<div>
-												<p className="font-medium text-sm">December 2023</p>
-												<p className="text-xs text-muted-foreground">Pro Plan</p>
-											</div>
-											<div className="flex items-center gap-2">
-												<span className="text-sm font-medium">$99.00</span>
-												<Button variant="ghost" size="sm">
-													Download
-												</Button>
-											</div>
-										</div>
 									</div>
 								</CardContent>
 							</Card>

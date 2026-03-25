@@ -1,22 +1,17 @@
 import { Type as t, TSchema } from "@sinclair/typebox";
 
 export * from "./users";
-export * from "./products";
 export * from "./auth";
 export * from "./dashboard";
 export * from "./profile";
 export * from "./settings";
 export * from "./upload";
-export * from "./subscriptions";
-export * from "./orders";
 export * from "./rbac";
-export * from "./customers";
 export * from "./system";
 export * from "./tasks";
 export * from "./notifications";
 
 // Re-export frontend-compatible types
-export type { ProductFrontend } from "./products";
 export type { UserFrontend } from "./users";
 
 // Re-export specific static types that were previously manual
@@ -115,9 +110,6 @@ export type Optional<T> = T | undefined;
 
 // Shared Constants
 export * from "./constants";
-
-// Polar Types
-export * from "./polar";
 
 // Email Types
 export * from "./email";
