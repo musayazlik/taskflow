@@ -1,5 +1,5 @@
 import { apiClient, buildApiQuery } from "@/lib/api";
-import type { ApiResponse } from "./types";
+import type { ApiResponse } from "@repo/types";
 import type {
   DashboardStatsFrontend as DashboardStats,
   RecentActivityFrontend as RecentActivity,

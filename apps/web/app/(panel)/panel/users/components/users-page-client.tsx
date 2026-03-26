@@ -9,31 +9,34 @@ import {
   UserX,
   Users,
   Crown,
-  Shield,
   Mail,
   Calendar,
   Sparkles,
   KeyRound,
-  ShieldCheck,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/shadcn-ui/avatar";
 import { ImageZoom } from "@repo/shadcn-ui/image-zoom";
 import { Card, CardContent, CardHeader, CardTitle } from "@repo/shadcn-ui/card";
-import { Badge } from "@repo/shadcn-ui/badge";
-import { userService, type User } from "@/services";
+
+import { userService } from "@/services";
+import type { UserFrontend as User } from "@repo/types";
+import { RoleBadge, StatusBadge } from "./badges";
 import {
   DataTable,
   type Column,
   type DataTableAction,
   type BulkAction,
 } from "@/components/data-table";
-import { cn } from "@/lib/utils";
+
 import { toast } from "sonner";
 import { PageHeader } from "@/components/panel/page-header";
 import { StatItem, StatsGrid } from "@/components/stats";
-import { CreateUserDialog } from "./dialogs/create-user-dialog";
-import { EditUserDialog } from "./dialogs/edit-user-dialog";
-import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
+import {
+  UserCreateDialog,
+} from "./dialogs/user-create-dialog";
+import { UserEditDialog } from "./dialogs/user-edit-dialog";
+import { UserDeleteDialog } from "./dialogs/user-delete-dialog";
+import type { UserCreateInput, AdminUserEditInput } from "@repo/validations/user";
 
 interface UsersPageClientProps {
   initialUsers: User[];
@@ -41,82 +44,6 @@ interface UsersPageClientProps {
   initialPage: number;
   initialPageSize: number;
   initialTotalPages: number;
-}
-
-// Role badge component
-function RoleBadge({ role }: { role: string }) {
-  const defaultConfig = {
-    icon: Shield,
-    label: "User",
-    className:
-      "bg-gray-100 dark:bg-zinc-700/50 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-zinc-600",
-  };
-
-  const config: Record<
-    string,
-    { icon: typeof Crown; label: string; className: string }
-  > = {
-    SUPER_ADMIN: {
-      icon: ShieldCheck,
-      label: "Super Admin",
-      className:
-        "bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-500/30",
-    },
-    ADMIN: {
-      icon: Crown,
-      label: "Admin",
-      className:
-        "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-500/30",
-    },
-    USER: defaultConfig,
-  };
-
-  const roleConfig = config[role] ?? defaultConfig;
-  const Icon = roleConfig.icon;
-
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border",
-        roleConfig.className,
-      )}
-    >
-      <Icon className="h-3 w-3" />
-      {roleConfig.label}
-    </span>
-  );
-}
-
-// Status badge component
-function StatusBadge({
-  verified,
-  verifiedAt,
-}: {
-  verified: boolean;
-  verifiedAt?: string | null;
-}) {
-  if (verified) {
-    return (
-      <div className="flex flex-col gap-0.5">
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30">
-          <UserCheck className="h-3 w-3" />
-          Verified
-        </span>
-        {verifiedAt && (
-          <span className="text-[10px] text-gray-400 dark:text-gray-500 ml-1">
-            {new Date(verifiedAt).toLocaleDateString()}
-          </span>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30">
-      <UserX className="h-3 w-3" />
-      Pending
-    </span>
-  );
 }
 
 export function UsersPageClient({
@@ -132,16 +59,21 @@ export function UsersPageClient({
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedRows, setSelectedRows] = useState<User[]>([]);
 
-  // Dialog states
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
   // Pagination
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [pageSize, setPageSize] = useState(initialPageSize);
   const [totalPages, setTotalPages] = useState(initialTotalPages);
   const [total, setTotal] = useState(initialTotal);
+
+  // ========== Create Dialog State ==========
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  // ========== Edit Dialog State ==========
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  // ========== Delete Dialog State ==========
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false);
 
   const loadUsers = useCallback(async () => {
     try {
@@ -204,15 +136,93 @@ export function UsersPageClient({
     }
   };
 
+  // ========== Create User Handlers ==========
+  const handleCreateUser = useCallback(
+    async (values: UserCreateInput) => {
+      try {
+        const response = await userService.createUser(values);
+        if (response.success) {
+          toast.success(response.message || "User created successfully");
+          await loadUsers();
+          return { success: true as const, message: response.message };
+        }
+        return {
+          success: false as const,
+          message: response.message || "Failed to create user",
+        };
+      } catch {
+        return { success: false as const, message: "An unexpected error occurred" };
+      }
+    },
+    [loadUsers],
+  );
+
+  // ========== Edit User Handlers ==========
   const openEditDialog = useCallback((user: User) => {
     setSelectedUser(user);
-    setIsEditDialogOpen(true);
+    setIsEditOpen(true);
   }, []);
 
+  const editDefaultValues = useMemo(() => {
+    if (!selectedUser) return null;
+    // Map SUPER_ADMIN to ADMIN since edit dialog only supports USER and ADMIN
+    const mappedRole = selectedUser.role === "SUPER_ADMIN" ? "ADMIN" : selectedUser.role;
+    return {
+      name: selectedUser.name,
+      email: selectedUser.email,
+      role: mappedRole as "USER" | "ADMIN",
+    };
+  }, [selectedUser]);
+
+  const handleEditUser = useCallback(
+    async (values: AdminUserEditInput) => {
+      if (!selectedUser) {
+        return { success: false as const, message: "No user selected" };
+      }
+      try {
+        const response = await userService.updateUser(selectedUser.id, values);
+        if (response.success) {
+          toast.success(response.message || "User updated successfully");
+          await loadUsers();
+          return { success: true as const, message: response.message };
+        }
+        return {
+          success: false as const,
+          message: response.message || "Failed to update user",
+        };
+      } catch {
+        return { success: false as const, message: "An unexpected error occurred" };
+      }
+    },
+    [selectedUser, loadUsers],
+  );
+
+  // ========== Delete User Handlers ==========
   const openDeleteDialog = useCallback((user: User) => {
     setSelectedUser(user);
-    setIsDeleteDialogOpen(true);
+    setIsDeleteOpen(true);
   }, []);
+
+  const handleDeleteUser = useCallback(async () => {
+    if (!selectedUser) return;
+
+    try {
+      setDeleteSubmitting(true);
+      const response = await userService.deleteUser(selectedUser.id);
+
+      if (response.success) {
+        setIsDeleteOpen(false);
+        toast.success("User deleted successfully");
+        await loadUsers();
+      } else {
+        toast.error(response.message || "Failed to delete user");
+      }
+    } catch {
+      toast.error("An unexpected error occurred during deletion");
+    } finally {
+      setDeleteSubmitting(false);
+    }
+  }, [selectedUser, loadUsers]);
 
   // Filter users based on search
   const filteredUsers = useMemo(() => {
@@ -470,7 +480,7 @@ export function UsersPageClient({
           {
             label: "Add User",
             icon: <Plus className="w-4 h-4" />,
-            onClick: () => setIsCreateDialogOpen(true),
+            onClick: () => setIsCreateOpen(true),
             className: "shadow-lg shadow-primary/25",
           },
         ]}
@@ -517,25 +527,26 @@ export function UsersPageClient({
         </CardContent>
       </Card>
 
-      {/* Dialogs */}
-      <CreateUserDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        onSuccess={loadUsers}
+      {/* Dialogs - Parent-controlled pattern */}
+      <UserCreateDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSubmit={handleCreateUser}
       />
 
-      <EditUserDialog
-        user={selectedUser}
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-        onSuccess={loadUsers}
+      <UserEditDialog
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        defaultValues={editDefaultValues}
+        onSubmit={handleEditUser}
       />
 
-      <DeleteUserDialog
-        user={selectedUser}
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        onSuccess={loadUsers}
+      <UserDeleteDialog
+        open={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        userName={selectedUser?.name || ""}
+        onConfirm={handleDeleteUser}
+        submitting={deleteSubmitting}
       />
     </div>
   );

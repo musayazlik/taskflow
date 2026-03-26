@@ -36,7 +36,7 @@ import {
 import { userService } from "@/services";
 import { settingsService } from "@/services/settings.service";
 import { mediaService } from "@/services/media.service";
-import type { MediaUploadSettings } from "@/services/types";
+import type { MediaUploadSettings } from "@repo/types";
 import { Switch } from "@repo/shadcn-ui/switch";
 import { hexToOklch, oklchToHex, PRESET_COLORS } from "@/lib/color-utils";
 import { Badge } from "@repo/shadcn-ui/badge";

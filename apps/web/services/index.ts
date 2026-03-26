@@ -4,4 +4,5 @@ export * from "./settings.service";
 export * from "./dashboard.service";
 export * from "./system.service";
 export * from "./media.service";
-export * from "./types";
+export * from "./task.service";
+export * from "./notification.service";

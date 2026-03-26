@@ -1,5 +1,6 @@
 import { apiClient } from "@/lib/api";
-import type { ApiResponse } from "./types";
+import { resolveApiBaseUrl } from "@repo/types";
+import type { ApiResponse } from "@repo/types";
 import type {
 	MediaFile,
 	MediaListResponse,
@@ -104,7 +105,7 @@ export const mediaService = {
 
 			onProgress?.(10);
 
-			const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4101";
+			const apiUrl = resolveApiBaseUrl();
 			const response = await fetch(`${apiUrl}/api/media/upload`, {
 				method: "POST",
 				body: formData,

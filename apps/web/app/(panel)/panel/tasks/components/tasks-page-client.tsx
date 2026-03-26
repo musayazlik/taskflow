@@ -5,14 +5,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { toast } from "sonner";
 
-import { apiClient } from "@/lib/api";
 import { useSession } from "@/lib/auth-client";
 import {
-  type ApiResponse,
   type AssignableUser,
   type Task,
   type TaskStatus,
-  type TasksListResponse,
   applyTasksRealtimeMessage,
   TASK_STATUSES,
   type TaskRealtimeMessage,
@@ -20,11 +17,11 @@ import {
 } from "@repo/types";
 
 import { useSocketRealtime } from "@/lib/socket/use-socket-realtime";
+import { taskService } from "@/services";
 import { TaskBoardHeader } from "./task-board-header";
-import { TaskCreateDialog } from "./task-create-dialog";
-import { TaskDeleteDialog } from "./task-delete-dialog";
-import { TaskEditDialog } from "./task-edit-dialog";
+import { TaskCreateDialog, TaskDeleteDialog, TaskEditDialog } from "./dialogs";
 import { TasksKanbanBoard } from "./tasks-kanban-board";
+import type { TaskCreateInput, TaskEditInput } from "@repo/validations/task";
 
 export function TasksPageClient() {
   const { data: session } = useSession();
@@ -35,25 +32,13 @@ export function TasksPageClient() {
   const currentRole = sessionUser?.role;
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>(
-    [],
-  );
+  const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
-  const [createSubmitting, setCreateSubmitting] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newStatus, setNewStatus] = useState<TaskStatus>("TODO");
-  const [newAssigneeId, setNewAssigneeId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   const [editOpen, setEditOpen] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
-  const [editTitle, setEditTitle] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editStatus, setEditStatus] = useState<TaskStatus>("TODO");
-  const [editAssigneeId, setEditAssigneeId] = useState("");
-  const [editSubmitting, setEditSubmitting] = useState(false);
 
   const [pendingDelete, setPendingDelete] = useState<Task | null>(null);
   const [deleteSubmitting, setDeleteSubmitting] = useState(false);
@@ -61,30 +46,22 @@ export function TasksPageClient() {
   const statuses = useMemo(() => TASK_STATUSES, []);
 
   const loadAssignableUsers = useCallback(async () => {
-    try {
-      const res = (await apiClient.get<ApiResponse<AssignableUser[]>>(
-        "/api/tasks/assignable-users",
-      )) as ApiResponse<AssignableUser[]>;
-      if (res?.success && Array.isArray(res.data)) {
-        setAssignableUsers(res.data);
-      }
-    } catch {
-      /* optional */
+    const res = await taskService.getAssignableUsers();
+    if (res.success && Array.isArray(res.data)) {
+      setAssignableUsers(res.data);
     }
   }, []);
 
   const loadTasks = useCallback(async () => {
     setLoading(true);
     try {
-      const res = (await apiClient.get<TasksListResponse>(
-        "/api/tasks?page=1&limit=50",
-      )) as unknown as TasksListResponse;
-      if (!res?.success || !Array.isArray(res.data)) {
-        toast.error(res?.message || "Failed to load tasks");
+      const res = await taskService.getTasks({ page: 1, limit: 50 });
+      if (!res.success || !res.data?.success || !Array.isArray(res.data.data)) {
+        toast.error(res.message || res.data?.message || "Failed to load tasks");
         setTasks([]);
         return;
       }
-      setTasks(res.data);
+      setTasks(res.data.data);
     } catch {
       toast.error("Failed to connect to server");
       setTasks([]);
@@ -107,126 +84,100 @@ export function TasksPageClient() {
     applyMessageAction: applyTasksRealtimeMessage,
   });
 
-  const resetCreateForm = useCallback(() => {
-    setNewTitle("");
-    setNewDescription("");
-    setNewStatus("TODO");
-    setNewAssigneeId("");
-  }, []);
-
   const openEdit = useCallback((task: Task) => {
     setEditTask(task);
-    setEditTitle(task.title);
-    setEditDescription(task.description ?? "");
-    setEditStatus(task.status);
-    setEditAssigneeId(task.assigneeId ?? "");
     setEditOpen(true);
   }, []);
 
-  const createTask = useCallback(async () => {
-    const title = newTitle.trim();
-    if (!title) {
-      toast.error("Title is required");
-      return;
-    }
-
-    setCreateSubmitting(true);
+  const createTask = useCallback(async (values: TaskCreateInput) => {
     try {
-      const res = await apiClient.post<ApiResponse<Task>>("/api/tasks", {
-        title,
-        description: newDescription.trim() ? newDescription.trim() : undefined,
-        status: newStatus,
-        assigneeId: newAssigneeId ? newAssigneeId : undefined,
+      const res = await taskService.createTask({
+        title: values.title.trim(),
+        description: values.description?.trim()
+          ? values.description.trim()
+          : undefined,
+        status: values.status,
+        assigneeId: values.assigneeId ?? undefined,
       });
 
-      if (!res?.success || !res.data) {
-        toast.error(res?.message || "Failed to create task");
-        return;
+      if (!res.success || !res.data) {
+        return {
+          success: false as const,
+          message: res.message || "Failed to create task",
+        };
       }
 
-      resetCreateForm();
-      setCreateOpen(false);
       setTasks((prev) => {
         const created = res.data as Task;
         const without = prev.filter((t) => t.id !== created.id);
         return [created, ...without];
       });
       toast.success("Task created");
+      return { success: true as const };
     } catch {
-      toast.error("Failed to create task");
-    } finally {
-      setCreateSubmitting(false);
+      return { success: false as const, message: "Failed to create task" };
     }
-  }, [newTitle, newDescription, newStatus, newAssigneeId, resetCreateForm]);
+  }, []);
 
-  const saveEdit = useCallback(async () => {
-    if (!editTask) return;
-    const title = editTitle.trim();
-    if (!title) {
-      toast.error("Title is required");
-      return;
-    }
+  const saveEdit = useCallback(
+    async (values: TaskEditInput) => {
+      if (!editTask)
+        return { success: false as const, message: "No task selected" };
+      try {
+        const patchRes = await taskService.updateTask(editTask.id, {
+          title: values.title.trim(),
+          description: values.description?.trim() ? values.description.trim() : null,
+          status: values.status,
+        });
 
-    setEditSubmitting(true);
-    try {
-      const patchRes = await apiClient.patch<ApiResponse<Task>>(
-        `/api/tasks/${editTask.id}`,
-        {
-          title,
-          description: editDescription.trim() ? editDescription.trim() : null,
-          status: editStatus,
-        },
-      );
-
-      if (!patchRes?.success || !patchRes.data) {
-        toast.error(patchRes?.message || "Failed to update task");
-        return;
-      }
-
-      let merged = patchRes.data as Task;
-      const prevAssignee = editTask.assigneeId ?? null;
-      const nextAssignee = editAssigneeId === "" ? null : editAssigneeId;
-      if (prevAssignee !== nextAssignee) {
-        const assignRes = await apiClient.post<ApiResponse<Task>>(
-          `/api/tasks/${editTask.id}/assign`,
-          { assigneeId: nextAssignee },
-        );
-        if (!assignRes?.success || !assignRes.data) {
-          toast.error(assignRes?.message || "Failed to update assignee");
-          return;
+        if (!patchRes.success || !patchRes.data) {
+          return {
+            success: false as const,
+            message: patchRes.message || "Failed to update task",
+          };
         }
-        merged = assignRes.data as Task;
-      }
 
-      setTasks((prev) =>
-        prev.map((t) => (t.id === merged.id ? merged : t)),
-      );
-      setEditOpen(false);
-      setEditTask(null);
-      toast.success("Task updated");
-    } catch {
-      toast.error("Failed to update task");
-    } finally {
-      setEditSubmitting(false);
-    }
-  }, [
-    editTask,
-    editTitle,
-    editDescription,
-    editStatus,
-    editAssigneeId,
-  ]);
+        let merged = patchRes.data as Task;
+        const prevAssignee = editTask.assigneeId ?? null;
+        const nextAssignee = values.assigneeId ?? null;
+        if (prevAssignee !== nextAssignee) {
+          const assignRes = await taskService.assignTask(editTask.id, nextAssignee);
+          if (!assignRes.success || !assignRes.data) {
+            return {
+              success: false as const,
+              message: assignRes.message || "Failed to update assignee",
+            };
+          }
+          merged = assignRes.data as Task;
+        }
+
+        setTasks((prev) => prev.map((t) => (t.id === merged.id ? merged : t)));
+        toast.success("Task updated");
+        return { success: true as const };
+      } catch {
+        return { success: false as const, message: "Failed to update task" };
+      }
+    },
+    [editTask],
+  );
+
+  const editDefaultValues = useMemo(() => {
+    if (!editTask) return null;
+    return {
+      title: editTask.title,
+      description: editTask.description ?? "",
+      status: editTask.status,
+      assigneeId: editTask.assigneeId ?? null,
+    };
+  }, [editTask]);
 
   const confirmDelete = useCallback(async () => {
     if (!pendingDelete) return;
     setDeleteSubmitting(true);
     try {
-      const res = (await apiClient.delete<ApiResponse<{ id: string }>>(
-        `/api/tasks/${pendingDelete.id}`,
-      )) as ApiResponse<{ id: string }>;
-
-      if (!res?.success) {
-        toast.error(res?.message || "Failed to delete task");
+      const res = await taskService.deleteTask(pendingDelete.id);
+      if (!res.success) {
+        toast.error(res.message || "Failed to delete task");
         return;
       }
 
@@ -243,13 +194,9 @@ export function TasksPageClient() {
   const updateStatus = useCallback(
     async (taskId: string, status: TaskStatus) => {
       try {
-        const res = await apiClient.patch<ApiResponse<Task>>(
-          `/api/tasks/${taskId}`,
-          { status },
-        );
-
-        if (!res?.success || !res.data) {
-          toast.error(res?.message || "Failed to update task");
+        const res = await taskService.updateStatus(taskId, status);
+        if (!res.success || !res.data) {
+          toast.error(res.message || "Failed to update task");
           return;
         }
 
@@ -308,8 +255,7 @@ export function TasksPageClient() {
   );
 
   const canManage = useCallback(
-    (task: Task) =>
-      canUserManageTask(task, currentUserId, currentRole),
+    (task: Task) => canUserManageTask(task, currentUserId, currentRole),
     [currentUserId, currentRole],
   );
 
@@ -322,7 +268,6 @@ export function TasksPageClient() {
           loading={loading}
           onRefresh={loadTasks}
           onNewTask={() => {
-            resetCreateForm();
             setCreateOpen(true);
           }}
         />
@@ -339,52 +284,31 @@ export function TasksPageClient() {
 
       <TaskCreateDialog
         open={createOpen}
-        onOpenChange={(open) => {
-          setCreateOpen(open);
-          if (!open) resetCreateForm();
-        }}
-        title={newTitle}
-        onTitleChange={setNewTitle}
-        description={newDescription}
-        onDescriptionChange={setNewDescription}
-        status={newStatus}
-        onStatusChange={setNewStatus}
-        assigneeId={newAssigneeId}
-        onAssigneeIdChange={setNewAssigneeId}
+        onOpenChangeAction={setCreateOpen}
         assignableUsers={assignableUsers}
         statuses={statuses}
-        onSubmit={createTask}
-        submitting={createSubmitting}
-        submitDisabled={loading}
+        onSubmitAction={createTask}
       />
 
       <TaskEditDialog
         open={editOpen}
-        onOpenChange={(open) => {
+        onOpenChangeAction={(open) => {
           setEditOpen(open);
           if (!open) setEditTask(null);
         }}
-        title={editTitle}
-        onTitleChange={setEditTitle}
-        description={editDescription}
-        onDescriptionChange={setEditDescription}
-        status={editStatus}
-        onStatusChange={setEditStatus}
-        assigneeId={editAssigneeId}
-        onAssigneeIdChange={setEditAssigneeId}
+        defaultValues={editDefaultValues}
         assignableUsers={assignableUsers}
         statuses={statuses}
-        onSubmit={saveEdit}
-        submitting={editSubmitting}
+        onSubmitAction={saveEdit}
       />
 
       <TaskDeleteDialog
         task={pendingDelete}
         open={pendingDelete !== null}
-        onOpenChange={(open) => {
+        onOpenChangeAction={(open) => {
           if (!open) setPendingDelete(null);
         }}
-        onConfirm={confirmDelete}
+        onConfirmAction={confirmDelete}
         submitting={deleteSubmitting}
       />
     </>

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { resolveApiBaseUrl } from "@repo/types";
-import type { User } from "../types";
+import type { UserFrontend as User } from "@repo/types";
 
 /**
  * Server-side user service

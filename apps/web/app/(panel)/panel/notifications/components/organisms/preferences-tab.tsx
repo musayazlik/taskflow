@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -37,12 +38,29 @@ interface Preference {
 interface PreferencesTabProps {
   preferences: Preference[];
   togglePreference: (prefId: string, type: "email" | "push" | "inApp") => void;
+  setAllChannel: (type: "email" | "push" | "inApp", enabled: boolean) => void;
 }
 
 export function PreferencesTab({
   preferences,
   togglePreference,
+  setAllChannel,
 }: PreferencesTabProps) {
+  const allEmailEnabled = useMemo(
+    () => preferences.length > 0 && preferences.every((p) => p.email),
+    [preferences],
+  );
+  const allPushEnabled = useMemo(
+    () => preferences.length > 0 && preferences.every((p) => p.push),
+    [preferences],
+  );
+  const allInAppEnabled = useMemo(
+    () => preferences.length > 0 && preferences.every((p) => p.inApp),
+    [preferences],
+  );
+
+  const [doNotDisturb, setDoNotDisturb] = useState(false);
+
   return (
     <>
       <Card>
@@ -69,7 +87,10 @@ export function PreferencesTab({
                   </p>
                 </div>
               </div>
-              <Switch defaultChecked />
+              <Switch
+                checked={allEmailEnabled}
+                onCheckedChange={(checked) => setAllChannel("email", checked)}
+              />
             </div>
 
             <div className="flex items-center justify-between p-4 rounded-xl border bg-gray-50 dark:bg-zinc-800/50">
@@ -84,7 +105,10 @@ export function PreferencesTab({
                   </p>
                 </div>
               </div>
-              <Switch defaultChecked />
+              <Switch
+                checked={allPushEnabled}
+                onCheckedChange={(checked) => setAllChannel("push", checked)}
+              />
             </div>
 
             <div className="flex items-center justify-between p-4 rounded-xl border bg-gray-50 dark:bg-zinc-800/50">
@@ -99,7 +123,10 @@ export function PreferencesTab({
                   </p>
                 </div>
               </div>
-              <Switch defaultChecked />
+              <Switch
+                checked={allInAppEnabled}
+                onCheckedChange={(checked) => setAllChannel("inApp", checked)}
+              />
             </div>
           </div>
         </CardContent>
@@ -206,7 +233,7 @@ export function PreferencesTab({
                 </p>
               </div>
             </div>
-            <Switch />
+            <Switch checked={doNotDisturb} onCheckedChange={setDoNotDisturb} />
           </div>
 
           <div className="mt-4 p-4 rounded-xl border border-dashed">

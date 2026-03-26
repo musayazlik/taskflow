@@ -6,17 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/shadcn-ui/card";
-import { Badge } from "@repo/shadcn-ui/badge";
 import { Bell, BellRing, AlertTriangle, AlertCircle, Check } from "lucide-react";
-
-interface Notification {
-  id: string | number;
-  type: string;
-  read?: boolean;
-}
+import type { UiNotification } from "@repo/types";
 
 interface StatsGridProps {
-  notifications: Notification[];
+  notifications: UiNotification[];
   readNotifications: string[];
 }
 
@@ -27,7 +21,6 @@ export function StatsGrid({
   const unreadCount = notifications.filter(
     (n) => !readNotifications.includes(String(n.id)),
   ).length;
-  const successCount = notifications.filter((n) => n.type === "success").length;
   const warningCount = notifications.filter((n) => n.type === "warning").length;
   const errorCount = notifications.filter((n) => n.type === "error").length;
 
