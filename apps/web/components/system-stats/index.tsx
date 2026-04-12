@@ -13,7 +13,7 @@ import {
   type RadialChartData,
 } from "@/components/charts";
 import { systemService } from "@/services/system.service";
-import type { SystemInfo } from "@/services/types";
+import type { SystemInfo } from "@repo/types";
 import { Cpu, HardDrive, MemoryStick, Monitor } from "lucide-react";
 import type { ChartConfig } from "@repo/shadcn-ui/chart";
 import {

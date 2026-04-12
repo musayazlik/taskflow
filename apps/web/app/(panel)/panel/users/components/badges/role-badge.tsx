@@ -1,9 +1,8 @@
-"use client";
-
-import { Crown, Shield, ShieldCheck } from "lucide-react";
+import { Badge } from "@repo/shadcn-ui/badge";
 import { cn } from "@/lib/utils";
+import { Shield, Crown, ShieldCheck } from "lucide-react";
 
-interface RoleBadgeProps {
+export interface RoleBadgeProps {
   role: string;
 }
 
@@ -38,14 +37,9 @@ export function RoleBadge({ role }: RoleBadgeProps) {
   const Icon = roleConfig.icon;
 
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border",
-        roleConfig.className,
-      )}
-    >
+    <Badge variant="outline" className={cn("gap-1.5", roleConfig.className)}>
       <Icon className="h-3 w-3" />
       {roleConfig.label}
-    </span>
+    </Badge>
   );
 }

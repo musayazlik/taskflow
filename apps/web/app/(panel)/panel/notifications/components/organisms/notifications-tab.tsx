@@ -13,12 +13,10 @@ import { Button } from "@repo/shadcn-ui/button";
 import { Badge } from "@repo/shadcn-ui/badge";
 import { Input } from "@repo/shadcn-ui/input";
 import { ScrollArea } from "@repo/shadcn-ui/scroll-area";
-import { Checkbox } from "@repo/shadcn-ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@repo/shadcn-ui/dropdown-menu";
 import { cn } from "@/lib/utils";
@@ -27,38 +25,18 @@ import {
   Filter,
   Trash2,
   Clock,
-  MoreHorizontal,
   BellOff,
   Check,
-  Archive,
   Eye,
   EyeOff,
 } from "lucide-react";
-import { getNotificationIcon, getNotificationStyles } from "../utils";
 import { NotificationItem } from "../molecules/notification-item";
-
-type NotificationType =
-  | "all"
-  | "unread"
-  | "success"
-  | "warning"
-  | "error"
-  | "info";
-
-interface Notification {
-  id: string | number;
-  title: string;
-  message: string;
-  type: string;
-  category: string;
-  time: string;
-  read?: boolean;
-}
+import type { NotificationsFilter, UiNotification } from "@repo/types";
 
 interface NotificationsTabProps {
-  notifications: Notification[];
-  activeTab: NotificationType;
-  setActiveTab: (tab: NotificationType) => void;
+  notifications: UiNotification[];
+  activeTab: NotificationsFilter;
+  setActiveTab: (tab: NotificationsFilter) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   selectedNotifications: string[];

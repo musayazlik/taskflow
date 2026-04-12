@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/shadcn-ui/tabs";
-import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/panel/page-header";
 import {
   Bell,
@@ -21,31 +20,18 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import { apiClient } from "@/lib/api";
 import { StatsGrid, type StatItem } from "@/components/stats";
 import { useSession } from "@/lib/auth-client";
 import { useSocketRealtime } from "@/lib/socket/use-socket-realtime";
-import type { NotificationRealtimeMessage } from "@repo/types";
+import type {
+  NotificationRealtimeMessage,
+  NotificationsFilter,
+  UiNotification,
+} from "@repo/types";
+import { notificationService } from "@/services";
 
 import { NotificationsTab } from "./organisms/notifications-tab";
 import { PreferencesTab } from "./organisms/preferences-tab";
-
-type UiNotification = {
-  id: string;
-  title: string;
-  message: string;
-  type: "success" | "warning" | "error" | "info";
-  category: string;
-  time: string;
-};
-
-type NotificationType =
-  | "all"
-  | "unread"
-  | "success"
-  | "warning"
-  | "error"
-  | "info";
 
 function formatTaskNotificationForPage(message: string): {
   title: string;
@@ -209,7 +195,7 @@ export function NotificationsPageClient() {
   const currentUserId = sessionUser?.id;
   const currentRole = sessionUser?.role;
 
-  const [activeTab, setActiveTab] = useState<NotificationType>("all");
+  const [activeTab, setActiveTab] = useState<NotificationsFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedNotifications, setSelectedNotifications] = useState<string[]>(
     [],
@@ -221,13 +207,11 @@ export function NotificationsPageClient() {
   const loadNotifications = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await apiClient.get<{
-        success: boolean;
-        data?: { notifications?: Array<unknown> };
-      }>("/api/notifications");
+      const res = await notificationService.getNotifications();
+      const payload = res.success && res.data ? res.data : null;
 
-      const backend = Array.isArray(res?.data?.notifications)
-        ? res.data.notifications
+      const backend = Array.isArray(payload?.data?.notifications)
+        ? (payload!.data!.notifications as Array<unknown>)
         : [];
 
       // Backend notification shape:
@@ -389,15 +373,14 @@ export function NotificationsPageClient() {
     // Optimistic update
     setReadNotifications((prev) => [...prev, id]);
 
-    void apiClient
-      .patch(`/api/notifications/${id}/read`, undefined)
-      .then(() => {
+    void notificationService.markAsRead(id).then((res) => {
+      if (res.success) {
         toast.success("Marked as read");
-      })
-      .catch(() => {
-        toast.error("Failed to mark as read");
-        // We intentionally keep optimistic UI; next refresh will sync.
-      });
+        return;
+      }
+      toast.error(res.message || "Failed to mark as read");
+      // We intentionally keep optimistic UI; next refresh will sync.
+    });
   };
 
   const markAllAsRead = () => {
@@ -410,18 +393,14 @@ export function NotificationsPageClient() {
     setReadNotifications(ids);
     toast.success("Marking all as read...");
 
-    void Promise.all(
-      unreadIds.map((id) =>
-        apiClient.patch(`/api/notifications/${id}/read`, undefined),
-      ),
-    )
-      .then(() => {
-        toast.success("All notifications marked as read");
-        void loadNotifications();
-      })
-      .catch(() => {
-        toast.error("Failed to mark all as read");
-      });
+    void notificationService.markManyAsRead(unreadIds).then((res) => {
+      if (!res.success) {
+        toast.error(res.message || "Failed to mark all as read");
+        return;
+      }
+      toast.success("All notifications marked as read");
+      void loadNotifications();
+    });
   };
 
   const togglePreference = (
@@ -431,6 +410,10 @@ export function NotificationsPageClient() {
     setPreferences((prev) =>
       prev.map((p) => (p.id === prefId ? { ...p, [type]: !p[type] } : p)),
     );
+  };
+
+  const setAllChannel = (type: "email" | "push" | "inApp", enabled: boolean) => {
+    setPreferences((prev) => prev.map((p) => ({ ...p, [type]: enabled })));
   };
 
   // Calculate stats
@@ -533,6 +516,7 @@ export function NotificationsPageClient() {
           <PreferencesTab
             preferences={preferences}
             togglePreference={togglePreference}
+            setAllChannel={setAllChannel}
           />
         </TabsContent>
       </Tabs>

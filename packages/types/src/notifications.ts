@@ -25,6 +25,30 @@ export type NotificationRealtimeMessage =
   | { type: "updated"; notification: Notification };
 
 /**
+ * Panel notifications UI (client-side view models).
+ *
+ * Note: This is intentionally separated from the wire `Notification` type above.
+ * The UI uses human-readable categories and simplified "severity" types.
+ */
+export type NotificationsFilter =
+  | "all"
+  | "unread"
+  | "success"
+  | "warning"
+  | "error"
+  | "info";
+
+export type UiNotification = {
+  id: string;
+  title: string;
+  message: string;
+  type: "success" | "warning" | "error" | "info";
+  category: string;
+  time: string;
+  read?: boolean;
+};
+
+/**
  * Merge a realtime mutation into the local notification list.
  * - `created` inserts (or replaces) by `id`.
  * - `updated` replaces by `id`.

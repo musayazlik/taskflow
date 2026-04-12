@@ -13,18 +13,10 @@ import {
 import { cn } from "@/lib/utils";
 import { Clock, MoreHorizontal, Archive, Eye, Trash2 } from "lucide-react";
 import { getNotificationIcon, getNotificationStyles } from "../utils";
-
-interface Notification {
-  id: string | number;
-  title: string;
-  message: string;
-  type: string;
-  category: string;
-  time: string;
-}
+import type { UiNotification } from "@repo/types";
 
 interface NotificationItemProps {
-  notification: Notification;
+  notification: UiNotification;
   isRead: boolean;
   isSelected: boolean;
   onToggleSelection: () => void;
