@@ -1,11 +1,6 @@
 import { apiClient, buildApiQuery } from "@/lib/api";
-import type {
-	ApiResponse,
-	User,
-	PaginatedResponse,
-	UserSettings,
-	UserSettingsWithId,
-} from "./types";
+import { resolveApiBaseUrl } from "@repo/types";
+import type { ApiResponse, UserFrontend as User, PaginatedResponse } from "@repo/types";
 
 export const userService = {
 	async getUsers(params?: {
@@ -338,16 +333,12 @@ export const userService = {
 		skills?: string[];
 	}): Promise<ApiResponse<User>> {
 		try {
-			console.log("[updateProfile] Sending request with body:", body);
-
 			const response = await apiClient.patch<{
 				success: boolean;
 				data?: User;
 				message?: string;
 				error?: string;
 			}>("/api/profile", body);
-
-			console.log("[updateProfile] Response:", response);
 
 			if (!response.success) {
 				return {
@@ -376,7 +367,8 @@ export const userService = {
 			const formData = new FormData();
 			formData.append("avatar", file);
 
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile/avatar`, {
+			const API_BASE_URL = resolveApiBaseUrl();
+			const response = await fetch(`${API_BASE_URL}/api/profile/avatar`, {
 				method: "POST",
 				body: formData,
 				credentials: "include",

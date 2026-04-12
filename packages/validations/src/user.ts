@@ -55,6 +55,21 @@ export const userUpdateSchema = z.object({
 export type UserUpdateInput = z.infer<typeof userUpdateSchema>;
 
 // ============================================
+// User Edit Schema (Admin Panel)
+// ============================================
+export const adminUserEditSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .min(2, "Name must be at least 2 characters")
+    .max(100, "Name must be less than 100 characters"),
+  email: z.string().min(1, "Email is required").email("Invalid email address"),
+  role: z.enum(["USER", "ADMIN"]).default("USER"),
+});
+
+export type AdminUserEditInput = z.infer<typeof adminUserEditSchema>;
+
+// ============================================
 // Change Password Schema
 // ============================================
 export const changePasswordSchema = z

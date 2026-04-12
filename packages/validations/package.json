@@ -16,6 +16,10 @@
 		"./user": {
 			"types": "./src/user.ts",
 			"default": "./src/user.ts"
+		},
+		"./task": {
+			"types": "./src/task.ts",
+			"default": "./src/task.ts"
 		}
 	},
 	"scripts": {

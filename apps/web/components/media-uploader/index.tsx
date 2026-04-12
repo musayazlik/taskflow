@@ -28,7 +28,7 @@ import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 import { mediaService } from "@/services/media.service";
-import type { MediaFile, MediaUploadSettings } from "@/services/types";
+import type { MediaFile, MediaUploadSettings } from "@repo/types";
 import { ImageCropper } from "@/components/image-cropper";
 
 type MediaUploaderMode = "button" | "dropzone";

@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api";
-import type { ApiResponse } from "./types";
+import type { ApiResponse } from "@repo/types";
 import type { SystemInfo } from "@repo/types";
 
 export const systemService = {
